@@ -1,6 +1,6 @@
 using Entity.Models.Common;
 
-namespace API.Controllers.ProductsControllers.HouseholdProductsController.Dtos;
+namespace API.Controllers.ProductsControllers.OilProductsController.Dtos;
  
 public class CreationDto
 {
@@ -9,7 +9,6 @@ public class CreationDto
     public decimal Price { get; set; }
     public long ImageId { get; set; }
     public long MainCategoryId { get; set; }
-    public long HouseholdCategoryId { get; set; }
     public long TagId { get; set; }
 
 }

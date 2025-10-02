@@ -3,7 +3,7 @@ using Entity.Models.File;
 using Entity.Models.Product.Categories;
 using Entity.Models.Product.Tags;
 
-namespace API.Controllers.ProductsControllers.HouseholdProductsController.Dtos;
+namespace API.Controllers.ProductsControllers.WaterAndDrinkController.Dtos;
 
 public class GetDto
 {
@@ -15,9 +15,7 @@ public class GetDto
     public FileModel Image { get; set; }
     public long MainCategoryId { get; set; }
     public MainProductCategories MainCategory { get; set; }
-    public long HouseholdProductCategoryId { get; set; }
-    public HouseholdProductCategory HouseholdProductCategory { get; set; }
     public long TagId { get; set; }
-    public HouseholdProductTags Tag { get; set; }
+    public WaterAndDrinksTags Tag { get; set; }
     
 }

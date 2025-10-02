@@ -29,9 +29,9 @@ public class FoodProductsController : ControllerBase
             Name = dto.Name,
             About = dto.About,
             Price = dto.Price,
-            ImageId = dto.ImageId,
-            CategoryImageId = dto.CategoryImageId,
-            CategoryId = dto.CategoryId,
+            ProductImageId = dto.ImageId,
+            MainCategoryId = dto.MainCategoryId,
+            FoodCategoryId = dto.FoodProductCategoryId,
             TagId = dto.TagId
         };
         var resEntity=await FoodProductRepository.AddAsync(entity);
@@ -42,10 +42,10 @@ public class FoodProductsController : ControllerBase
             Name = resEntity.Name,
             About = resEntity.About,
             Price = resEntity.Price,
-            ImageId = resEntity.ImageId,
+            ImageId = resEntity.ProductImageId,
             Image = resEntity.Image,
-            CategoryImageId = resEntity.CategoryImageId,
-            CategoryImage = resEntity.CategoryImage,
+            MainCategoryId = resEntity.MainCategoryId,
+            FoodProductCategoryId = resEntity.FoodCategoryId,
             FoodProductCategory = resEntity.FoodProductCategory,
             TagId = resEntity.TagId,
             Tag = resEntity.Tag
@@ -63,9 +63,9 @@ public class FoodProductsController : ControllerBase
         res.Name = dto.Name;
         res.About = dto.About; 
         res.Price = dto.Price;
-        res.ImageId = dto.ImageId;
-        res.CategoryImageId = dto.CategoryImageId;
-        res.CategoryId = dto.CategoryId;
+        res.ProductImageId = dto.ImageId;
+        res.MainCategoryId = dto.MainCategoryId;
+        res.FoodCategoryId = dto.FoodProductCategoryId;
         res.TagId = dto.TagId;
         
         await FoodProductRepository.UpdateAsync(res);
@@ -93,11 +93,11 @@ public class FoodProductsController : ControllerBase
             Name = res.Name,
             About = res.About,
             Price = res.Price,
-            ImageId = res.ImageId,
+            ImageId = res.ProductImageId,
             Image = res.Image,
-            CategoryImageId = res.CategoryImageId,
-            CategoryImage = res.CategoryImage,
-            CategoryId = res.CategoryId,
+            MainCategoryId = res.MainCategoryId,
+            MainCategory = res.MainCategory,
+            FoodProductCategoryId = res.FoodCategoryId,
             FoodProductCategory = res.FoodProductCategory,
             TagId = res.TagId,
             Tag = res.Tag
@@ -108,24 +108,24 @@ public class FoodProductsController : ControllerBase
     [HttpGet]
     public async Task<ResponseModelBase> GetAllAsync()
     {
-        var res =   FoodProductRepository.GetAllAsQueryable().ToList();
+        var resList =   FoodProductRepository.GetAllAsQueryable().ToList();
         List<GetDto> dtos = new List<GetDto>();
-        foreach (FoodProducts model in res)
+        foreach (FoodProducts res in resList)
         {
             dtos.Add(new GetDto
             {
-                Id = model.Id,
-                Name = model.Name,
-                About = model.About,
-                Price = model.Price,
-                ImageId = model.ImageId,
-                Image = model.Image,
-                CategoryImageId = model.CategoryImageId,
-                CategoryImage = model.CategoryImage,
-                CategoryId =model.CategoryId,
-                FoodProductCategory = model.FoodProductCategory,
-                TagId = model.TagId,
-                Tag = model.Tag
+                Id = res.Id,
+                Name = res.Name,
+                About = res.About,
+                Price = res.Price,
+                ImageId = res.ProductImageId,
+                Image = res.Image,
+                MainCategoryId = res.MainCategoryId,
+                MainCategory = res.MainCategory,
+                FoodProductCategoryId = res.FoodCategoryId,
+                FoodProductCategory = res.FoodProductCategory,
+                TagId = res.TagId,
+                Tag = res.Tag
             });
         }
         
@@ -137,24 +137,24 @@ public class FoodProductsController : ControllerBase
     [HttpGet]
     public async Task<ResponseModelBase> GetAllByTagsAsync(long tagId)
     {
-        var res =   FoodProductRepository.GetAllAsQueryable().Where(item=>item.TagId==tagId).ToList();
+        var resList =   FoodProductRepository.GetAllAsQueryable().Where(item=>item.TagId==tagId).ToList();
         List<GetDto> dtos = new List<GetDto>();
-        foreach (FoodProducts model in res)
+        foreach (FoodProducts res in resList)
         {
             dtos.Add(new GetDto
             {
-                Id = model.Id,
-                Name = model.Name,
-                About = model.About,
-                Price = model.Price,
-                ImageId = model.ImageId,
-                Image = model.Image,
-                CategoryImageId = model.CategoryImageId,
-                CategoryImage = model.CategoryImage,
-                CategoryId =model.CategoryId,
-                FoodProductCategory = model.FoodProductCategory,
-                TagId = model.TagId,
-                Tag = model.Tag
+                Id = res.Id,
+                Name = res.Name,
+                About = res.About,
+                Price = res.Price,
+                ImageId = res.ProductImageId,
+                Image = res.Image,
+                MainCategoryId = res.MainCategoryId,
+                MainCategory = res.MainCategory,
+                FoodProductCategoryId = res.FoodCategoryId,
+                FoodProductCategory = res.FoodProductCategory,
+                TagId = res.TagId,
+                Tag = res.Tag
             });
         }
         

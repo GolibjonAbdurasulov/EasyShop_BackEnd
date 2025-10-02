@@ -13,9 +13,9 @@ public class GetDto
     public decimal Price { get; set; }
     public long ImageId { get; set; }
     public FileModel Image { get; set; }
-    public long CategoryImageId { get; set; }
-    public FileModel CategoryImage { get; set; }
-    public long CategoryId { get; set; }
+    public long MainCategoryId { get; set; }
+    public MainProductCategories MainCategory { get; set; }
+    public long FoodProductCategoryId { get; set; }
     public FoodProductCategory FoodProductCategory { get; set; }
     public long TagId { get; set; }
     public FoodProductTags Tag { get; set; }
