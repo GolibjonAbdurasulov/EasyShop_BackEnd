@@ -58,7 +58,7 @@ builder
 
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo { Title = "https://foragedialog.uz", Version = "v1" });
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "https://easyshop.uz", Version = "v1" });
 
   
     options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
@@ -162,7 +162,6 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
     });
 }
-
 
 
 
