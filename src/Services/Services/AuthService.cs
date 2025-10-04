@@ -36,7 +36,7 @@ public class AuthService : IAuthService
 
     public async Task<UserDto> Login(UserLoginDto dto)
     {
-        var user = await UserRepository.FirstOrDefaultAsync(user => user.Email == dto.Email && user.Password == dto.Password);
+        var user = await UserRepository.FirstOrDefaultAsync(user => user.PhoneNumber == dto.PhoneNumber && user.Password == dto.Password);
         if (user is  null)
             throw new NullReferenceException();
         string token =  _tokenService.GetToken();
@@ -44,7 +44,7 @@ public class AuthService : IAuthService
         {
             Id=user.Id,
             UserName = user.FullName,
-            Email = user.Email,
+            PhoneNumber = user.PhoneNumber,
             Password = user.Password,
             Role = user.Role.ToString(),
             IsSigned = true,
@@ -59,7 +59,7 @@ public class AuthService : IAuthService
     
     public async Task<ClientDto> ClientLogin(ClientLoginDto dto)
     {
-        var client = await ClientRepository.FirstOrDefaultAsync(user => user.Email == dto.Email && user.Password == dto.Password);
+        var client = await ClientRepository.FirstOrDefaultAsync(user => user.Email == dto.PhoneNumber && user.Password == dto.Password);
         if (client is  null)
             throw new NullReferenceException();
         string token =  _tokenService.GetToken();
@@ -67,7 +67,7 @@ public class AuthService : IAuthService
         {
             Id=client.Id,
             FullName = client.FullName,
-            Email = client.Email,
+            PhoneNumber = client.Email,
             Password = client.Password,
             IsSigned = true,
             Token = token
@@ -105,7 +105,7 @@ public class AuthService : IAuthService
         {
             UserName=user.FullName
             ,
-            Email = user.Email,
+            PhoneNumber = user.PhoneNumber,
             Password = user.Password,
             Role = user.Role.ToString()
         };
@@ -117,7 +117,7 @@ public class AuthService : IAuthService
         var client = new Client
         {
             FullName = dto.FullName,
-            Email = dto.Email,
+            Email = dto.PhoneNumber,
             Password = dto.Password, 
             IsSigned = false
         };
@@ -132,7 +132,7 @@ public class AuthService : IAuthService
         // 3. Email yuborish
         var emailDto = new SendEmailDto
         {
-            Email = dto.Email,
+            Email = dto.PhoneNumber,
             Subject = "Ro‘yxatdan o‘tishni tasdiqlash",
             Message = $"Assalomu alaykum {dto.FullName}!<br/>" +
                       $"Ro‘yxatdan o‘tishni yakunlash uchun quyidagi kodni kiriting: <b>{confirmationCode}</b>"
@@ -144,7 +144,7 @@ public class AuthService : IAuthService
         return new ClientDto
         {
             Id = client.Id,
-            Email = client.Email,
+            PhoneNumber = client.Email,
             FullName = client.FullName,
             IsSigned = client.IsSigned,
         };
@@ -173,12 +173,12 @@ public class AuthService : IAuthService
         {
             var confirmationCode = Guid.NewGuid().ToString("N").Substring(0, 6).ToUpper(); // 6 xonali kod
 
-            _otpService.SaveOtp(dto.Email, confirmationCode);
+            _otpService.SaveOtp(dto.PhoneNumber, confirmationCode);
 
             // 3. Email yuborish
             var emailDto = new SendEmailDto
             {
-                Email = dto.Email,
+                Email = dto.PhoneNumber,
                 Subject = "Ro‘yxatdan o‘tishni tasdiqlash",
                 Message = $"Assalomu alaykum {dto.FullName}!<br/>" +
                           $"Ro‘yxatdan o‘tishni yakunlash uchun quyidagi kodni kiriting: <b>{confirmationCode}</b>"

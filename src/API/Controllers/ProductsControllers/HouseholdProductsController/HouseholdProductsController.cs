@@ -21,7 +21,7 @@ public class HouseholdProductsController : ControllerBase
 
     [HttpPost]
     [Authorize]
-    public async Task<ResponseModelBase> CreateAsync( CreationDto dto)
+    public async Task<ResponseModelBase> CreateAsync( HouseholdCreationDto dto)
     {
         var entity = new HouseholdProducts
         {
@@ -35,7 +35,7 @@ public class HouseholdProductsController : ControllerBase
         };
         var resEntity=await HoldProductsRepository.AddAsync(entity);
         
-        var resDto = new GetDto
+        var resDto = new HouseholdGetDto
         {
             Id = resEntity.Id,
             Name = resEntity.Name,
@@ -57,7 +57,7 @@ public class HouseholdProductsController : ControllerBase
   
     [HttpPut]
     [Authorize]
-    public async Task<ResponseModelBase> UpdateAsync( UpdateDto dto)
+    public async Task<ResponseModelBase> UpdateAsync( HouseholdUpdateDto dto)
     {
         var res =  await HoldProductsRepository.GetByIdAsync(dto.Id);
         res.Name = dto.Name;
@@ -87,7 +87,7 @@ public class HouseholdProductsController : ControllerBase
     public async Task<ResponseModelBase> GetByIdAsync(long id)
     {
         var resEntity =  await HoldProductsRepository.GetByIdAsync(id);
-        var dto = new GetDto
+        var dto = new HouseholdGetDto
         {
             Id = resEntity.Id,
             Name = resEntity.Name,
@@ -109,10 +109,10 @@ public class HouseholdProductsController : ControllerBase
     public async Task<ResponseModelBase> GetAllAsync()
     {
         var res =   HoldProductsRepository.GetAllAsQueryable().ToList();
-        List<GetDto> dtos = new List<GetDto>();
+        List<HouseholdGetDto> dtos = new List<HouseholdGetDto>();
         foreach (HouseholdProducts resEntity in res)
         {
-            dtos.Add(new GetDto
+            dtos.Add(new HouseholdGetDto
             {
                 Id = resEntity.Id,
                 Name = resEntity.Name,
@@ -138,10 +138,10 @@ public class HouseholdProductsController : ControllerBase
     public async Task<ResponseModelBase> GetAllByTagsAsync(long tagId)
     {
         var res =   HoldProductsRepository.GetAllAsQueryable().Where(item=>item.TagId==tagId).ToList();
-        List<GetDto> dtos = new List<GetDto>();
+        List<HouseholdGetDto> dtos = new List<HouseholdGetDto>();
         foreach (HouseholdProducts resEntity in res)
         {
-            dtos.Add(new GetDto
+            dtos.Add(new HouseholdGetDto
             {
                 Id = resEntity.Id,
                 Name = resEntity.Name,

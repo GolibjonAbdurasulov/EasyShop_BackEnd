@@ -21,7 +21,7 @@ public class WaterAndDrinkController : ControllerBase
 
     [HttpPost]
     [Authorize]
-    public async Task<ResponseModelBase> CreateAsync( CreationDto dto)
+    public async Task<ResponseModelBase> CreateAsync( WaterAndDrinkProductCreationDto dto)
     {
         var entity = new WaterAndDrinks()
         {
@@ -34,7 +34,7 @@ public class WaterAndDrinkController : ControllerBase
         };
         var resEntity=await WaterAndDrinksRepository.AddAsync(entity);
         
-        var resDto = new GetDto
+        var resDto = new WaterAndDrinkProductGetDto
         {
             Id = resEntity.Id,
             Name = resEntity.Name,
@@ -54,7 +54,7 @@ public class WaterAndDrinkController : ControllerBase
   
     [HttpPut]
     [Authorize]
-    public async Task<ResponseModelBase> UpdateAsync( UpdateDto dto)
+    public async Task<ResponseModelBase> UpdateAsync( WaterAndDrinkProductUpdateDto dto)
     {
         var res =  await WaterAndDrinksRepository.GetByIdAsync(dto.Id);
         res.Name = dto.Name;
@@ -83,7 +83,7 @@ public class WaterAndDrinkController : ControllerBase
     public async Task<ResponseModelBase> GetByIdAsync(long id)
     {
         var resEntity =  await WaterAndDrinksRepository.GetByIdAsync(id);
-        var dto = new GetDto
+        var dto = new WaterAndDrinkProductGetDto
         { 
             Id = resEntity.Id,
             Name = resEntity.Name,
@@ -103,10 +103,10 @@ public class WaterAndDrinkController : ControllerBase
     public async Task<ResponseModelBase> GetAllAsync()
     {
         var res =   WaterAndDrinksRepository.GetAllAsQueryable().ToList();
-        List<GetDto> dtos = new List<GetDto>();
+        List<WaterAndDrinkProductGetDto> dtos = new List<WaterAndDrinkProductGetDto>();
         foreach (WaterAndDrinks model in res)
         {
-            dtos.Add(new GetDto
+            dtos.Add(new WaterAndDrinkProductGetDto
             {
                 Id = model.Id,
                 Name = model.Name,
@@ -129,10 +129,10 @@ public class WaterAndDrinkController : ControllerBase
     public async Task<ResponseModelBase> GetAllByTagsAsync(long tagId)
     {
         var res =   WaterAndDrinksRepository.GetAllAsQueryable().Where(item=>item.TagId==tagId).ToList();
-        List<GetDto> dtos = new List<GetDto>();
+        List<WaterAndDrinkProductGetDto> dtos = new List<WaterAndDrinkProductGetDto>();
         foreach (WaterAndDrinks model in res)
         {
-            dtos.Add(new GetDto
+            dtos.Add(new WaterAndDrinkProductGetDto
             {
                 Id = model.Id,
                 Name = model.Name,

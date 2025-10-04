@@ -29,7 +29,7 @@ public class UserService : IUserService
         {
             Id = oldUser.Id,
             UserName=oldUser.FullName,
-            Email = oldUser.Email,
+            PhoneNumber = oldUser.PhoneNumber,
             Password = oldUser.Password,
             Role = oldUser.Role.ToString(),
             IsSigned = oldUser.IsSigned
@@ -49,8 +49,8 @@ public class UserService : IUserService
     public async Task<UserDto> UpdateAsync(UserDto dto)
     {
         var oldUser = await _userRepository.GetByIdAsync(dto.Id);
-        if (dto.Email is not null&&dto.Email!="string")
-            oldUser.Email = dto.Email;
+        if (dto.PhoneNumber is not null&&dto.PhoneNumber!="string")
+            oldUser.PhoneNumber = dto.PhoneNumber;
         
         if (dto.Password is not null&&dto.Password!="string")
             oldUser.Password = dto.Password; 
@@ -69,7 +69,7 @@ public class UserService : IUserService
         var user = new User
         {
             FullName= dto.UserName,
-            Email = dto.Email,
+            PhoneNumber = dto.Email,
             Password = dto.Password,
             Role = Enum.Parse<Role>(dto.Role),
             IsSigned = false
@@ -78,7 +78,7 @@ public class UserService : IUserService
         {
             Id = user.Id,
             UserName = user.FullName,
-            Email = user.Email,
+            PhoneNumber = user.PhoneNumber,
             Password = user.Password,
             Role = user.Role.ToString(),
             IsSigned = user.IsSigned
@@ -97,7 +97,7 @@ public class UserService : IUserService
             {
                 Id = user.Id,
                 UserName = user.FullName,
-                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
                 Password = user.Password,
                 Role = user.Role.ToString(),
                 IsSigned = user.IsSigned,

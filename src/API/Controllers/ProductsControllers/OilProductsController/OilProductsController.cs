@@ -22,7 +22,7 @@ public class OilProductsController : ControllerBase
 
     [HttpPost]
     [Authorize]
-    public async Task<ResponseModelBase> CreateAsync( CreationDto dto)
+    public async Task<ResponseModelBase> CreateAsync( OilProductCreationDto dto)
     {
         var entity = new OilProducts
         {
@@ -35,7 +35,7 @@ public class OilProductsController : ControllerBase
         };
         var resEntity=await HoldProductsRepository.AddAsync(entity);
         
-        var resDto = new GetDto
+        var resDto = new OilProductGetDto
         {
             Id = resEntity.Id,
             Name = resEntity.Name,
@@ -55,7 +55,7 @@ public class OilProductsController : ControllerBase
   
     [HttpPut]
     [Authorize]
-    public async Task<ResponseModelBase> UpdateAsync( UpdateDto dto)
+    public async Task<ResponseModelBase> UpdateAsync( OilProductUpdateDto dto)
     {
         var res =  await HoldProductsRepository.GetByIdAsync(dto.Id);
         res.Name = dto.Name;
@@ -84,7 +84,7 @@ public class OilProductsController : ControllerBase
     public async Task<ResponseModelBase> GetByIdAsync(long id)
     {
         var resEntity =  await HoldProductsRepository.GetByIdAsync(id);
-        var dto = new GetDto
+        var dto = new OilProductGetDto
         { 
             Id = resEntity.Id,
             Name = resEntity.Name,
@@ -104,10 +104,10 @@ public class OilProductsController : ControllerBase
     public async Task<ResponseModelBase> GetAllAsync()
     {
         var res =   HoldProductsRepository.GetAllAsQueryable().ToList();
-        List<GetDto> dtos = new List<GetDto>();
+        List<OilProductGetDto> dtos = new List<OilProductGetDto>();
         foreach (OilProducts model in res)
         {
-            dtos.Add(new GetDto
+            dtos.Add(new OilProductGetDto
             {
                 Id = model.Id,
                 Name = model.Name,
@@ -130,10 +130,10 @@ public class OilProductsController : ControllerBase
     public async Task<ResponseModelBase> GetAllByTagsAsync(long tagId)
     {
         var res =   HoldProductsRepository.GetAllAsQueryable().Where(item=>item.TagId==tagId).ToList();
-        List<GetDto> dtos = new List<GetDto>();
+        List<OilProductGetDto> dtos = new List<OilProductGetDto>();
         foreach (OilProducts model in res)
         {
-            dtos.Add(new GetDto
+            dtos.Add(new OilProductGetDto
             {
                 Id = model.Id,
                 Name = model.Name,

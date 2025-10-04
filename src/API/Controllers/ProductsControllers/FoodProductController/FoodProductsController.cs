@@ -22,7 +22,7 @@ public class FoodProductsController : ControllerBase
 
     [HttpPost]
     [Authorize]
-    public async Task<ResponseModelBase> CreateAsync( CreationDto dto)
+    public async Task<ResponseModelBase> CreateAsync( FoodProductCreationDto dto)
     {
         var entity = new FoodProducts
         {
@@ -36,7 +36,7 @@ public class FoodProductsController : ControllerBase
         };
         var resEntity=await FoodProductRepository.AddAsync(entity);
         
-        var resDto = new GetDto
+        var resDto = new FoodProductGetDto
         {
             Id = resEntity.Id,
             Name = resEntity.Name,
@@ -57,7 +57,7 @@ public class FoodProductsController : ControllerBase
   
     [HttpPut]
     [Authorize]
-    public async Task<ResponseModelBase> UpdateAsync( UpdateDto dto)
+    public async Task<ResponseModelBase> UpdateAsync( FoodProductUpdateDto dto)
     {
         var res =  await FoodProductRepository.GetByIdAsync(dto.Id);
         res.Name = dto.Name;
@@ -87,7 +87,7 @@ public class FoodProductsController : ControllerBase
     public async Task<ResponseModelBase> GetByIdAsync(long id)
     {
         var res =  await FoodProductRepository.GetByIdAsync(id);
-        var dto = new GetDto
+        var dto = new FoodProductGetDto
         {
             Id = res.Id,
             Name = res.Name,
@@ -109,10 +109,10 @@ public class FoodProductsController : ControllerBase
     public async Task<ResponseModelBase> GetAllAsync()
     {
         var resList =   FoodProductRepository.GetAllAsQueryable().ToList();
-        List<GetDto> dtos = new List<GetDto>();
+        List<FoodProductGetDto> dtos = new List<FoodProductGetDto>();
         foreach (FoodProducts res in resList)
         {
-            dtos.Add(new GetDto
+            dtos.Add(new FoodProductGetDto
             {
                 Id = res.Id,
                 Name = res.Name,
@@ -138,10 +138,10 @@ public class FoodProductsController : ControllerBase
     public async Task<ResponseModelBase> GetAllByTagsAsync(long tagId)
     {
         var resList =   FoodProductRepository.GetAllAsQueryable().Where(item=>item.TagId==tagId).ToList();
-        List<GetDto> dtos = new List<GetDto>();
+        List<FoodProductGetDto> dtos = new List<FoodProductGetDto>();
         foreach (FoodProducts res in resList)
         {
-            dtos.Add(new GetDto
+            dtos.Add(new FoodProductGetDto
             {
                 Id = res.Id,
                 Name = res.Name,
