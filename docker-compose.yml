@@ -1,0 +1,13 @@
+services:
+  web:
+    image: ${DOCKER_USERNAME}/easy_shop
+    build:
+      context: .
+      dockerfile: src/API/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    restart: always
+    volumes:
+      - ./uploads:/app/wwwroot/uploads
