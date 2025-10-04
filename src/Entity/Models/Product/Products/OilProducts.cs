@@ -6,5 +6,5 @@ namespace Entity.Models.Product.Products;
 public class OilProducts : Product
 {
     [Column("tag_id"),ForeignKey(nameof(Tag))]public long TagId { get; set; }
-    public OilProductTags Tag { get; set; }
+    public virtual OilProductTags Tag { get; set; }
 }

@@ -9,5 +9,5 @@ public class FoodProducts : Product
    [Column("food_category_id"),ForeignKey(nameof(FoodProductCategory))]public long FoodCategoryId { get; set; }
    public virtual FoodProductCategory FoodProductCategory { get; set; }
    [Column("tag_id"),ForeignKey(nameof(Tag))]public long TagId { get; set; }
-   public FoodProductTags Tag { get; set; }
+   public virtual FoodProductTags Tag { get; set; }
 }
