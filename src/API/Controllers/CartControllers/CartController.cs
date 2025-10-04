@@ -1,8 +1,6 @@
 using API.Common;
 using API.Controllers.CartControllers.Dtos;
-using API.Controllers.OrderController.Dtos;
 using DatabaseBroker.Repositories.CartRepositories;
-using Entity.Enums;
 using Entity.Models.Order;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

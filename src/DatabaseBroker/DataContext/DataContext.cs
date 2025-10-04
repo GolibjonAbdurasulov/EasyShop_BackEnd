@@ -1,5 +1,9 @@
 using Entity.Models.Common;
 using Entity.Models.File;
+using Entity.Models.Order;
+using Entity.Models.Product.Categories;
+using Entity.Models.Product.Products;
+using Entity.Models.Product.Tags;
 using Entity.Models.Translation;
 using Microsoft.EntityFrameworkCore;
 using User = Entity.Models.Users.User;
@@ -16,6 +20,19 @@ public class DataContext : DbContext
     public  DbSet<FileModel> Files { get; set; }
     public  DbSet<Translation> Translations { get; set; }
     public  DbSet<User> Users { get; set; }
+    public  DbSet<Cart> Carts { get; set; }
+    public  DbSet<Order> Orders { get; set; }
+    public  DbSet<OilProducts> OilProducts { get; set; }
+    public  DbSet<OilProductTags> OilProductTags { get; set; }
+    public  DbSet<HouseholdProducts> HouseholdProducts { get; set; }
+    public  DbSet<HouseholdProductTags> HouseholdProductTags { get; set; }
+    public  DbSet<HouseholdProductCategory> HouseholdProductCategories { get; set; }
+    public  DbSet<FoodProducts> FoodProducts { get; set; }
+    public  DbSet<FoodProductTags> FoodProductTags { get; set; }
+    public  DbSet<FoodProductCategory> FoodProductCategories { get; set; }
+    public  DbSet<WaterAndDrinks> WaterAndDrinks { get; set; }
+    public  DbSet<WaterAndDrinksTags> WaterAndDrinksTags { get; set; }
+    public  DbSet<MainProductCategories> MainProductCategories { get; set; }
 
 
     // private void TrackActionsAt()
