@@ -7,7 +7,7 @@ namespace Entity.Models.Product.Categories;
 [Table("food_product_categories")]
 public class FoodProductCategory : ModelBase<long>
 {
-    [Column("category_name",TypeName = "jsonb")]public MultiLanguageField CategoryName { get; set; }
-    [Column("file_id"),ForeignKey(nameof(CategoryImage))] public long CategoryImageId  { get; set; }
+    [Column("food_produc_category_name",TypeName = "jsonb")]public MultiLanguageField FoodProductCategoryName { get; set; }
+    [Column("food_product_image_id"),ForeignKey(nameof(CategoryImage))] public long FoodProductCategoryImageId  { get; set; }
     public virtual FileModel CategoryImage { get; set; }
 }

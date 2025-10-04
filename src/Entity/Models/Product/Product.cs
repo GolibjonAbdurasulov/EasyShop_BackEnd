@@ -13,6 +13,6 @@ public class Product : ModelBase<long>
     [Column("product_image_id"),ForeignKey(nameof(Image))]public long ProductImageId { get; set; }
     public virtual FileModel Image { get; set; }
     
-    [Column("image_id"),ForeignKey(nameof(MainCategory))]public long MainCategoryId { get; set; }
+    [Column("main_category_id"),ForeignKey(nameof(MainCategory))]public long MainCategoryId { get; set; }
     public virtual MainProductCategories MainCategory { get; set; }
 }

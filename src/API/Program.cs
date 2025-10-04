@@ -58,7 +58,7 @@ builder
 
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo { Title = "https://easyShop.uz", Version = "v1" });
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "https://foragedialog.uz", Version = "v1" });
 
   
     options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
@@ -170,6 +170,7 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
 });
+
 NpgsqlConnection.GlobalTypeMapper.EnableDynamicJson();
 
 // Dasturni ishga tushirish
