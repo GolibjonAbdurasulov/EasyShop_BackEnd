@@ -8,4 +8,5 @@ public class MainCategoryGetDto
     public long Id { get; set; }
     public MultiLanguageField MainCategoryName { get; set; }
     public Guid MainCategoryImageId  { get; set; }
+    public string ImageUrl => $"http://45.130.148.249:8080/File/DownloadFile/download/{MainCategoryImageId}";
 }

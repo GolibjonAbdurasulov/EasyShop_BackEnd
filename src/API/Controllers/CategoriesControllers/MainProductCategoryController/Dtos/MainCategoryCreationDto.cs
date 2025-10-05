@@ -6,4 +6,5 @@ public class MainCategoryCreationDto
 {
     public MultiLanguageField MainCategoryName { get; set; }
     public Guid MainCategoryImageId  { get; set; }
+
 }
