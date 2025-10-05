@@ -37,6 +37,35 @@ public class CartController : ControllerBase
         };
         return new ResponseModelBase(resDto);
     }
+    
+    [HttpPost]
+    [Authorize]
+    public async Task<ResponseModelBase> AddProductToCart( long clientId,CartCreationDto dto)
+    {
+        var cart= CartRepository.GetAllAsQueryable().
+            FirstOrDefault(item=>item.CustomerId==clientId);
+        if (cart == null)
+        {
+            var entity = new Cart
+            {
+                ProductsId = dto.ProductsId,
+                CustomerId = dto.CustomerId,
+            };
+            var resCart=await CartRepository.AddAsync(entity);
+            return new ResponseModelBase(resCart);
+        }
+        
+        cart.ProductsId.AddRange(dto.ProductsId);
+
+        var resDto = new CartGetDto
+        {
+            Id = cart.Id,
+            ProductsId = cart.ProductsId,
+            CustomerId = cart.CustomerId,
+            Customer = cart.Customer
+        };
+        return new ResponseModelBase(resDto);
+    }
 
 
   
