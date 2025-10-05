@@ -14,7 +14,6 @@ public class FoodProductGetDto
     public Guid ImageId { get; set; }
     public string ImageUrl => $"http://45.130.148.249:8080/File/DownloadFile/download/{ImageId}";
 
-    public FileModel Image { get; set; }
     public long MainCategoryId { get; set; }
     public MainProductCategories MainCategory { get; set; }
     public long FoodProductCategoryId { get; set; }

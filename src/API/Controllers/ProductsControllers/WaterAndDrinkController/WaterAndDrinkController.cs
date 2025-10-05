@@ -41,7 +41,6 @@ public class WaterAndDrinkController : ControllerBase
             About = resEntity.About,
             Price = resEntity.Price,
             ImageId = resEntity.ProductImageId,
-            Image = resEntity.Image,
             MainCategoryId = resEntity.MainCategoryId,
             MainCategory = resEntity.MainCategory,
             TagId = resEntity.TagId,
@@ -90,7 +89,6 @@ public class WaterAndDrinkController : ControllerBase
             About = resEntity.About,
             Price = resEntity.Price,
             ImageId = resEntity.ProductImageId,
-            Image = resEntity.Image,
             MainCategoryId = resEntity.MainCategoryId,
             MainCategory = resEntity.MainCategory,
             TagId = resEntity.TagId,
@@ -113,7 +111,6 @@ public class WaterAndDrinkController : ControllerBase
                 About = model.About,
                 Price = model.Price,
                 ImageId = model.ProductImageId,
-                Image = model.Image,
                 MainCategory = model.MainCategory,
                 TagId = model.TagId,
                 Tag = model.Tag
@@ -139,7 +136,6 @@ public class WaterAndDrinkController : ControllerBase
                 About = model.About,
                 Price = model.Price,
                 ImageId = model.ProductImageId,
-                Image = model.Image,
                 MainCategory = model.MainCategory,
                 TagId = model.TagId,
                 Tag = model.Tag
