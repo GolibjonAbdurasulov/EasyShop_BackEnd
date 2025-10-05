@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DatabaseBroker.Repositories.Categories.HouseHoldProductCategoryRepository;
 [Injectable]
-public class HouseHoldProductCategoryRepository : RepositoryBase<HouseholdProductCategory,long>
+public class HouseHoldProductCategoryRepository : RepositoryBase<HouseholdProductCategory,long>, IHouseHoldProductCategoryRepository
 {
     public HouseHoldProductCategoryRepository(DataContext dbContext) : base(dbContext)
     {
