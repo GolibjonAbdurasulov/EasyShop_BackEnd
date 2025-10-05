@@ -112,6 +112,7 @@ public class OilProductsController : ControllerBase
                 About = model.About,
                 Price = model.Price,
                 ImageId = model.ProductImageId,
+                MainCategoryId = model.MainCategoryId,
                 MainCategory = model.MainCategory,
                 TagId = model.TagId,
                 Tag = model.Tag
