@@ -9,10 +9,10 @@ namespace API.Controllers.TagsController.HouseHoldProductTagsController;
 
 [ApiController]
 [Route("[controller]/[action]")]
-public class HouseHoldProductController : ControllerBase
+public class HouseHoldProductTagsController : ControllerBase
 {
     private IHouseHoldProductTagsRepository HouseHoldProductTagsRepository { get; set; }
-    public HouseHoldProductController(IHouseHoldProductTagsRepository householdProductTagsRepository)
+    public HouseHoldProductTagsController(IHouseHoldProductTagsRepository householdProductTagsRepository)
     {
         HouseHoldProductTagsRepository = householdProductTagsRepository;
     }
