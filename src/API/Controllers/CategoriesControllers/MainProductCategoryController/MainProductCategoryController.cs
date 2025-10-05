@@ -77,7 +77,11 @@ public class MainProductCategoryController : ControllerBase
     [HttpGet]
     public async Task<ResponseModelBase> GetAllAsync()
     {
-        var res =   MainProductCategoryRepository.GetAllAsQueryable().ToList();
+        var res = MainProductCategoryRepository
+            .GetAllAsQueryable()
+            .OrderBy(x => x.Id)
+            .ToList();
+
         List<MainCategoryGetDto> dtos = new List<MainCategoryGetDto>();
         foreach (MainProductCategories model in res)
         {
