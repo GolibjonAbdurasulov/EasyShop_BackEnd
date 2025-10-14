@@ -40,10 +40,10 @@ public class CartController : ControllerBase
     
     [HttpPost]
     [Authorize]
-    public async Task<ResponseModelBase> AddProductToCart( long clientId,CartCreationDto dto)
+    public async Task<ResponseModelBase> AddProductToCart(CartCreationDto dto)
     {
         var cart= CartRepository.GetAllAsQueryable().
-            FirstOrDefault(item=>item.CustomerId==clientId);
+            FirstOrDefault(item=>item.CustomerId==dto.CustomerId);
         if (cart == null)
         {
             var entity = new Cart
