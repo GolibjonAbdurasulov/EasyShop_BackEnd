@@ -16,9 +16,3 @@ public class Cart : ModelBase<long>
     public virtual User Customer { get; set; }
 }
 
-public class ProductItem
-{
-    public long  Id { get; set; }
-    public string ProductType { get; set; }
-    public long Quantity { get; set; }
-}

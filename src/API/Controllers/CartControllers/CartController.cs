@@ -203,7 +203,68 @@ public class CartController : ControllerBase
 
         return new ResponseModelBase(product, HttpStatusCode.OK);
     }
-    
+
+    [HttpGet]
+    [Authorize]
+    public async Task<ResponseModelBase> GetManyProductsDates([FromBody] List<ProductItem> items)
+    {
+        List<CartGetProductsDto> products = new List<CartGetProductsDto>();
+        foreach (var item in items)
+        {
+            var product = new Product();
+            switch (item.ProductType)
+            {
+                case "FoodProduct":
+                    product =await FoodProductRepository.GetByIdAsync(item.ProductId);
+                    products.Add(new CartGetProductsDto
+                    {
+                        ProductId = product.Id,
+                        Name = product.Name.uz,
+                        Price = product.Price,
+                        Quantity = product.Quantity,
+                        ImageId = product.ProductImageId
+                    });
+                    break;
+                case "HouseHoldProduct":
+                    product = await HouseHoldProductsRepository.GetByIdAsync(item.ProductId);
+                    products.Add(new CartGetProductsDto
+                    {
+                        ProductId = product.Id,
+                        Name = product.Name.uz,
+                        Price = product.Price,
+                        Quantity = product.Quantity,
+                        ImageId = product.ProductImageId
+                    });
+                    break;
+                case "OilProduct":
+                    product = await OilProductsRepository.GetByIdAsync(item.ProductId);
+                    products.Add(new CartGetProductsDto
+                    {
+                        ProductId = product.Id,
+                        Name = product.Name.uz,
+                        Price = product.Price,
+                        Quantity = product.Quantity,
+                        ImageId = product.ProductImageId
+                    });
+                    break;
+                case "WaterAndDrinksProduct":
+                    product = await WaterAndDrinksRepository.GetByIdAsync(item.ProductId);
+                    products.Add(new CartGetProductsDto
+                    {
+                        ProductId = product.Id,
+                        Name = product.Name.uz,
+                        Price = product.Price,
+                        Quantity = product.Quantity,
+                        ImageId = product.ProductImageId
+                    });
+                    break;
+                default:
+                    return new ResponseModelBase("Invalid product type on CartController", HttpStatusCode.NotFound);
+            }
+        }
+        return new ResponseModelBase(products, HttpStatusCode.OK);
+    }
+
     [HttpGet]
     [Authorize]
     public async Task<ResponseModelBase> GetAllProductsData([FromBody] long clientId)
@@ -216,16 +277,16 @@ public class CartController : ControllerBase
             switch (itemProduct.ProductType)
             {
                 case "FoodProduct":
-                    product =await FoodProductRepository.GetByIdAsync(itemProduct.Id);
+                    product =await FoodProductRepository.GetByIdAsync(itemProduct.ProductId);
                     break;
                 case "HouseHoldProduct":
-                    product = await HouseHoldProductsRepository.GetByIdAsync(itemProduct.Id);
+                    product = await HouseHoldProductsRepository.GetByIdAsync(itemProduct.ProductId);
                     break;
                 case "OilProduct":
-                    product = await OilProductsRepository.GetByIdAsync(itemProduct.Id);
+                    product = await OilProductsRepository.GetByIdAsync(itemProduct.ProductId);
                     break;
                 case "WaterAndDrinksProduct":
-                    product = await WaterAndDrinksRepository.GetByIdAsync(itemProduct.Id);
+                    product = await WaterAndDrinksRepository.GetByIdAsync(itemProduct.ProductId);
                 
                     break;
             }
@@ -252,7 +313,7 @@ public class CartController : ControllerBase
     [Authorize]
     public async Task<ResponseModelBase> UpdateProductItem(ProductItem dto)
     {
-        var cart = await CartRepository.GetByIdAsync(dto.Id);
+        var cart = await CartRepository.GetByIdAsync(dto.ProductId);
         
         foreach (var itemProduct in cart.ProductsId)
         {
@@ -260,19 +321,19 @@ public class CartController : ControllerBase
             switch (itemProduct.ProductType)
             {
                 case "FoodProduct":
-                    if (itemProduct.Id==dto.Id)
+                    if (itemProduct.ProductId==dto.ProductId)
                         itemProduct.Quantity = dto.Quantity;
                     break;
                 case "HouseHoldProduct":
-                    if (itemProduct.Id==dto.Id)
+                    if (itemProduct.ProductId==dto.ProductId)
                         itemProduct.Quantity = dto.Quantity;
                     break;
                 case "OilProduct":
-                    if (itemProduct.Id==dto.Id)
+                    if (itemProduct.ProductId==dto.ProductId)
                         itemProduct.Quantity = dto.Quantity;
                     break;
                 case "WaterAndDrinksProduct":
-                    if (itemProduct.Id==dto.Id)
+                    if (itemProduct.ProductId==dto.ProductId)
                         itemProduct.Quantity = dto.Quantity;
                     break;
             }
@@ -290,19 +351,19 @@ public class CartController : ControllerBase
         {
             case "FoodProduct":
                 cart.ProductsId.Remove(cart.ProductsId.
-                    FirstOrDefault(p => p.ProductType == "FoodProduct"&& p.Id==dto.ProductId ));
+                    FirstOrDefault(p => p.ProductType == "FoodProduct"&& p.ProductId==dto.ProductId ));
                 break;
             case "HouseHoldProduct":
                 cart.ProductsId.Remove(cart.ProductsId.
-                    FirstOrDefault(p => p.ProductType == "HouseHoldProduct"&& p.Id==dto.ProductId ));
+                    FirstOrDefault(p => p.ProductType == "HouseHoldProduct"&& p.ProductId==dto.ProductId ));
                 break;
             case "OilProduct":
                 cart.ProductsId.Remove(cart.ProductsId.
-                    FirstOrDefault(p => p.ProductType == "OilProduct"&& p.Id==dto.ProductId )); 
+                    FirstOrDefault(p => p.ProductType == "OilProduct"&& p.ProductId==dto.ProductId )); 
                 break;
             case "WaterAndDrinksProduct":
                 cart.ProductsId.Remove(cart.ProductsId.
-                    FirstOrDefault(p => p.ProductType == "WaterAndDrinksProduct"&& p.Id==dto.ProductId ));
+                    FirstOrDefault(p => p.ProductType == "WaterAndDrinksProduct"&& p.ProductId==dto.ProductId ));
 
                 break;
             default:
@@ -340,7 +401,7 @@ public class CartController : ControllerBase
             switch (product.ProductType)
             {
                 case "FoodProduct":
-                    var item =await FoodProductRepository.GetByIdAsync(product.Id);
+                    var item =await FoodProductRepository.GetByIdAsync(product.ProductId);
                     products.Add(new CartGetProductsDto
                     {
                         ProductId = item.Id,
@@ -351,7 +412,7 @@ public class CartController : ControllerBase
                     });
                     break;
                 case "HouseHoldProduct":
-                    var item2 = await HouseHoldProductsRepository.GetByIdAsync(product.Id);
+                    var item2 = await HouseHoldProductsRepository.GetByIdAsync(product.ProductId);
                     products.Add(new CartGetProductsDto
                     {
                         ProductId = item2.Id,
@@ -361,7 +422,7 @@ public class CartController : ControllerBase
                         ImageId = item2.ProductImageId
                     });                    break;
                 case "OilProduct":
-                    var item3 = await OilProductsRepository.GetByIdAsync(product.Id);
+                    var item3 = await OilProductsRepository.GetByIdAsync(product.ProductId);
                     products.Add(new CartGetProductsDto
                     {
                         ProductId = item3.Id,
@@ -371,7 +432,7 @@ public class CartController : ControllerBase
                         ImageId = item3.ProductImageId
                     });                    break;
                 case "WaterAndDrinksProduct":
-                    var item4 = await WaterAndDrinksRepository.GetByIdAsync(product.Id);
+                    var item4 = await WaterAndDrinksRepository.GetByIdAsync(product.ProductId);
                     products.Add(new CartGetProductsDto
                     {
                         ProductId = item4.Id,

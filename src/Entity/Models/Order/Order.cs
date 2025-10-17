@@ -9,8 +9,7 @@ namespace Entity.Models.Order;
 [Table("orders")]
 public class Order : ModelBase<long>
 {
-    [Column("products_id")]public List<long> ProductsIds { get; set; }
-    [Column("quantity")]public int Quantity { get; set; }
+    [Column("products_id", TypeName = "jsonb")] public List<ProductItem> ProductsIds { get; set; } = new();
     [Column("total_price")]public decimal TotalPrice { get; set; }
     [Column("order_status")]public OrderStatus OrderStatus { get; set; }
     [Column("delivery_date")]public DateTime DeliveryDate { get; set; }

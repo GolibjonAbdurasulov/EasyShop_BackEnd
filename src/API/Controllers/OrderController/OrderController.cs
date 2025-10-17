@@ -25,7 +25,6 @@ public class OrderController : ControllerBase
         var entity = new Order
         {
             ProductsIds = dto.ProductsIds,
-            Quantity = dto.Quantity,
             TotalPrice = dto.TotalPrice,
             OrderStatus = dto.OrderStatus,
             DeliveryDate = dto.DeliveryDate,
@@ -38,7 +37,6 @@ public class OrderController : ControllerBase
         {
             Id = resEntity.Id,
             ProductsIds = resEntity.ProductsIds,
-            Quantity = resEntity.Quantity,
             TotalPrice = resEntity.TotalPrice,
             OrderStatus = resEntity.OrderStatus,
             DeliveryDate = resEntity.DeliveryDate,
@@ -56,7 +54,6 @@ public class OrderController : ControllerBase
     {
         var res =  await OrderRepository.GetByIdAsync(dto.Id);
         res.ProductsIds = dto.ProductsIds;
-        res.Quantity = dto.Quantity;
         res.TotalPrice = dto.TotalPrice;
         res.OrderStatus = dto.OrderStatus;
         res.DeliveryDate = dto.DeliveryDate;
@@ -85,7 +82,6 @@ public class OrderController : ControllerBase
         { 
             Id = resEntity.Id,
             ProductsIds = resEntity.ProductsIds,
-            Quantity = resEntity.Quantity,
             TotalPrice = resEntity.TotalPrice,
             OrderStatus = resEntity.OrderStatus,
             DeliveryDate = resEntity.DeliveryDate,
@@ -106,7 +102,6 @@ public class OrderController : ControllerBase
             {
                 Id = model.Id,
                 ProductsIds = model.ProductsIds,
-                Quantity = model.Quantity,
                 TotalPrice = model.TotalPrice,
                 OrderStatus = model.OrderStatus,
                 DeliveryDate = model.DeliveryDate,
@@ -130,7 +125,6 @@ public class OrderController : ControllerBase
         {
             Id = model.Id,
             ProductsIds = model.ProductsIds,
-            Quantity = model.Quantity,
             TotalPrice = model.TotalPrice,
             OrderStatus = model.OrderStatus,
             DeliveryDate = model.DeliveryDate,
