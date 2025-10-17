@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using Entity.Models.Order;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace DatabaseBroker.Migrations
 {
     /// <inheritdoc />
-    public partial class create_orders_table : Migration
+    public partial class create_order : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,9 +18,9 @@ namespace DatabaseBroker.Migrations
                 name: "orders",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", 
-                            Npgsql.EntityFrameworkCore.PostgreSQL.Metadata.NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                            NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
 
                     products_id = table.Column<List<ProductItem>>(type: "jsonb", nullable: true),
 
@@ -36,7 +37,7 @@ namespace DatabaseBroker.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_orders", x => x.Id);
+                    table.PrimaryKey("PK_orders", x => x.id);
                     table.ForeignKey(
                         name: "FK_orders_users_customer_id",
                         column: x => x.customer_id,
