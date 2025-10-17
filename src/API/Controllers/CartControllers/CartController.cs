@@ -175,6 +175,18 @@ public class CartController : ControllerBase
         return new ResponseModelBase(resDto);
     }
 
+    [HttpPut]
+    [Authorize]
+    public async Task<ResponseModelBase> UpdateAsync( CartUpdateDto dto)
+    {
+        var res =  await CartRepository.GetByIdAsync(dto.Id);
+        res.ProductsId = dto.ProductsId;
+        res.CustomerId = dto.CustomerId;
+        
+        await CartRepository.UpdateAsync(res);
+        return new ResponseModelBase(dto);
+    }
+
     
     [HttpPut]
     [Authorize]
@@ -274,7 +286,7 @@ public class CartController : ControllerBase
                         ProductId = item.Id,
                         Name = item.Name.uz,
                         Price = item.Price,
-                        Quantity = item.Quantity,
+                        Quantity = product.Quantity,
                         ImageId = item.ProductImageId
                     });
                     break;
@@ -285,7 +297,7 @@ public class CartController : ControllerBase
                         ProductId = item2.Id,
                         Name = item2.Name.uz,
                         Price = item2.Price,
-                        Quantity = item2.Quantity,
+                        Quantity = product.Quantity,
                         ImageId = item2.ProductImageId
                     });                    break;
                 case "OilProduct":
@@ -295,7 +307,7 @@ public class CartController : ControllerBase
                         ProductId = item3.Id,
                         Name = item3.Name.uz,
                         Price = item3.Price,
-                        Quantity = item3.Quantity,
+                        Quantity = product.Quantity,
                         ImageId = item3.ProductImageId
                     });                    break;
                 case "WaterAndDrinksProduct":
@@ -305,7 +317,7 @@ public class CartController : ControllerBase
                         ProductId = item4.Id,
                         Name = item4.Name.uz,
                         Price = item4.Price,
-                        Quantity = item4.Quantity,
+                        Quantity = product.Quantity,
                         ImageId = item4.ProductImageId
                     });                    break;
             }  
@@ -338,7 +350,15 @@ public class CartController : ControllerBase
                 return new ResponseModelBase("Invalid product type on CartController", HttpStatusCode.NotFound);
         }
 
-        return new ResponseModelBase(product, HttpStatusCode.OK);
+        
+        return new ResponseModelBase(new CartGetProductsDto
+        {
+            ProductId = product.Id,
+            Name = product.Name.uz,
+            Price = product.Price,
+            Quantity = 0,
+            ImageId = product.ProductImageId
+        }, HttpStatusCode.OK);
     }
 
     [HttpGet]
@@ -402,50 +422,39 @@ public class CartController : ControllerBase
         return new ResponseModelBase(products, HttpStatusCode.OK);
     }
 
-    [HttpGet]
-    [Authorize]
-    public async Task<ResponseModelBase> GetAllProductsData([FromBody] long clientId)
-    {
-        List<Product> products = new List<Product>();
-        var cart=CartRepository.GetAllAsQueryable().FirstOrDefault(item=>item.CustomerId==clientId );
-        foreach (var itemProduct in cart.ProductsId)
-        {
-            var product = new Product();
-            switch (itemProduct.ProductType)
-            {
-                case "FoodProduct":
-                    product =await FoodProductRepository.GetByIdAsync(itemProduct.ProductId);
-                    break;
-                case "HouseHoldProduct":
-                    product = await HouseHoldProductsRepository.GetByIdAsync(itemProduct.ProductId);
-                    break;
-                case "OilProduct":
-                    product = await OilProductsRepository.GetByIdAsync(itemProduct.ProductId);
-                    break;
-                case "WaterAndDrinksProduct":
-                    product = await WaterAndDrinksRepository.GetByIdAsync(itemProduct.ProductId);
-                
-                    break;
-            }
-            products.Add(product);
-        }
-        
-        
-        return new ResponseModelBase(products, HttpStatusCode.OK);
-    }
+    // [HttpGet]
+    // [Authorize]
+    // public async Task<ResponseModelBase> GetAllProductsData([FromBody] long clientId)
+    // {
+    //     List<Product> products = new List<Product>();
+    //     var cart=CartRepository.GetAllAsQueryable().FirstOrDefault(item=>item.CustomerId==clientId );
+    //     foreach (var itemProduct in cart.ProductsId)
+    //     {
+    //         var product = new Product();
+    //         switch (itemProduct.ProductType)
+    //         {
+    //             case "FoodProduct":
+    //                 product =await FoodProductRepository.GetByIdAsync(itemProduct.ProductId);
+    //                 break;
+    //             case "HouseHoldProduct":
+    //                 product = await HouseHoldProductsRepository.GetByIdAsync(itemProduct.ProductId);
+    //                 break;
+    //             case "OilProduct":
+    //                 product = await OilProductsRepository.GetByIdAsync(itemProduct.ProductId);
+    //                 break;
+    //             case "WaterAndDrinksProduct":
+    //                 product = await WaterAndDrinksRepository.GetByIdAsync(itemProduct.ProductId);
+    //             
+    //                 break;
+    //         }
+    //         products.Add(product);
+    //     }
+    //     
+    //     
+    //     return new ResponseModelBase(products, HttpStatusCode.OK);
+    // }
+    //
     
-    [HttpPut]
-    [Authorize]
-    public async Task<ResponseModelBase> UpdateAsync( CartUpdateDto dto)
-    {
-        var res =  await CartRepository.GetByIdAsync(dto.Id);
-        res.ProductsId = dto.ProductsId;
-        res.CustomerId = dto.CustomerId;
-        
-        await CartRepository.UpdateAsync(res);
-        return new ResponseModelBase(dto);
-    }
-
     
     [HttpGet]
     public async Task<ResponseModelBase> GetByIdAsync(long id)
