@@ -1,7 +1,13 @@
+using System.Net;
 using API.Common;
 using API.Controllers.CartControllers.Dtos;
 using DatabaseBroker.Repositories.CartRepositories;
+using DatabaseBroker.Repositories.Products.FoodProductRepository;
+using DatabaseBroker.Repositories.Products.HouseHoldProductsRepository;
+using DatabaseBroker.Repositories.Products.OilProductsRepository;
+using DatabaseBroker.Repositories.Products.WaterAndDrinksRepository;
 using Entity.Models.Order;
+using Entity.Models.Product;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,9 +18,17 @@ namespace API.Controllers.CartControllers;
 public class CartController : ControllerBase
 {
    private ICartRepository CartRepository { get; set; }
-    public CartController(ICartRepository cartRepository)
+   private IFoodProductRepository  FoodProductRepository { get; set; }
+   private IHouseHoldProductsRepository  HouseHoldProductsRepository { get; set; }
+   private IOilProductsRepository   OilProductsRepository { get; set; }
+   private IWaterAndDrinksRepository   WaterAndDrinksRepository { get; set; }
+    public CartController(ICartRepository cartRepository, IHouseHoldProductsRepository houseHoldProductsRepository, IFoodProductRepository foodProductRepository, IOilProductsRepository oilProductsRepository, IWaterAndDrinksRepository waterAndDrinksRepository)
     {
         CartRepository = cartRepository;
+        HouseHoldProductsRepository = houseHoldProductsRepository;
+        FoodProductRepository = foodProductRepository;
+        OilProductsRepository = oilProductsRepository;
+        WaterAndDrinksRepository = waterAndDrinksRepository;
     }
 
     [HttpPost]
@@ -38,24 +52,117 @@ public class CartController : ControllerBase
         return new ResponseModelBase(resDto);
     }
     
+    // [HttpPost]
+    // [Authorize]
+    // public async Task<ResponseModelBase> AddProductToCart(CartCreationDto dto)
+    // {
+    //     var cart= CartRepository.GetAllAsQueryable().
+    //         FirstOrDefault(item=>item.CustomerId==dto.CustomerId);
+    //     if (cart == null)
+    //     {
+    //         var entity = new Cart
+    //         {
+    //             ProductsId = dto.ProductsId,
+    //             CustomerId = dto.CustomerId,
+    //         };
+    //         var resCart=await CartRepository.AddAsync(entity);
+    //         return new ResponseModelBase(resCart);
+    //     }
+    //     
+    //     cart.ProductsId.Add(dto.ProductsId);
+    //
+    //     var resDto = new CartGetDto
+    //     {
+    //         Id = cart.Id,
+    //         ProductsId = cart.ProductsId,
+    //         CustomerId = cart.CustomerId,
+    //         Customer = cart.Customer
+    //     };
+    //     return new ResponseModelBase(resDto);
+    // }
+    // [HttpPost]
+    // [Authorize]
+    // public async Task<ResponseModelBase> AddProductToCart(CartCreationDto dto)
+    // {
+    //     var cart = CartRepository.GetAllAsQueryable()
+    //         .FirstOrDefault(item => item.CustomerId == dto.CustomerId);
+    //
+    //     if (cart == null)
+    //     {
+    //         var entity = new Cart
+    //         {
+    //             ProductsId = dto.ProductsId,
+    //             CustomerId = dto.CustomerId,
+    //         };
+    //         var resCart = await CartRepository.AddAsync(entity);
+    //         return new ResponseModelBase(resCart);
+    //     }
+    //
+    //     // 🧠 agar mavjud bo‘lsa — yangilarni qo‘shamiz
+    //     cart.ProductsId ??= new Dictionary<string, long>();
+    //
+    //     foreach (var kv in dto.ProductsId)
+    //     {
+    //         if (!cart.ProductsId.ContainsKey(kv.Key))
+    //             cart.ProductsId.Add(kv.Key, kv.Value);
+    //         else
+    //             cart.ProductsId[kv.Key] = kv.Value;
+    //     }
+    //
+    //     await CartRepository.UpdateAsync(cart);
+    //
+    //     var resDto = new CartGetDto
+    //     {
+    //         Id = cart.Id,
+    //         ProductsId = cart.ProductsId,
+    //         CustomerId = cart.CustomerId,
+    //         Customer = cart.Customer
+    //     };
+    //     return new ResponseModelBase(resDto);
+    // }
+
+
     [HttpPost]
     [Authorize]
     public async Task<ResponseModelBase> AddProductToCart(CartCreationDto dto)
     {
-        var cart= CartRepository.GetAllAsQueryable().
-            FirstOrDefault(item=>item.CustomerId==dto.CustomerId);
+        // 🔍 Mavjud cartni topamiz
+        var cart = CartRepository.GetAllAsQueryable()
+            .FirstOrDefault(item => item.CustomerId == dto.CustomerId);
+
+        // 🧩 Agar cart mavjud bo‘lmasa — yangisini yaratamiz
         if (cart == null)
         {
             var entity = new Cart
             {
-                ProductsId = dto.ProductsId,
+                ProductsId = dto.ProductsId, // endi List<ProductItem>
                 CustomerId = dto.CustomerId,
             };
-            var resCart=await CartRepository.AddAsync(entity);
+
+            var resCart = await CartRepository.AddAsync(entity);
             return new ResponseModelBase(resCart);
         }
-        
-        cart.ProductsId.AddRange(dto.ProductsId);
+
+        // Agar mavjud bo‘lsa — yangilarni qo‘shamiz yoki yangilaymiz
+        cart.ProductsId ??= new List<ProductItem>();
+
+        foreach (var item in dto.ProductsId)
+        {
+            var product = cart.ProductsId.FirstOrDefault(p => p.ProductType == item.ProductType);
+
+            if (product == null)
+            {
+                // Yangi mahsulotni qo‘shish
+                cart.ProductsId.Add(item);
+            }
+            else
+            {
+                // Mavjud mahsulotni yangilash (miqdorini oshirish yoki almashtirish)
+                product.Quantity = item.Quantity;
+            }
+        }
+
+        await CartRepository.UpdateAsync(cart);
 
         var resDto = new CartGetDto
         {
@@ -64,11 +171,71 @@ public class CartController : ControllerBase
             CustomerId = cart.CustomerId,
             Customer = cart.Customer
         };
+
         return new ResponseModelBase(resDto);
     }
 
 
-  
+    
+    [HttpGet]
+    [Authorize]
+    public async Task<ResponseModelBase> GetProductData([FromBody] string productType ,long  productId)
+    {
+        var product = new Product();
+        switch (productType)
+        {
+            case "FoodProduct":
+                product =await FoodProductRepository.GetByIdAsync(productId);
+                break;
+            case "HouseHoldProduct":
+                product = await HouseHoldProductsRepository.GetByIdAsync(productId);
+                break;
+            case "OilProduct":
+                product = await OilProductsRepository.GetByIdAsync(productId);
+                break;
+            case "WaterAndDrinksProduct":
+               product = await WaterAndDrinksRepository.GetByIdAsync(productId);
+                
+                break;
+            default:
+                return new ResponseModelBase("Invalid product type on CartController", HttpStatusCode.NotFound);
+        }
+
+        return new ResponseModelBase(product, HttpStatusCode.OK);
+    }
+    
+    [HttpGet]
+    [Authorize]
+    public async Task<ResponseModelBase> GetAllProductsData([FromBody] long clientId)
+    {
+        List<Product> products = new List<Product>();
+        var cart=CartRepository.GetAllAsQueryable().FirstOrDefault(item=>item.CustomerId==clientId );
+        foreach (var itemProduct in cart.ProductsId)
+        {
+            var product = new Product();
+            switch (itemProduct.ProductType)
+            {
+                case "FoodProduct":
+                    product =await FoodProductRepository.GetByIdAsync(itemProduct.Id);
+                    break;
+                case "HouseHoldProduct":
+                    product = await HouseHoldProductsRepository.GetByIdAsync(itemProduct.Id);
+                    break;
+                case "OilProduct":
+                    product = await OilProductsRepository.GetByIdAsync(itemProduct.Id);
+                    break;
+                case "WaterAndDrinksProduct":
+                    product = await WaterAndDrinksRepository.GetByIdAsync(itemProduct.Id);
+                
+                    break;
+            }
+            products.Add(product);
+        }
+        
+        
+        return new ResponseModelBase(products, HttpStatusCode.OK);
+    }
+    
     [HttpPut]
     [Authorize]
     public async Task<ResponseModelBase> UpdateAsync( CartUpdateDto dto)
@@ -80,7 +247,73 @@ public class CartController : ControllerBase
         await CartRepository.UpdateAsync(res);
         return new ResponseModelBase(dto);
     }
+
+    [HttpPut]
+    [Authorize]
+    public async Task<ResponseModelBase> UpdateProductItem(ProductItem dto)
+    {
+        var cart = await CartRepository.GetByIdAsync(dto.Id);
+        
+        foreach (var itemProduct in cart.ProductsId)
+        {
+            
+            switch (itemProduct.ProductType)
+            {
+                case "FoodProduct":
+                    if (itemProduct.Id==dto.Id)
+                        itemProduct.Quantity = dto.Quantity;
+                    break;
+                case "HouseHoldProduct":
+                    if (itemProduct.Id==dto.Id)
+                        itemProduct.Quantity = dto.Quantity;
+                    break;
+                case "OilProduct":
+                    if (itemProduct.Id==dto.Id)
+                        itemProduct.Quantity = dto.Quantity;
+                    break;
+                case "WaterAndDrinksProduct":
+                    if (itemProduct.Id==dto.Id)
+                        itemProduct.Quantity = dto.Quantity;
+                    break;
+            }
+        }
+        await CartRepository.UpdateAsync(cart);
+        return new ResponseModelBase(cart, HttpStatusCode.OK);
+    }
     
+    [HttpDelete]
+    [Authorize]
+    public async Task<ResponseModelBase> DeleteProductFromCart(DeleteProductFromCartDto dto)
+    {
+        var cart =await CartRepository.GetByIdAsync(dto.CartId);
+        switch (dto.ProductType)
+        {
+            case "FoodProduct":
+                cart.ProductsId.Remove(cart.ProductsId.
+                    FirstOrDefault(p => p.ProductType == "FoodProduct"&& p.Id==dto.ProductId ));
+                break;
+            case "HouseHoldProduct":
+                cart.ProductsId.Remove(cart.ProductsId.
+                    FirstOrDefault(p => p.ProductType == "HouseHoldProduct"&& p.Id==dto.ProductId ));
+                break;
+            case "OilProduct":
+                cart.ProductsId.Remove(cart.ProductsId.
+                    FirstOrDefault(p => p.ProductType == "OilProduct"&& p.Id==dto.ProductId )); 
+                break;
+            case "WaterAndDrinksProduct":
+                cart.ProductsId.Remove(cart.ProductsId.
+                    FirstOrDefault(p => p.ProductType == "WaterAndDrinksProduct"&& p.Id==dto.ProductId ));
+
+                break;
+            default:
+                throw new Exception("Invalid product type on CartController");
+        }
+        
+        await CartRepository.UpdateAsync(cart);
+        
+        return new ResponseModelBase(cart,HttpStatusCode.OK);
+    }
+
     
     [HttpDelete]
     [Authorize]
@@ -99,14 +332,59 @@ public class CartController : ControllerBase
             FirstOrDefault(item=>item.CustomerId == customerId);
         if (resEntity == null)
             throw new NullReferenceException("There is no such cart on CartController");
-        var dto = new CartGetDto
+        
+        List<CartGetProductsDto> products = new List<CartGetProductsDto>();
+        
+        foreach (var product in resEntity.ProductsId)
         {
-            Id = resEntity.Id,
-            ProductsId = resEntity.ProductsId,
-            CustomerId = resEntity.CustomerId,
-            Customer = resEntity.Customer
-        };
-        return new ResponseModelBase(dto);
+            switch (product.ProductType)
+            {
+                case "FoodProduct":
+                    var item =await FoodProductRepository.GetByIdAsync(product.Id);
+                    products.Add(new CartGetProductsDto
+                    {
+                        ProductId = item.Id,
+                        Name = item.Name.uz,
+                        Price = item.Price,
+                        Quantity = item.Quantity,
+                        ImageId = item.ProductImageId
+                    });
+                    break;
+                case "HouseHoldProduct":
+                    var item2 = await HouseHoldProductsRepository.GetByIdAsync(product.Id);
+                    products.Add(new CartGetProductsDto
+                    {
+                        ProductId = item2.Id,
+                        Name = item2.Name.uz,
+                        Price = item2.Price,
+                        Quantity = item2.Quantity,
+                        ImageId = item2.ProductImageId
+                    });                    break;
+                case "OilProduct":
+                    var item3 = await OilProductsRepository.GetByIdAsync(product.Id);
+                    products.Add(new CartGetProductsDto
+                    {
+                        ProductId = item3.Id,
+                        Name = item3.Name.uz,
+                        Price = item3.Price,
+                        Quantity = item3.Quantity,
+                        ImageId = item3.ProductImageId
+                    });                    break;
+                case "WaterAndDrinksProduct":
+                    var item4 = await WaterAndDrinksRepository.GetByIdAsync(product.Id);
+                    products.Add(new CartGetProductsDto
+                    {
+                        ProductId = item4.Id,
+                        Name = item4.Name.uz,
+                        Price = item4.Price,
+                        Quantity = item4.Quantity,
+                        ImageId = item4.ProductImageId
+                    });                    break;
+            }  
+        }
+        
+        
+        return new ResponseModelBase(products,HttpStatusCode.OK);
     }
     
     [HttpGet]

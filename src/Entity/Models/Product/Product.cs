@@ -16,4 +16,7 @@ public class Product : ModelBase<long>
     
     [Column("main_category_id"),ForeignKey(nameof(MainCategory))]public long MainCategoryId { get; set; }
     public virtual MainProductCategories MainCategory { get; set; }
+
+    [NotMapped]
+    public int Quantity { get; set; }
 }
