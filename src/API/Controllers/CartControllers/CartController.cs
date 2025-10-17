@@ -188,66 +188,38 @@ public class CartController : ControllerBase
     }
 
     
-    // [HttpPut]
-    // [Authorize]
-    // public async Task<ResponseModelBase> UpdateProductItem([FromBody]ProductItem dto, long cartId)
-    // {
-    //     var cart = await CartRepository.GetByIdAsync(cartId);
-    //     
-    //     foreach (var itemProduct in cart.ProductsId)
-    //     {
-    //         
-    //         switch (itemProduct.ProductType)
-    //         {
-    //             case "FoodProduct":
-    //                 if (itemProduct.ProductId==dto.ProductId)
-    //                     itemProduct.Quantity = dto.Quantity;
-    //                 break;
-    //             case "HouseHoldProduct":
-    //                 if (itemProduct.ProductId==dto.ProductId)
-    //                     itemProduct.Quantity = dto.Quantity;
-    //                 break;
-    //             case "OilProduct":
-    //                 if (itemProduct.ProductId==dto.ProductId)
-    //                     itemProduct.Quantity = dto.Quantity;
-    //                 break;
-    //             case "WaterAndDrinksProduct":
-    //                 if (itemProduct.ProductId==dto.ProductId)
-    //                     itemProduct.Quantity = dto.Quantity;
-    //                 break;
-    //         }
-    //     }
-    //     await CartRepository.UpdateAsync(cart);
-    //     return new ResponseModelBase(cart, HttpStatusCode.OK);
-    // }
-    //
-    
     [HttpPut]
     [Authorize]
-    public async Task<ResponseModelBase> UpdateProductItem([FromBody] ProductItem dto, long cartId)
+    public async Task<ResponseModelBase> UpdateProductItem([FromBody]ProductItem dto, long cartId)
     {
         var cart = await CartRepository.GetByIdAsync(cartId);
-
-        if (cart == null)
-            return new ResponseModelBase("Cart not found", HttpStatusCode.NotFound);
-
-        var item = cart.ProductsId.FirstOrDefault(x =>
-            x.ProductId == dto.ProductId && x.ProductType == dto.ProductType);
-
-        if (item == null)
-            return new ResponseModelBase("Product not found in cart", HttpStatusCode.NotFound);
-
-        // 🔹 Quantity yangilaymiz
-        item.Quantity = dto.Quantity;
-
-        // 🔹 Umumiy narxni qayta hisoblash (ixtiyoriy, lekin foydali)
-        //cart.TotalPrice = cart.ProductsId.Sum(p => p. * p.Quantity);
-
+        
+        foreach (var itemProduct in cart.ProductsId)
+        {
+            
+            switch (itemProduct.ProductType)
+            {
+                case "FoodProduct":
+                    if (itemProduct.ProductId==dto.ProductId)
+                        itemProduct.Quantity = dto.Quantity;
+                    break;
+                case "HouseHoldProduct":
+                    if (itemProduct.ProductId==dto.ProductId)
+                        itemProduct.Quantity = dto.Quantity;
+                    break;
+                case "OilProduct":
+                    if (itemProduct.ProductId==dto.ProductId)
+                        itemProduct.Quantity = dto.Quantity;
+                    break;
+                case "WaterAndDrinksProduct":
+                    if (itemProduct.ProductId==dto.ProductId)
+                        itemProduct.Quantity = dto.Quantity;
+                    break;
+            }
+        }
         await CartRepository.UpdateAsync(cart);
-
         return new ResponseModelBase(cart, HttpStatusCode.OK);
     }
-
     
     [HttpDelete]
     [Authorize]
