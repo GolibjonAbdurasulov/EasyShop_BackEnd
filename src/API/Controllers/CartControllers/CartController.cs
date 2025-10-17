@@ -311,6 +311,7 @@ public class CartController : ControllerBase
                         Name = item.Name.uz,
                         Price = item.Price,
                         Quantity = product.Quantity,
+                        ProductType=product.ProductType,
                         ImageId = item.ProductImageId
                     });
                     break;
@@ -322,6 +323,7 @@ public class CartController : ControllerBase
                         Name = item2.Name.uz,
                         Price = item2.Price,
                         Quantity = product.Quantity,
+                        ProductType=product.ProductType,
                         ImageId = item2.ProductImageId
                     });                    break;
                 case "OilProduct":
@@ -332,6 +334,7 @@ public class CartController : ControllerBase
                         Name = item3.Name.uz,
                         Price = item3.Price,
                         Quantity = product.Quantity,
+                        ProductType=product.ProductType,
                         ImageId = item3.ProductImageId
                     });                    break;
                 case "WaterAndDrinksProduct":
@@ -342,6 +345,7 @@ public class CartController : ControllerBase
                         Name = item4.Name.uz,
                         Price = item4.Price,
                         Quantity = product.Quantity,
+                        ProductType=product.ProductType,
                         ImageId = item4.ProductImageId
                     });                    break;
             }  

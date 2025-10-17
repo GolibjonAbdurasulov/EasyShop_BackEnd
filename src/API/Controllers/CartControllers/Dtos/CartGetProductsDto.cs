@@ -7,6 +7,7 @@ public class CartGetProductsDto
     public decimal Price { get; set; }
     public int Quantity { get; set; }
     public Guid ImageId { get; set; }
+    public string ProductType { get; set; }
     public string ImageLink { get => $"https://back.easyshop.uz/File/DownloadFile/download/{ImageId}"; }
     
 }
