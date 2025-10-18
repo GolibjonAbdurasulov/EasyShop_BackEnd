@@ -52,61 +52,76 @@ public class CartController : ControllerBase
         return new ResponseModelBase(resDto);
     }
     
+    [HttpPost]
+    [Authorize]
+    public async Task<ResponseModelBase> AddProductToCart(CartCreationDto dto)
+    {
+        var cart= CartRepository.GetAllAsQueryable().
+            FirstOrDefault(item=>item.CustomerId==dto.CustomerId);
+        if (cart == null)
+        {
+            var entity = new Cart
+            {
+                ProductsId = dto.ProductsId,
+                CustomerId = dto.CustomerId,
+            };
+            var resCart=await CartRepository.AddAsync(entity);
+            return new ResponseModelBase(resCart);
+        }
+        
+        cart.ProductsId.AddRange(dto.ProductsId);
+
+        await CartRepository.UpdateAsync(cart);
+        var resDto = new CartGetDto
+        {
+            Id = cart.Id,
+            ProductsId = cart.ProductsId,
+            CustomerId = cart.CustomerId,
+            Customer = cart.Customer
+        };
+        return new ResponseModelBase(resDto);
+    }
+
+
+
     // [HttpPost]
     // [Authorize]
     // public async Task<ResponseModelBase> AddProductToCart(CartCreationDto dto)
     // {
-    //     var cart= CartRepository.GetAllAsQueryable().
-    //         FirstOrDefault(item=>item.CustomerId==dto.CustomerId);
-    //     if (cart == null)
-    //     {
-    //         var entity = new Cart
-    //         {
-    //             ProductsId = dto.ProductsId,
-    //             CustomerId = dto.CustomerId,
-    //         };
-    //         var resCart=await CartRepository.AddAsync(entity);
-    //         return new ResponseModelBase(resCart);
-    //     }
-    //     
-    //     cart.ProductsId.Add(dto.ProductsId);
-    //
-    //     var resDto = new CartGetDto
-    //     {
-    //         Id = cart.Id,
-    //         ProductsId = cart.ProductsId,
-    //         CustomerId = cart.CustomerId,
-    //         Customer = cart.Customer
-    //     };
-    //     return new ResponseModelBase(resDto);
-    // }
-    // [HttpPost]
-    // [Authorize]
-    // public async Task<ResponseModelBase> AddProductToCart(CartCreationDto dto)
-    // {
+    //     // 🔍 Mavjud cartni topamiz
     //     var cart = CartRepository.GetAllAsQueryable()
     //         .FirstOrDefault(item => item.CustomerId == dto.CustomerId);
     //
+    //     // 🧩 Agar cart mavjud bo‘lmasa — yangisini yaratamiz
     //     if (cart == null)
     //     {
     //         var entity = new Cart
     //         {
-    //             ProductsId = dto.ProductsId,
+    //             ProductsId = dto.ProductsId, // endi List<ProductItem>
     //             CustomerId = dto.CustomerId,
     //         };
+    //
     //         var resCart = await CartRepository.AddAsync(entity);
     //         return new ResponseModelBase(resCart);
     //     }
     //
-    //     // 🧠 agar mavjud bo‘lsa — yangilarni qo‘shamiz
-    //     cart.ProductsId ??= new Dictionary<string, long>();
+    //     // Agar mavjud bo‘lsa — yangilarni qo‘shamiz yoki yangilaymiz
+    //     cart.ProductsId ??= new List<ProductItem>();
     //
-    //     foreach (var kv in dto.ProductsId)
+    //     foreach (var item in dto.ProductsId)
     //     {
-    //         if (!cart.ProductsId.ContainsKey(kv.Key))
-    //             cart.ProductsId.Add(kv.Key, kv.Value);
+    //         var product = cart.ProductsId.FirstOrDefault(p => p.ProductType == item.ProductType);
+    //
+    //         if (product == null)
+    //         {
+    //             // Yangi mahsulotni qo‘shish
+    //             cart.ProductsId.Add(item);
+    //         }
     //         else
-    //             cart.ProductsId[kv.Key] = kv.Value;
+    //         {
+    //             // Mavjud mahsulotni yangilash (miqdorini oshirish yoki almashtirish)
+    //             product.Quantity = item.Quantity;
+    //         }
     //     }
     //
     //     await CartRepository.UpdateAsync(cart);
@@ -118,62 +133,9 @@ public class CartController : ControllerBase
     //         CustomerId = cart.CustomerId,
     //         Customer = cart.Customer
     //     };
+    //
     //     return new ResponseModelBase(resDto);
     // }
-
-
-    [HttpPost]
-    [Authorize]
-    public async Task<ResponseModelBase> AddProductToCart(CartCreationDto dto)
-    {
-        // 🔍 Mavjud cartni topamiz
-        var cart = CartRepository.GetAllAsQueryable()
-            .FirstOrDefault(item => item.CustomerId == dto.CustomerId);
-
-        // 🧩 Agar cart mavjud bo‘lmasa — yangisini yaratamiz
-        if (cart == null)
-        {
-            var entity = new Cart
-            {
-                ProductsId = dto.ProductsId, // endi List<ProductItem>
-                CustomerId = dto.CustomerId,
-            };
-
-            var resCart = await CartRepository.AddAsync(entity);
-            return new ResponseModelBase(resCart);
-        }
-
-        // Agar mavjud bo‘lsa — yangilarni qo‘shamiz yoki yangilaymiz
-        cart.ProductsId ??= new List<ProductItem>();
-
-        foreach (var item in dto.ProductsId)
-        {
-            var product = cart.ProductsId.FirstOrDefault(p => p.ProductType == item.ProductType);
-
-            if (product == null)
-            {
-                // Yangi mahsulotni qo‘shish
-                cart.ProductsId.Add(item);
-            }
-            else
-            {
-                // Mavjud mahsulotni yangilash (miqdorini oshirish yoki almashtirish)
-                product.Quantity = item.Quantity;
-            }
-        }
-
-        await CartRepository.UpdateAsync(cart);
-
-        var resDto = new CartGetDto
-        {
-            Id = cart.Id,
-            ProductsId = cart.ProductsId,
-            CustomerId = cart.CustomerId,
-            Customer = cart.Customer
-        };
-
-        return new ResponseModelBase(resDto);
-    }
 
     [HttpPut]
     [Authorize]
