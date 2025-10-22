@@ -122,8 +122,6 @@ public class OilProductsController : ControllerBase
         return new ResponseModelBase(dtos);
     }   
     
-    
-    
     [HttpGet]
     public async Task<ResponseModelBase> GetAllByTagsAsync(long tagId)
     {
