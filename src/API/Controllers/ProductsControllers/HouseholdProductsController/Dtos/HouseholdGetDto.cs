@@ -12,7 +12,7 @@ public class HouseholdGetDto
     public MultiLanguageField About { get; set; }
     public decimal Price { get; set; }
     public Guid ImageId { get; set; }
-    public string ImageUrl => $"http://45.130.148.249:8080/File/DownloadFile/download/{ImageId}";
+    public string ImageUrl => $"https://back.easyshop.uz/File/DownloadFile/download/{ImageId}";
     public long MainCategoryId { get; set; }
     public MainProductCategories MainCategory { get; set; }
     public long HouseholdProductCategoryId { get; set; }
