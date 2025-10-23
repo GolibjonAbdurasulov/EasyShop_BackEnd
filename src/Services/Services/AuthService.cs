@@ -4,6 +4,7 @@ using DatabaseBroker.Repositories.ClientRepository;
 using DatabaseBroker.Repositories.UserRepository;
 using Entity.Attributes;
 using Entity.Client;
+using Entity.Exceptions;
 using Entity.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -38,7 +39,7 @@ public class AuthService : IAuthService
     {
         var user = await UserRepository.FirstOrDefaultAsync(user => user.PhoneNumber == dto.PhoneNumber && user.Password == dto.Password);
         if (user is  null)
-            throw new NullReferenceException();
+            throw new NotFoundException("Foydalanuvchi topilmadi");
         string token =  _tokenService.GetToken();
         var resUser = new UserDto()
         {
@@ -50,7 +51,8 @@ public class AuthService : IAuthService
             IsSigned = true,
             Token = token
         };
-
+        
+        
         user.IsSigned = true;
         await UserRepository.UpdateAsync(user);
         return resUser;
@@ -61,7 +63,7 @@ public class AuthService : IAuthService
     {
         var client = await ClientRepository.FirstOrDefaultAsync(user => user.Email == dto.PhoneNumber && user.Password == dto.Password);
         if (client is  null)
-            throw new NullReferenceException();
+            throw new NotFoundException("Foydalanuvchi topilmadi");
         string token =  _tokenService.GetToken();
         var resUser = new ClientDto()
         {
