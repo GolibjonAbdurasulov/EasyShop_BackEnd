@@ -159,6 +159,36 @@ public class HouseholdProductsController : ControllerBase
     }
     
     [HttpGet]
+    public async Task<ResponseModelBase> GetByCategoryAsync(long categoryId)
+    {
+        var resList =   HoldProductsRepository.GetAllAsQueryable().
+            Where(item=>item.HouseholdCategoryId==categoryId).ToList();
+        
+        List<HouseholdGetDto> dtos = new List<HouseholdGetDto>();
+        foreach (HouseholdProducts res in resList)
+        {
+            dtos.Add(new HouseholdGetDto
+            {
+                Id = res.Id,
+                Name = res.Name,
+                About = res.About,
+                Price = res.Price,
+                ImageId = res.ProductImageId,
+                MainCategoryId = res.MainCategoryId,
+                MainCategory = res.MainCategory,
+                HouseholdProductCategoryId = res.HouseholdCategoryId,
+                HouseholdProductCategory = res.HouseholdProductCategory,
+                TagId = res.TagId,
+                Tag = res.Tag
+            });
+        }
+        
+        return new ResponseModelBase(dtos);   
+        
+    } 
+
+    
+    [HttpGet]
     public async Task<ResponseModelBase> SearchAsync(string query)
     {
         if (string.IsNullOrWhiteSpace(query))

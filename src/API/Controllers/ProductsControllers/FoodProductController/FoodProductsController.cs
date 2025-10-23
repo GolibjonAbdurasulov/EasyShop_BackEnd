@@ -156,8 +156,37 @@ public class FoodProductsController : ControllerBase
         }
         
         return new ResponseModelBase(dtos);
-    }   
-    
+    }
+
+
+    [HttpGet]
+    public async Task<ResponseModelBase> GetByCategoryAsync(long categoryId)
+    {
+        var resList =   FoodProductRepository.GetAllAsQueryable().
+            Where(item=>item.FoodCategoryId==categoryId).ToList();
+        
+        List<FoodProductGetDto> dtos = new List<FoodProductGetDto>();
+        foreach (FoodProducts res in resList)
+        {
+            dtos.Add(new FoodProductGetDto
+            {
+                Id = res.Id,
+                Name = res.Name,
+                About = res.About,
+                Price = res.Price,
+                ImageId = res.ProductImageId,
+                MainCategoryId = res.MainCategoryId,
+                MainCategory = res.MainCategory,
+                FoodProductCategoryId = res.FoodCategoryId,
+                FoodProductCategory = res.FoodProductCategory,
+                TagId = res.TagId,
+                Tag = res.Tag
+            });
+        }
+        
+        return new ResponseModelBase(dtos);   
+        
+    } 
     
     [HttpGet]
     public async Task<ResponseModelBase> SearchAsync(string query)
