@@ -1,3 +1,4 @@
+using System.Net;
 using API.Common;
 using API.Controllers.ProductsControllers.FoodProductController.Dtos;
 using DatabaseBroker.Repositories.Products.FoodProductRepository;
@@ -156,4 +157,40 @@ public class FoodProductsController : ControllerBase
         
         return new ResponseModelBase(dtos);
     }   
+    
+    
+    [HttpGet]
+    public async Task<ResponseModelBase> SearchAsync(string query)
+    {
+        if (string.IsNullOrWhiteSpace(query))
+            return new ResponseModelBase("Query string cannot be empty", HttpStatusCode.NotFound);
+
+        var res = FoodProductRepository
+            .GetAllAsQueryable()
+            .Where(p =>
+                p.Name.uz.ToLower().Contains(query.ToLower()) ||
+                p.Name.ru.ToLower().Contains(query.ToLower()) ||
+                p.Name.kr.ToLower().Contains(query.ToLower())
+            )
+            .ToList();
+
+        var dtos = res.Select(model => new FoodProductGetDto()
+        {
+            Id = model.Id,
+            Name = model.Name,
+            About = model.About,
+            Price = model.Price,
+            ImageId = model.ProductImageId,
+            MainCategoryId = model.MainCategoryId,
+            MainCategory = model.MainCategory,
+            TagId = model.TagId,
+            Tag = model.Tag
+        }).ToList();
+
+        if (dtos.Count==0) 
+            return new ResponseModelBase("Query string cannot be empty", HttpStatusCode.NotFound);
+
+        return new ResponseModelBase(dtos);
+    }
+
 }

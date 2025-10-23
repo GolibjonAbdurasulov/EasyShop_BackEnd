@@ -1,3 +1,4 @@
+using System.Net;
 using API.Common;
 using API.Controllers.ProductsControllers.OilProductsController.Dtos;
 using DatabaseBroker.Repositories.Products.OilProductsRepository;
@@ -13,11 +14,11 @@ namespace API.Controllers.ProductsControllers.OilProductsController;
 public class OilProductsController : ControllerBase
 {
     private IOilProductsRepository HoldProductsRepository { get; set; }
-    private IOilProductTagsRepository HouseholdProductTagsRepository { get; set; }
+    private IOilProductTagsRepository OilProduct { get; set; }
     public OilProductsController(IOilProductsRepository ourTeamRepository, IOilProductTagsRepository houseHoldProductTags)
     {
         this.HoldProductsRepository = ourTeamRepository;
-        HouseholdProductTagsRepository = houseHoldProductTags;
+        OilProduct = houseHoldProductTags;
     }
 
     [HttpPost]
@@ -144,5 +145,40 @@ public class OilProductsController : ControllerBase
         
         return new ResponseModelBase(dtos);
     }
+    
+    [HttpGet]
+    public async Task<ResponseModelBase> SearchAsync(string query)
+    {
+        if (string.IsNullOrWhiteSpace(query))
+            return new ResponseModelBase("Query string cannot be empty", HttpStatusCode.NotFound);
+
+        var res = HoldProductsRepository
+            .GetAllAsQueryable()
+            .Where(p =>
+                p.Name.uz.ToLower().Contains(query.ToLower()) ||
+                p.Name.ru.ToLower().Contains(query.ToLower()) ||
+                p.Name.kr.ToLower().Contains(query.ToLower())
+            )
+            .ToList();
+
+        var dtos = res.Select(model => new OilProductGetDto
+        {
+            Id = model.Id,
+            Name = model.Name,
+            About = model.About,
+            Price = model.Price,
+            ImageId = model.ProductImageId,
+            MainCategoryId = model.MainCategoryId,
+            MainCategory = model.MainCategory,
+            TagId = model.TagId,
+            Tag = model.Tag
+        }).ToList();
+
+        if (dtos.Count==0) 
+            return new ResponseModelBase("Query string cannot be empty", HttpStatusCode.NotFound);
+
+        return new ResponseModelBase(dtos);
+    }
+
     
 }
