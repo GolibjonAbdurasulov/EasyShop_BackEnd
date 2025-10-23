@@ -1,3 +1,4 @@
+using Entity.Models.Client;
 using Entity.Models.Common;
 using Entity.Models.File;
 using Entity.Models.Order;
@@ -33,6 +34,8 @@ public class DataContext : DbContext
     public  DbSet<WaterAndDrinks> WaterAndDrinks { get; set; }
     public  DbSet<WaterAndDrinksTags> WaterAndDrinksTags { get; set; }
     public  DbSet<MainProductCategories> MainProductCategories { get; set; }
+    public  DbSet<Address> Addresses { get; set; }
+    public  DbSet<Client> Clients { get; set; }
 
 
     // private void TrackActionsAt()

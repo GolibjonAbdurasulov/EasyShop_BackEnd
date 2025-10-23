@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Entity.Models.Common;
 
-namespace Entity.Client;
+namespace Entity.Models.Client;
 
 [Table("clients")]
 public class Client : ModelBase<long>

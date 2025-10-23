@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using DatabaseBroker.Repositories.ClientRepository;
 using DatabaseBroker.Repositories.UserRepository;
 using Entity.Attributes;
-using Entity.Client;
 using Entity.Exceptions;
 using Entity.Models;
+using Entity.Models.Client;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Services.Dtos;
@@ -61,7 +61,8 @@ public class AuthService : IAuthService
     
     public async Task<ClientDto> ClientLogin(ClientLoginDto dto)
     {
-        var client = await ClientRepository.FirstOrDefaultAsync(user => user.Email == dto.PhoneNumber && user.Password == dto.Password);
+        var client = await ClientRepository.
+            FirstOrDefaultAsync(user => user.Email == dto.PhoneNumber && user.Password == dto.Password);
         if (client is  null)
             throw new NotFoundException("Foydalanuvchi topilmadi");
         string token =  _tokenService.GetToken();
@@ -121,28 +122,28 @@ public class AuthService : IAuthService
             FullName = dto.FullName,
             Email = dto.PhoneNumber,
             Password = dto.Password, 
-            IsSigned = false
+            IsSigned = true
         };
 
         await ClientRepository.AddAsync(client);
 
-        // 2. Tasdiqlash kodi yaratish
-        var confirmationCode = Guid.NewGuid().ToString("N").Substring(0, 6).ToUpper(); // 6 xonali kod
-        
-        _otpService.SaveOtp(client.Email, confirmationCode);
-        
-        // 3. Email yuborish
-        var emailDto = new SendEmailDto
-        {
-            Email = dto.PhoneNumber,
-            Subject = "Ro‘yxatdan o‘tishni tasdiqlash",
-            Message = $"Assalomu alaykum {dto.FullName}!<br/>" +
-                      $"Ro‘yxatdan o‘tishni yakunlash uchun quyidagi kodni kiriting: <b>{confirmationCode}</b>"
-        };
-
-        await _emailService.SendEmail(emailDto);
-
-        // 4. ClientDto qaytarish
+        // // 2. Tasdiqlash kodi yaratish
+        // var confirmationCode = Guid.NewGuid().ToString("N").Substring(0, 6).ToUpper(); // 6 xonali kod
+        //
+        // _otpService.SaveOtp(client.Email, confirmationCode);
+        //
+        // // 3. Email yuborish
+        // var emailDto = new SendEmailDto
+        // {
+        //     Email = dto.PhoneNumber,
+        //     Subject = "Ro‘yxatdan o‘tishni tasdiqlash",
+        //     Message = $"Assalomu alaykum {dto.FullName}!<br/>" +
+        //               $"Ro‘yxatdan o‘tishni yakunlash uchun quyidagi kodni kiriting: <b>{confirmationCode}</b>"
+        // };
+        //
+        // await _emailService.SendEmail(emailDto);
+        //
+        // // 4. ClientDto qaytarish
         return new ClientDto
         {
             Id = client.Id,

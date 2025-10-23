@@ -1,7 +1,7 @@
 using DatabaseBroker.Repositories.Common;
 using Entity.Attributes;
-using Entity.Client;
 using Entity.Models;
+using Entity.Models.Client;
 using Microsoft.EntityFrameworkCore;
 
 namespace DatabaseBroker.Repositories.ClientRepository;

@@ -1,6 +1,6 @@
 using DatabaseBroker.Repositories.Common;
-using Entity.Client;
 using Entity.Models;
+using Entity.Models.Client;
 
 namespace DatabaseBroker.Repositories.ClientRepository;
 

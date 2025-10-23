@@ -31,4 +31,30 @@ public class AuthController : ControllerBase
         
         return new ResponseModelBase(res);
     }
+    
+    [HttpPost]
+    [AllowAnonymous]
+    public async Task<ResponseModelBase> ClientLogin([FromBody]ClientLoginDto dto)
+    {
+        var res = await _authService.ClientLogin(dto);
+        return new ResponseModelBase(res);
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
+    public async Task<ResponseModelBase> ClientLogOut(long id)
+    {
+        var res =await _authService.ClientLogOut(id);
+        
+        return new ResponseModelBase(res);
+    }
+    
+    [HttpPost]
+    [AllowAnonymous]
+    public async Task<ResponseModelBase> ClientRegister(RegisterDto dto)
+    {
+        var res =await _authService.Registration(dto);
+        
+        return new ResponseModelBase(res);
+    }
 }
