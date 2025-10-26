@@ -1,3 +1,4 @@
+using System.Net;
 using API.Common;
 using API.Controllers.AddressControllers.Dtos;
 using API.Controllers.TagsController.FoodProductTagsController.Dtos;
@@ -83,6 +84,27 @@ public class AddressController : ControllerBase
     public async Task<ResponseModelBase> GetByIdAsync(long id)
     {
         var resEntity =  await AddressRepository.GetByIdAsync(id);
+        var dto = new AddressDto
+        {
+            Id = resEntity.Id,
+            FullAddress = resEntity.FullAddress,
+            Latitude = resEntity.Latitude,
+            Longitude = resEntity.Longitude,
+            City = resEntity.City,
+            Region = resEntity.Region,
+            PostalCode = resEntity.PostalCode,
+            ClientId = resEntity.ClientId
+        };
+        return new ResponseModelBase(dto);
+    }
+    
+    [HttpGet]
+    public async Task<ResponseModelBase> GetAddressByClientId(long clientId)
+    {
+        var resEntity =   AddressRepository.GetAllAsQueryable().FirstOrDefault(address => address.ClientId==clientId );
+        if (resEntity==null)
+            return new ResponseModelBase("Address not found",HttpStatusCode.NotFound);
+        
         var dto = new AddressDto
         {
             Id = resEntity.Id,
