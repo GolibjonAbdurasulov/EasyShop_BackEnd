@@ -116,24 +116,30 @@ public class OrderController : ControllerBase
     [HttpGet]
     public async Task<ResponseModelBase> GetAllUserOrdersAsync(long userId)
     {
-        var model =   OrderRepository.GetAllAsQueryable().
-            FirstOrDefault(item=>item.CustomerId==userId);
-        if (model == null)
+        var models =   OrderRepository.GetAllAsQueryable().
+            Where(item=>item.CustomerId==userId).ToList();
+        if (models == null)
             throw new NullReferenceException("Order not found OrderController");
         
-        var dto =new OrderGetDto()
+        
+        List<OrderGetDto> dtos = new List<OrderGetDto>();
+        foreach (Order model in models)
         {
-            Id = model.Id,
-            ProductsIds = model.ProductsIds,
-            TotalPrice = model.TotalPrice,
-            OrderStatus = model.OrderStatus,
-            DeliveryDate = model.DeliveryDate,
-            CustomerId = model.CustomerId,
-            User = model.Client
-        };
-        
-        
-        return new ResponseModelBase(dto);
+            dtos.Add(new OrderGetDto() 
+            { 
+                Id = model.Id, 
+                ProductsIds = model.ProductsIds, 
+                TotalPrice = model.TotalPrice, 
+                OrderStatus = model.OrderStatus, 
+                DeliveryDate = model.DeliveryDate, 
+                CustomerId = model.CustomerId, 
+                User = model.Client 
+            });
+          
+
+        }
+
+        return new ResponseModelBase(dtos);
     }   
     
     
