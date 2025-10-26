@@ -145,10 +145,119 @@ public class OrderController : ControllerBase
     
     
     [HttpGet]
-    public async Task<ResponseModelBase> GetAllDeliveryOrders()
+    public async Task<ResponseModelBase> GetAllAcceptedOrders()
     {
         var models =   OrderRepository.GetAllAsQueryable().
             Where(item=>item.OrderStatus==OrderStatus.Accepted).ToList();
+        if (models == null)
+            throw new NullReferenceException("Order not found OrderController");
+        
+        
+        List<OrderGetDto> dtos = new List<OrderGetDto>();
+        foreach (Order model in models)
+        {
+            dtos.Add(new OrderGetDto() 
+            { 
+                Id = model.Id, 
+                ProductsIds = model.ProductsIds, 
+                TotalPrice = model.TotalPrice, 
+                OrderStatus = model.OrderStatus, 
+                DeliveryDate = model.DeliveryDate, 
+                CustomerId = model.CustomerId, 
+                User = model.Client 
+            });
+        }
+
+        return new ResponseModelBase(dtos);
+    }   
+    
+    [HttpGet]
+    public async Task<ResponseModelBase> GetAllShippedOrders()
+    {
+        var models =   OrderRepository.GetAllAsQueryable().
+            Where(item=>item.OrderStatus==OrderStatus.Shipped).ToList();
+        if (models == null)
+            throw new NullReferenceException("Order not found OrderController");
+        
+        
+        List<OrderGetDto> dtos = new List<OrderGetDto>();
+        foreach (Order model in models)
+        {
+            dtos.Add(new OrderGetDto() 
+            { 
+                Id = model.Id, 
+                ProductsIds = model.ProductsIds, 
+                TotalPrice = model.TotalPrice, 
+                OrderStatus = model.OrderStatus, 
+                DeliveryDate = model.DeliveryDate, 
+                CustomerId = model.CustomerId, 
+                User = model.Client 
+            });
+        }
+
+        return new ResponseModelBase(dtos);
+    }  
+    
+    [HttpGet]
+    public async Task<ResponseModelBase> GetAllDeliveredOrders()
+    {
+        var models =   OrderRepository.GetAllAsQueryable().
+            Where(item=>item.OrderStatus==OrderStatus.Delivered).ToList();
+        if (models == null)
+            throw new NullReferenceException("Order not found OrderController");
+        
+        
+        List<OrderGetDto> dtos = new List<OrderGetDto>();
+        foreach (Order model in models)
+        {
+            dtos.Add(new OrderGetDto() 
+            { 
+                Id = model.Id, 
+                ProductsIds = model.ProductsIds, 
+                TotalPrice = model.TotalPrice, 
+                OrderStatus = model.OrderStatus, 
+                DeliveryDate = model.DeliveryDate, 
+                CustomerId = model.CustomerId, 
+                User = model.Client 
+            });
+        }
+
+        return new ResponseModelBase(dtos);
+    }   
+    
+   
+    [HttpGet]
+    public async Task<ResponseModelBase> GetAllPaidOrders()
+    {
+        var models =   OrderRepository.GetAllAsQueryable().
+            Where(item=>item.OrderStatus==OrderStatus.Paid).ToList();
+        if (models == null)
+            throw new NullReferenceException("Order not found OrderController");
+        
+        
+        List<OrderGetDto> dtos = new List<OrderGetDto>();
+        foreach (Order model in models)
+        {
+            dtos.Add(new OrderGetDto() 
+            { 
+                Id = model.Id, 
+                ProductsIds = model.ProductsIds, 
+                TotalPrice = model.TotalPrice, 
+                OrderStatus = model.OrderStatus, 
+                DeliveryDate = model.DeliveryDate, 
+                CustomerId = model.CustomerId, 
+                User = model.Client 
+            });
+        }
+
+        return new ResponseModelBase(dtos);
+    }   
+    
+    [HttpGet]
+    public async Task<ResponseModelBase> GetAllUnPaidOrders()
+    {
+        var models =   OrderRepository.GetAllAsQueryable().
+            Where(item=>item.OrderStatus==OrderStatus.Unpaid).ToList();
         if (models == null)
             throw new NullReferenceException("Order not found OrderController");
         
