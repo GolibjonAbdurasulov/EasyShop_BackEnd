@@ -141,6 +141,35 @@ public class OrderController : ControllerBase
 
         return new ResponseModelBase(dtos);
     }   
+ 
+    
+    
+    [HttpGet]
+    public async Task<ResponseModelBase> GetAllDeliveryOrders()
+    {
+        var models =   OrderRepository.GetAllAsQueryable().
+            Where(item=>item.OrderStatus==OrderStatus.Accepted).ToList();
+        if (models == null)
+            throw new NullReferenceException("Order not found OrderController");
+        
+        
+        List<OrderGetDto> dtos = new List<OrderGetDto>();
+        foreach (Order model in models)
+        {
+            dtos.Add(new OrderGetDto() 
+            { 
+                Id = model.Id, 
+                ProductsIds = model.ProductsIds, 
+                TotalPrice = model.TotalPrice, 
+                OrderStatus = model.OrderStatus, 
+                DeliveryDate = model.DeliveryDate, 
+                CustomerId = model.CustomerId, 
+                User = model.Client 
+            });
+        }
+
+        return new ResponseModelBase(dtos);
+    }   
     
     
 }

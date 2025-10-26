@@ -6,4 +6,5 @@ public enum OrderStatus
     Unpaid,
     Shipped,
     Delivered,
+    Accepted
 }
