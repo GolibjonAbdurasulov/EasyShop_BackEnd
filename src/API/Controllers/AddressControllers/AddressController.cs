@@ -1,11 +1,8 @@
 using System.Net;
 using API.Common;
 using API.Controllers.AddressControllers.Dtos;
-using API.Controllers.TagsController.FoodProductTagsController.Dtos;
 using DatabaseBroker.Repositories.AddressRepositories;
-using DatabaseBroker.Repositories.Tags.FoodProductTagsRepository;
 using Entity.Models.Order;
-using Entity.Models.Product.Tags;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

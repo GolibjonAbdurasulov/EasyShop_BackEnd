@@ -13,6 +13,6 @@ public class Order : ModelBase<long>
     [Column("total_price")]public decimal TotalPrice { get; set; }
     [Column("order_status")]public OrderStatus OrderStatus { get; set; }
     [Column("delivery_date")]public DateTime DeliveryDate { get; set; }
-    [Column("customer_id"),ForeignKey(nameof(Customer))]public long CustomerId { get; set; }
-    public virtual User Customer { get; set; }
+    [Column("customer_id"),ForeignKey(nameof(Client))]public long CustomerId { get; set; }
+    public virtual Client.Client Client { get; set; }
 }

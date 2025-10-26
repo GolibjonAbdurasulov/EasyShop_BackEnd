@@ -29,7 +29,7 @@ public class OrderController : ControllerBase
             OrderStatus = dto.OrderStatus,
             DeliveryDate = dto.DeliveryDate,
             CustomerId = dto.CustomerId,
-            Customer = null
+            Client = null
         };
         var resEntity=await OrderRepository.AddAsync(entity);
         
@@ -41,7 +41,7 @@ public class OrderController : ControllerBase
             OrderStatus = resEntity.OrderStatus,
             DeliveryDate = resEntity.DeliveryDate,
             CustomerId = resEntity.CustomerId,
-            User = resEntity.Customer
+            User = resEntity.Client
         };
         return new ResponseModelBase(resDto);
     }
@@ -86,7 +86,7 @@ public class OrderController : ControllerBase
             OrderStatus = resEntity.OrderStatus,
             DeliveryDate = resEntity.DeliveryDate,
             CustomerId = resEntity.CustomerId,
-            User = resEntity.Customer
+            User = resEntity.Client
         };
         return new ResponseModelBase(dto);
     }
@@ -106,7 +106,7 @@ public class OrderController : ControllerBase
                 OrderStatus = model.OrderStatus,
                 DeliveryDate = model.DeliveryDate,
                 CustomerId = model.CustomerId,
-                User = model.Customer
+                User = model.Client
             });
         }
         
@@ -129,7 +129,7 @@ public class OrderController : ControllerBase
             OrderStatus = model.OrderStatus,
             DeliveryDate = model.DeliveryDate,
             CustomerId = model.CustomerId,
-            User = model.Customer
+            User = model.Client
         };
         
         

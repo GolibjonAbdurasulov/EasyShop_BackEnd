@@ -1,4 +1,5 @@
 using Entity.Enums;
+using Entity.Models.Client;
 using Entity.Models.Order;
 using Entity.Models.Users;
 
@@ -12,5 +13,5 @@ public class OrderGetDto
     public OrderStatus OrderStatus { get; set; }
     public DateTime DeliveryDate { get; set; }
     public long CustomerId { get; set; }
-    public virtual User User { get; set; }
+    public virtual Client User { get; set; }
 }
