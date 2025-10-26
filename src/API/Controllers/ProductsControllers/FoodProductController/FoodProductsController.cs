@@ -165,10 +165,10 @@ public class FoodProductsController : ControllerBase
         var resList =   FoodProductRepository.GetAllAsQueryable().
             Where(item=>item.FoodCategoryId==categoryId).ToList();
         
-        List<FoodProductGetDto> dtos = new List<FoodProductGetDto>();
+        List<FoodProductCategoryGetDto> dtos = new List<FoodProductCategoryGetDto>();
         foreach (FoodProducts res in resList)
         {
-            dtos.Add(new FoodProductGetDto
+            dtos.Add(new FoodProductCategoryGetDto
             {
                 Id = res.Id,
                 Name = res.Name,
@@ -176,11 +176,8 @@ public class FoodProductsController : ControllerBase
                 Price = res.Price,
                 ImageId = res.ProductImageId,
                 MainCategoryId = res.MainCategoryId,
-                MainCategory = res.MainCategory,
                 FoodProductCategoryId = res.FoodCategoryId,
-                FoodProductCategory = res.FoodProductCategory,
                 TagId = res.TagId,
-                Tag = res.Tag
             });
         }
         

@@ -1,11 +1,8 @@
 using Entity.Models.Common;
-using Entity.Models.File;
-using Entity.Models.Product.Categories;
-using Entity.Models.Product.Tags;
 
 namespace API.Controllers.ProductsControllers.FoodProductController.Dtos;
 
-public class FoodProductGetDto
+public class FoodProductCategoryGetDto
 {
     public long Id { get; set; }
     public MultiLanguageField Name { get; set; }
@@ -15,10 +12,6 @@ public class FoodProductGetDto
     public string ImageUrl => $"https://back.easyshop.uz/File/DownloadFile/download/{ImageId}";
 
     public long MainCategoryId { get; set; }
-    public MainProductCategories? MainCategory { get; set; }
     public long FoodProductCategoryId { get; set; }
-    public FoodProductCategory? FoodProductCategory { get; set; }
     public long TagId { get; set; }
-    public FoodProductTags? Tag { get; set; }
-    
 }

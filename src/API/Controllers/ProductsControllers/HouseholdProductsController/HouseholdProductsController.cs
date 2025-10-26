@@ -164,10 +164,10 @@ public class HouseholdProductsController : ControllerBase
         var resList =   HoldProductsRepository.GetAllAsQueryable().
             Where(item=>item.HouseholdCategoryId==categoryId).ToList();
         
-        List<HouseholdGetDto> dtos = new List<HouseholdGetDto>();
+        List<HouseholdProductCategoryGetDto> dtos = new List<HouseholdProductCategoryGetDto>();
         foreach (HouseholdProducts res in resList)
         {
-            dtos.Add(new HouseholdGetDto
+            dtos.Add(new HouseholdProductCategoryGetDto
             {
                 Id = res.Id,
                 Name = res.Name,
@@ -175,11 +175,8 @@ public class HouseholdProductsController : ControllerBase
                 Price = res.Price,
                 ImageId = res.ProductImageId,
                 MainCategoryId = res.MainCategoryId,
-                MainCategory = res.MainCategory,
                 HouseholdProductCategoryId = res.HouseholdCategoryId,
-                HouseholdProductCategory = res.HouseholdProductCategory,
                 TagId = res.TagId,
-                Tag = res.Tag
             });
         }
         
