@@ -289,7 +289,7 @@ public class OrderController : ControllerBase
         if (order == null)
             throw new NullReferenceException("Order not found OrderController");
         
-        order.OrderStatus = OrderStatus.Shipped;
+        order.OrderStatus = OrderStatus.Delivered;
         var res=await OrderRepository.UpdateAsync(order);
         return new ResponseModelBase(res);
     }
@@ -302,7 +302,7 @@ public class OrderController : ControllerBase
         if (order == null)
             throw new NullReferenceException("Order not found OrderController");
         
-        order.OrderStatus = OrderStatus.Delivered;
+        order.OrderStatus = OrderStatus.Shipped;
         order.DeliveryDate = DateTime.Now;
         var res=await OrderRepository.UpdateAsync(order);
         return new ResponseModelBase(res);
