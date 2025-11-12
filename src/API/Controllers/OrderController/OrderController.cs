@@ -344,9 +344,9 @@ public class OrderController : ControllerBase
         {
             case "FoodProduct":
                 return await FoodProducts.GetByIdAsync(id);
-            case "HouseOilProduct":
+            case "HouseHoldProduct": 
                 return await HouseholdProducts.GetByIdAsync(id);
-            case "WaterAndDrinksProduct":
+            case "WaterAndDrinksProduct": 
                 return await WaterAndDrinks.GetByIdAsync(id);
             case "OilProduct":
                 return await OilProductsRepository.GetByIdAsync(id);
@@ -354,4 +354,5 @@ public class OrderController : ControllerBase
                 return null;
         }
     }
+
 }
