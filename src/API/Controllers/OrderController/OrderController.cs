@@ -1,8 +1,13 @@
 using API.Common;
 using API.Controllers.OrderController.Dtos;
 using DatabaseBroker.Repositories.OrderRepositories;
+using DatabaseBroker.Repositories.Products.FoodProductRepository;
+using DatabaseBroker.Repositories.Products.HouseHoldProductsRepository;
+using DatabaseBroker.Repositories.Products.OilProductsRepository;
+using DatabaseBroker.Repositories.Products.WaterAndDrinksRepository;
 using Entity.Enums;
 using Entity.Models.Order;
+using Entity.Models.Product;
 using Entity.Models.Product.Products;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +18,19 @@ namespace API.Controllers.OrderController;
 public class OrderController : ControllerBase
 {
     private IOrderRepository OrderRepository { get; set; }
-    public OrderController(IOrderRepository orderRepository)
+    private IOilProductsRepository OilProductsRepository { get; set; }
+    private IFoodProductRepository FoodProducts { get; set; } 
+    private IHouseHoldProductsRepository HouseholdProducts { get; set; }
+    private IWaterAndDrinksRepository WaterAndDrinks { get; set; }
+    public OrderController(IOrderRepository orderRepository, IOilProductsRepository oilProductsRepository, 
+        IFoodProductRepository foodProducts, IHouseHoldProductsRepository householdProducts, 
+        IWaterAndDrinksRepository waterAndDrinks)
     {
         OrderRepository = orderRepository;
+        OilProductsRepository = oilProductsRepository;
+        FoodProducts = foodProducts;
+        HouseholdProducts = householdProducts;
+        WaterAndDrinks = waterAndDrinks;
     }
 
     [HttpPost]
@@ -309,4 +324,34 @@ public class OrderController : ControllerBase
     }
 
     
+    [HttpPost]
+    [Authorize]
+    public async Task<ResponseModelBase> GetProductNames(GetProductDatas dto)
+    {
+        List<string> dtos = new List<string>();
+        foreach (ProductItem item in dto.productsItemIds)
+        {
+            var data=await GetData(item.ProductType,item.ProductId);
+            dtos.Add(data.Name.uz);
+        }
+        
+        return new ResponseModelBase(dtos);
+    }
+
+    private async Task<Product> GetData(string type, long id)
+    {
+        switch (type)
+        {
+            case "FoodProduct":
+                return await FoodProducts.GetByIdAsync(id);
+            case "HouseOilProduct":
+                return await HouseholdProducts.GetByIdAsync(id);
+            case "WaterAndDrinksProduct":
+                return await WaterAndDrinks.GetByIdAsync(id);
+            case "OilProduct":
+                return await OilProductsRepository.GetByIdAsync(id);
+            default:
+                return null;
+        }
+    }
 }
