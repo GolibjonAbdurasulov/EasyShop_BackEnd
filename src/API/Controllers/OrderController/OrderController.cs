@@ -1,5 +1,6 @@
 using API.Common;
 using API.Controllers.OrderController.Dtos;
+using DatabaseBroker.Repositories.ClientRepository;
 using DatabaseBroker.Repositories.OrderRepositories;
 using DatabaseBroker.Repositories.Products.FoodProductRepository;
 using DatabaseBroker.Repositories.Products.HouseHoldProductsRepository;
@@ -8,7 +9,6 @@ using DatabaseBroker.Repositories.Products.WaterAndDrinksRepository;
 using Entity.Enums;
 using Entity.Models.Order;
 using Entity.Models.Product;
-using Entity.Models.Product.Products;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,15 +22,17 @@ public class OrderController : ControllerBase
     private IFoodProductRepository FoodProducts { get; set; } 
     private IHouseHoldProductsRepository HouseholdProducts { get; set; }
     private IWaterAndDrinksRepository WaterAndDrinks { get; set; }
+    private IClientRepository ClientRepository { get; set; }
     public OrderController(IOrderRepository orderRepository, IOilProductsRepository oilProductsRepository, 
         IFoodProductRepository foodProducts, IHouseHoldProductsRepository householdProducts, 
-        IWaterAndDrinksRepository waterAndDrinks)
+        IWaterAndDrinksRepository waterAndDrinks, IClientRepository clientRepository)
     {
         OrderRepository = orderRepository;
         OilProductsRepository = oilProductsRepository;
         FoodProducts = foodProducts;
         HouseholdProducts = householdProducts;
         WaterAndDrinks = waterAndDrinks;
+        ClientRepository = clientRepository;
     }
 
     [HttpPost]
@@ -293,6 +295,66 @@ public class OrderController : ControllerBase
         }
 
         return new ResponseModelBase(dtos);
+    }
+    
+    
+    [HttpGet]
+    public async Task<ResponseModelBase> GetOrderDetails(long orderId)
+    {
+        var model =   OrderRepository.GetAllAsQueryable().
+            FirstOrDefault(item=>item.Id==orderId);
+        if (model == null)
+            throw new NullReferenceException("Order not found OrderController");
+        var client = await ClientRepository.GetByIdAsync(model.CustomerId);
+
+        
+        List<OrderDetailsProducts> products = new List<OrderDetailsProducts>();
+        foreach (ProductItem item in model.ProductsIds)
+        {
+            Product product = new Product();
+
+            switch (item.ProductType)
+            {
+                case "OilProduct" :
+                   product=await OilProductsRepository.GetByIdAsync(item.ProductId);
+                    break;               
+                case "HouseHoldProduct" :
+                   product=await HouseholdProducts.GetByIdAsync(item.ProductId);
+                    break;                
+                case "FoodProduct" :
+                   product=await FoodProducts.GetByIdAsync(item.ProductId);
+                    break;                
+                case "WaterAndDrinksProduct" :
+                   product=await WaterAndDrinks.GetByIdAsync(item.ProductId);
+                    break;
+                default:
+                product=null;
+                    break;
+            }
+            
+            products.Add(new OrderDetailsProducts
+            {
+                ProductId = item.ProductId,
+                ProductName = product.Name.uz,
+                Price = product.Price,
+                Count = item.Quantity
+            });
+            product = null;
+        }
+
+        var res = new OrderDetailsGetDto
+        {
+            OrderId = model.Id,
+            Status = model.OrderStatus,
+            TotalPrice = model.TotalPrice,
+            OrderedDate = model.DeliveryDate,
+            OrderDetailsProducts = products,
+            CustomerName = client.FullName,
+            CustomerPhoneNumber = client.Email
+        };
+
+
+        return new ResponseModelBase(res);
     }
 
 
