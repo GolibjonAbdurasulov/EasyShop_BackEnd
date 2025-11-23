@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Entity.Models.File;
+using Entity.Models.Product;
 using Microsoft.AspNetCore.Http;
 namespace Services.Interfaces;
 
@@ -15,4 +16,6 @@ public interface IFileService
     public Task SaveFileAsync(byte[] bytes, string filePath);
     public  ValueTask<FileModel> GetByIdAsync(Guid id);
     public  Task<Stream> SendFileAsync(Guid id);
+    public Task<Stream> GetProductCheck(long productId);
+    public Task<Product> GetProductsDates(string productType, long productId);
 }

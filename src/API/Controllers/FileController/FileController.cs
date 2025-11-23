@@ -95,6 +95,15 @@ public class FileController : ControllerBase
             return new ResponseModelBase(ex);
         }
     }
+    
+    
+    [HttpGet]
+    public async Task<IActionResult> GetOrderCheckAsPdf(long orderId)
+    {
+        var stream = await _fileService.GetProductCheck(orderId);
+        return File(stream, "application/pdf", $"order_{orderId}_check.pdf");
+    }
+
 
    
     
