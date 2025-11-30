@@ -203,7 +203,7 @@ public class OrderController : ControllerBase
     }
  
     
-    [HttpGet("GetAllShippedOrders")]
+    [HttpGet]
     public async Task<ResponseModelBase> GetAllShippedOrders(
         DateTime? date,
         DateTime? startDate,
@@ -243,7 +243,7 @@ public class OrderController : ControllerBase
     }
 
     
-    [HttpGet("GetAllDeliveredOrders")]
+    [HttpGet]
     public async Task<ResponseModelBase> GetAllDeliveredOrders(
         DateTime? date,
         DateTime? startDate,
@@ -283,7 +283,7 @@ public class OrderController : ControllerBase
     }
 
    
-    [HttpGet("GetAllPaidOrders")]
+    [HttpGet]
     public async Task<ResponseModelBase> GetAllPaidOrders(
         DateTime? date,
         DateTime? startDate,
@@ -324,7 +324,7 @@ public class OrderController : ControllerBase
 
     
     
-    [HttpGet("GetAllUnPaidOrders")]
+    [HttpGet]
     public async Task<ResponseModelBase> GetAllUnPaidOrders(
         DateTime? date,
         DateTime? startDate,
