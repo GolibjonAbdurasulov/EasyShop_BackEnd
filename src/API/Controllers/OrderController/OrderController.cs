@@ -385,7 +385,37 @@ public class OrderController : ControllerBase
         return new ResponseModelBase(res);
     }
 
-    
+
+    [HttpPut]
+    [Authorize]
+    public async Task<ResponseModelBase> UpdateOrderStatus(long orderId,int status)
+    {
+        var order= await OrderRepository.GetByIdAsync(orderId);
+        if (order == null)
+            throw new NullReferenceException("Order not found OrderController");
+        switch (status)
+        {
+            case 1:
+                order.OrderStatus = OrderStatus.Paid;
+                break;
+            case 2:
+                order.OrderStatus = OrderStatus.Unpaid;
+                break;
+            case 3:
+                order.OrderStatus = OrderStatus.Shipped;
+                break;
+            case 4:
+                order.OrderStatus = OrderStatus.Delivered;
+                break;
+            case 5:
+                order.OrderStatus = OrderStatus.Accepted;
+                break;
+        }
+        var res=await OrderRepository.UpdateAsync(order);
+        return new ResponseModelBase(res);
+    }
+
+
     [HttpPost]
     [Authorize]
     public async Task<ResponseModelBase> GetProductNames(GetProductDatas dto)
@@ -416,5 +446,7 @@ public class OrderController : ControllerBase
                 return null;
         }
     }
+    
+
 
 }
