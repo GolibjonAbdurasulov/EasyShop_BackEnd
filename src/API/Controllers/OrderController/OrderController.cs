@@ -162,140 +162,207 @@ public class OrderController : ControllerBase
     
     
     [HttpGet]
-    public async Task<ResponseModelBase> GetAllAcceptedOrders()
+    public async Task<ResponseModelBase> GetAllAcceptedOrders(
+        DateTime? date,
+        DateTime? startDate,
+        DateTime? endDate)
     {
-        var models =   OrderRepository.GetAllAsQueryable().
-            Where(item=>item.OrderStatus==OrderStatus.Accepted).ToList();
-        if (models == null)
-            throw new NullReferenceException("Order not found OrderController");
-        
-        
-        List<OrderGetDto> dtos = new List<OrderGetDto>();
-        foreach (Order model in models)
+        var query = OrderRepository.GetAllAsQueryable()
+            .Where(o => o.OrderStatus == OrderStatus.Accepted);
+
+        // Bitta sana bo‘yicha filter
+        if (date.HasValue)
         {
-            dtos.Add(new OrderGetDto() 
-            { 
-                Id = model.Id, 
-                ProductsIds = model.ProductsIds, 
-                TotalPrice = model.TotalPrice, 
-                OrderStatus = model.OrderStatus, 
-                DeliveryDate = model.DeliveryDate, 
-                CustomerId = model.CustomerId, 
-                User = model.Client 
-            });
+            var d = date.Value.Date;
+            query = query.Where(o => o.DeliveryDate.Date == d);
         }
 
-        return new ResponseModelBase(dtos);
-    }   
-    
-    [HttpGet]
-    public async Task<ResponseModelBase> GetAllShippedOrders()
-    {
-        var models =   OrderRepository.GetAllAsQueryable().
-            Where(item=>item.OrderStatus==OrderStatus.Shipped).ToList();
-        if (models == null)
-            throw new NullReferenceException("Order not found OrderController");
-        
-        
-        List<OrderGetDto> dtos = new List<OrderGetDto>();
-        foreach (Order model in models)
+        // Sana oralig‘i bo‘yicha filter
+        if (startDate.HasValue && endDate.HasValue)
         {
-            dtos.Add(new OrderGetDto() 
-            { 
-                Id = model.Id, 
-                ProductsIds = model.ProductsIds, 
-                TotalPrice = model.TotalPrice, 
-                OrderStatus = model.OrderStatus, 
-                DeliveryDate = model.DeliveryDate, 
-                CustomerId = model.CustomerId, 
-                User = model.Client 
-            });
+            var start = startDate.Value.Date;
+            var end = endDate.Value.Date.AddDays(1).AddSeconds(-1);
+
+            query = query.Where(o => o.DeliveryDate >= start && o.DeliveryDate <= end);
         }
 
-        return new ResponseModelBase(dtos);
-    }  
-    
-    [HttpGet]
-    public async Task<ResponseModelBase> GetAllDeliveredOrders()
-    {
-        var models =   OrderRepository.GetAllAsQueryable().
-            Where(item=>item.OrderStatus==OrderStatus.Delivered).ToList();
-        if (models == null)
-            throw new NullReferenceException("Order not found OrderController");
-        
-        
-        List<OrderGetDto> dtos = new List<OrderGetDto>();
-        foreach (Order model in models)
-        {
-            dtos.Add(new OrderGetDto() 
-            { 
-                Id = model.Id, 
-                ProductsIds = model.ProductsIds, 
-                TotalPrice = model.TotalPrice, 
-                OrderStatus = model.OrderStatus, 
-                DeliveryDate = model.DeliveryDate, 
-                CustomerId = model.CustomerId, 
-                User = model.Client 
-            });
-        }
+        var models = query.ToList();
 
-        return new ResponseModelBase(dtos);
-    }   
-    
-   
-    [HttpGet]
-    public async Task<ResponseModelBase> GetAllPaidOrders()
-    {
-        var models =   OrderRepository.GetAllAsQueryable().
-            Where(item=>item.OrderStatus==OrderStatus.Paid).ToList();
-        if (models == null)
-            throw new NullReferenceException("Order not found OrderController");
-        
-        
-        List<OrderGetDto> dtos = new List<OrderGetDto>();
-        foreach (Order model in models)
+        var dtos = models.Select(o => new OrderGetDto
         {
-            dtos.Add(new OrderGetDto() 
-            { 
-                Id = model.Id, 
-                ProductsIds = model.ProductsIds, 
-                TotalPrice = model.TotalPrice, 
-                OrderStatus = model.OrderStatus, 
-                DeliveryDate = model.DeliveryDate, 
-                CustomerId = model.CustomerId, 
-                User = model.Client 
-            });
-        }
-
-        return new ResponseModelBase(dtos);
-    }   
-    
-    [HttpGet]
-    public async Task<ResponseModelBase> GetAllUnPaidOrders()
-    {
-        var models =   OrderRepository.GetAllAsQueryable().
-            Where(item=>item.OrderStatus==OrderStatus.Unpaid).ToList();
-        if (models == null)
-            throw new NullReferenceException("Order not found OrderController");
-        
-        
-        List<OrderGetDto> dtos = new List<OrderGetDto>();
-        foreach (Order model in models)
-        {
-            dtos.Add(new OrderGetDto() 
-            { 
-                Id = model.Id, 
-                ProductsIds = model.ProductsIds, 
-                TotalPrice = model.TotalPrice, 
-                OrderStatus = model.OrderStatus, 
-                DeliveryDate = model.DeliveryDate, 
-                CustomerId = model.CustomerId, 
-                User = model.Client 
-            });
-        }
+            Id = o.Id,
+            ProductsIds = o.ProductsIds,
+            TotalPrice = o.TotalPrice,
+            OrderStatus = o.OrderStatus,
+            DeliveryDate = o.DeliveryDate,
+            CustomerId = o.CustomerId,
+            User = o.Client
+        }).ToList();
 
         return new ResponseModelBase(dtos);
     }
+ 
+    
+    [HttpGet("GetAllShippedOrders")]
+    public async Task<ResponseModelBase> GetAllShippedOrders(
+        DateTime? date,
+        DateTime? startDate,
+        DateTime? endDate)
+    {
+        var query = OrderRepository.GetAllAsQueryable()
+            .Where(o => o.OrderStatus == OrderStatus.Shipped);
+
+        if (date.HasValue)
+        {
+            var d = date.Value.Date;
+            query = query.Where(o => o.DeliveryDate.Date == d);
+        }
+
+        if (startDate.HasValue && endDate.HasValue)
+        {
+            var start = startDate.Value.Date;
+            var end = endDate.Value.Date.AddDays(1).AddSeconds(-1);
+
+            query = query.Where(o => o.DeliveryDate >= start && o.DeliveryDate <= end);
+        }
+
+        var models = query.ToList();
+
+        var dtos = models.Select(o => new OrderGetDto
+        {
+            Id = o.Id,
+            ProductsIds = o.ProductsIds,
+            TotalPrice = o.TotalPrice,
+            OrderStatus = o.OrderStatus,
+            DeliveryDate = o.DeliveryDate,
+            CustomerId = o.CustomerId,
+            User = o.Client
+        }).ToList();
+
+        return new ResponseModelBase(dtos);
+    }
+
+    
+    [HttpGet("GetAllDeliveredOrders")]
+    public async Task<ResponseModelBase> GetAllDeliveredOrders(
+        DateTime? date,
+        DateTime? startDate,
+        DateTime? endDate)
+    {
+        var query = OrderRepository.GetAllAsQueryable()
+            .Where(o => o.OrderStatus == OrderStatus.Delivered);
+
+        if (date.HasValue)
+        {
+            var d = date.Value.Date;
+            query = query.Where(o => o.DeliveryDate.Date == d);
+        }
+
+        if (startDate.HasValue && endDate.HasValue)
+        {
+            var start = startDate.Value.Date;
+            var end = endDate.Value.Date.AddDays(1).AddSeconds(-1);
+
+            query = query.Where(o => o.DeliveryDate >= start && o.DeliveryDate <= end);
+        }
+
+        var models = query.ToList();
+
+        var dtos = models.Select(o => new OrderGetDto
+        {
+            Id = o.Id,
+            ProductsIds = o.ProductsIds,
+            TotalPrice = o.TotalPrice,
+            OrderStatus = o.OrderStatus,
+            DeliveryDate = o.DeliveryDate,
+            CustomerId = o.CustomerId,
+            User = o.Client
+        }).ToList();
+
+        return new ResponseModelBase(dtos);
+    }
+
+   
+    [HttpGet("GetAllPaidOrders")]
+    public async Task<ResponseModelBase> GetAllPaidOrders(
+        DateTime? date,
+        DateTime? startDate,
+        DateTime? endDate)
+    {
+        var query = OrderRepository.GetAllAsQueryable()
+            .Where(o => o.OrderStatus == OrderStatus.Paid);
+
+        if (date.HasValue)
+        {
+            var d = date.Value.Date;
+            query = query.Where(o => o.DeliveryDate.Date == d);
+        }
+
+        if (startDate.HasValue && endDate.HasValue)
+        {
+            var start = startDate.Value.Date;
+            var end = endDate.Value.Date.AddDays(1).AddSeconds(-1);
+
+            query = query.Where(o => o.DeliveryDate >= start && o.DeliveryDate <= end);
+        }
+
+        var models = query.ToList();
+
+        var dtos = models.Select(o => new OrderGetDto
+        {
+            Id = o.Id,
+            ProductsIds = o.ProductsIds,
+            TotalPrice = o.TotalPrice,
+            OrderStatus = o.OrderStatus,
+            DeliveryDate = o.DeliveryDate,
+            CustomerId = o.CustomerId,
+            User = o.Client
+        }).ToList();
+
+        return new ResponseModelBase(dtos);
+    }
+
+    
+    
+    [HttpGet("GetAllUnPaidOrders")]
+    public async Task<ResponseModelBase> GetAllUnPaidOrders(
+        DateTime? date,
+        DateTime? startDate,
+        DateTime? endDate)
+    {
+        var query = OrderRepository.GetAllAsQueryable()
+            .Where(o => o.OrderStatus == OrderStatus.Unpaid);
+
+        if (date.HasValue)
+        {
+            var d = date.Value.Date;
+            query = query.Where(o => o.DeliveryDate.Date == d);
+        }
+
+        if (startDate.HasValue && endDate.HasValue)
+        {
+            var start = startDate.Value.Date;
+            var end = endDate.Value.Date.AddDays(1).AddSeconds(-1);
+
+            query = query.Where(o => o.DeliveryDate >= start && o.DeliveryDate <= end);
+        }
+
+        var models = query.ToList();
+
+        var dtos = models.Select(o => new OrderGetDto
+        {
+            Id = o.Id,
+            ProductsIds = o.ProductsIds,
+            TotalPrice = o.TotalPrice,
+            OrderStatus = o.OrderStatus,
+            DeliveryDate = o.DeliveryDate,
+            CustomerId = o.CustomerId,
+            User = o.Client
+        }).ToList();
+
+        return new ResponseModelBase(dtos);
+    }
+
     
     
     [HttpGet]
