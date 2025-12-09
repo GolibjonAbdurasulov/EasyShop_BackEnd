@@ -19,4 +19,5 @@ public class Product : ModelBase<long>
 
     [NotMapped]
     public int Quantity { get; set; }
+    
 }

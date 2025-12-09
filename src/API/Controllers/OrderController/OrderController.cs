@@ -416,8 +416,8 @@ public class OrderController : ControllerBase
             TotalPrice = model.TotalPrice,
             OrderedDate = model.DeliveryDate,
             OrderDetailsProducts = products,
-            CustomerName = client.FullName,
-            CustomerPhoneNumber = client.Email
+            CustomerName = client.ClientFullName,
+            CustomerPhoneNumber = client.PhoneNumber
         };
 
 

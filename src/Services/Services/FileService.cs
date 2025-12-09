@@ -289,7 +289,7 @@ public async Task<Stream> GetProductCheck(long orderId)
         }
     }
 
-    var clientName = order.Client?.FullName ?? "Mijoz";
+    var clientName = order.Client?.ClientFullName ?? "Mijoz";
 
     var stream = new MemoryStream();
 

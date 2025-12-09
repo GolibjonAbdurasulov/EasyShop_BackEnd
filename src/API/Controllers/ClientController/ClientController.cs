@@ -27,8 +27,10 @@ public class ClientController : ControllerBase
     {
         var client = new Client
         {
-            FullName = dto.FullName,
-            Email = dto.PhoneNumber,
+            ClientFullName = dto.ClientFullName,
+            CompanyName = dto.CompanyName,
+            INN = dto.INN,
+            PhoneNumber = dto.PhoneNumber,
             Password = dto.Password,
             IsSigned = false
         };
@@ -44,8 +46,10 @@ public class ClientController : ControllerBase
         var client =await ClientRepository.UpdateAsync(new Client
         {
             Id = dto.Id,
-            FullName = dto.FullName,
-            Email = dto.PhoneNumber,
+            ClientFullName = dto.ClientFullName,
+            CompanyName = dto.CompanyName,
+            INN = dto.INN,
+            PhoneNumber = dto.PhoneNumber,
             Password = dto.Password,
             IsSigned = dto.IsSigned
         });

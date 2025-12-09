@@ -62,15 +62,17 @@ public class AuthService : IAuthService
     public async Task<ClientDto> ClientLogin(ClientLoginDto dto)
     {
         var client = await ClientRepository.
-            FirstOrDefaultAsync(user => user.Email == dto.PhoneNumber && user.Password == dto.Password);
+            FirstOrDefaultAsync(user => user.PhoneNumber == dto.PhoneNumber && user.Password == dto.Password);
         if (client is  null)
             throw new NotFoundException("Foydalanuvchi topilmadi");
         string token =  _tokenService.GetToken();
         var resUser = new ClientDto()
         {
             Id=client.Id,
-            FullName = client.FullName,
-            PhoneNumber = client.Email,
+            ClientFullName = client.ClientFullName,
+            CompanyName = client.CompanyName,
+            INN = client.INN,
+            PhoneNumber = client.PhoneNumber,
             Password = client.Password,
             IsSigned = true,
             Token = token
@@ -119,8 +121,10 @@ public class AuthService : IAuthService
         // 1. Foydalanuvchini bazaga yozish (lekin hali tasdiqlanmagan)
         var client = new Client
         {
-            FullName = dto.FullName,
-            Email = dto.PhoneNumber,
+            ClientFullName = dto.ClientFullName,
+            CompanyName = dto.CompanyName,
+            INN = dto.INN,
+            PhoneNumber = dto.PhoneNumber,
             Password = dto.Password, 
             IsSigned = true
         };
@@ -147,8 +151,8 @@ public class AuthService : IAuthService
         return new ClientDto
         {
             Id = client.Id,
-            PhoneNumber = client.Email,
-            FullName = client.FullName,
+            PhoneNumber = client.PhoneNumber,
+            ClientFullName = client.ClientFullName,
             IsSigned = client.IsSigned,
         };
     }
@@ -161,7 +165,7 @@ public class AuthService : IAuthService
             return false;
 
         // 2. DB dagi foydalanuvchini tasdiqlash
-        var client = await ClientRepository.GetAllAsQueryable().FirstOrDefaultAsync(c => c.Email == email);
+        var client = await ClientRepository.GetAllAsQueryable().FirstOrDefaultAsync(c => c.PhoneNumber == email);
         if (client == null) return false;
 
         client.IsSigned = true;
@@ -183,7 +187,7 @@ public class AuthService : IAuthService
             {
                 Email = dto.PhoneNumber,
                 Subject = "Ro‘yxatdan o‘tishni tasdiqlash",
-                Message = $"Assalomu alaykum {dto.FullName}!<br/>" +
+                Message = $"Assalomu alaykum {dto.ClientFullName}!<br/>" +
                           $"Ro‘yxatdan o‘tishni yakunlash uchun quyidagi kodni kiriting: <b>{confirmationCode}</b>"
             };
             
