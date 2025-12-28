@@ -103,6 +103,7 @@ public class FoodProductsController : ControllerBase
     public async Task<ResponseModelBase> GetByIdAsync(long id)
     {
         var res =  await FoodProductRepository.GetByIdAsync(id);
+        var warehouseDates=await WarehouseDatesRepository.GetByIdAsync(res.WarehouseDatesId);
         var dto = new FoodProductGetDto
         {
             Id = res.Id,
@@ -116,7 +117,10 @@ public class FoodProductsController : ControllerBase
             FoodProductCategory = res.FoodProductCategory,
             TagId = res.TagId,
             Tag = res.Tag,
-            WarehouseDatesId = res.WarehouseDatesId
+            WarehouseDatesId = res.WarehouseDatesId,
+            QuantityBoxes = warehouseDates.QuantityBoxes,
+            QuantityPieces = warehouseDates.QuantityPieces,
+            QuantityInOneBox = warehouseDates.QuantityInOneBox,
         };
         return new ResponseModelBase(dto);
     }
@@ -128,6 +132,7 @@ public class FoodProductsController : ControllerBase
         List<FoodProductGetDto> dtos = new List<FoodProductGetDto>();
         foreach (FoodProducts res in resList)
         {
+            var warehouseDates=await WarehouseDatesRepository.GetByIdAsync(res.WarehouseDatesId);
             dtos.Add(new FoodProductGetDto
             {
                 Id = res.Id,
@@ -141,7 +146,10 @@ public class FoodProductsController : ControllerBase
                 FoodProductCategory = res.FoodProductCategory,
                 TagId = res.TagId,
                 Tag = res.Tag,
-                WarehouseDatesId = res.WarehouseDatesId
+                WarehouseDatesId = res.WarehouseDatesId,
+                QuantityBoxes = warehouseDates.QuantityBoxes,
+                QuantityPieces = warehouseDates.QuantityPieces,
+                QuantityInOneBox = warehouseDates.QuantityInOneBox,
             });
         }
         
@@ -157,6 +165,7 @@ public class FoodProductsController : ControllerBase
         List<FoodProductGetDto> dtos = new List<FoodProductGetDto>();
         foreach (FoodProducts res in resList)
         {
+            var warehouseDates=await WarehouseDatesRepository.GetByIdAsync(res.WarehouseDatesId);
             dtos.Add(new FoodProductGetDto
             {
                 Id = res.Id,
@@ -170,8 +179,10 @@ public class FoodProductsController : ControllerBase
                 FoodProductCategory = res.FoodProductCategory,
                 TagId = res.TagId,
                 Tag = res.Tag,
-                WarehouseDatesId = res.WarehouseDatesId
-                
+                WarehouseDatesId = res.WarehouseDatesId,
+                QuantityBoxes = warehouseDates.QuantityBoxes,
+                QuantityPieces = warehouseDates.QuantityPieces,
+                QuantityInOneBox = warehouseDates.QuantityInOneBox,
             });
         }
         
@@ -188,6 +199,8 @@ public class FoodProductsController : ControllerBase
         List<FoodProductCategoryGetDto> dtos = new List<FoodProductCategoryGetDto>();
         foreach (FoodProducts res in resList)
         {
+            var warehouseDates=await WarehouseDatesRepository.GetByIdAsync(res.WarehouseDatesId);
+
             dtos.Add(new FoodProductCategoryGetDto
             {
                 Id = res.Id,
@@ -198,7 +211,10 @@ public class FoodProductsController : ControllerBase
                 MainCategoryId = res.MainCategoryId,
                 FoodProductCategoryId = res.FoodCategoryId,
                 TagId = res.TagId,
-                WarehouseDatesId = res.WarehouseDatesId
+                WarehouseDatesId = res.WarehouseDatesId,
+                QuantityBoxes = warehouseDates.QuantityBoxes,
+                QuantityPieces = warehouseDates.QuantityPieces,
+                QuantityInOneBox = warehouseDates.QuantityInOneBox,
             });
         }
         
@@ -218,7 +234,7 @@ public class FoodProductsController : ControllerBase
                 p.Name.uz.ToLower().Contains(query.ToLower())
             )
             .ToList();
-
+        
         var dtos = res.Select(model => new FoodProductGetDto()
         {
             Id = model.Id,
@@ -231,6 +247,9 @@ public class FoodProductsController : ControllerBase
             TagId = model.TagId,
             Tag = model.Tag,
             WarehouseDatesId = model.WarehouseDatesId,
+            //QuantityBoxes = warehouseDates.QuantityBoxes,
+            //QuantityPieces = warehouseDates.QuantityPieces,
+            //QuantityInOneBox = warehouseDates.QuantityInOneBox,
         }).ToList();
 
         if (dtos.Count==0) 

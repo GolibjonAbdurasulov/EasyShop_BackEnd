@@ -21,4 +21,7 @@ public class HouseholdGetDto
 
     public long TagId { get; set; }
     public HouseholdProductTags? Tag { get; set; }
+    public int QuantityBoxes { get; set; }
+    public int QuantityPieces { get; set; }
+    public int QuantityInOneBox { get; set; }
 }

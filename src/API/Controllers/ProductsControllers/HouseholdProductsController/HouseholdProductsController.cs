@@ -3,6 +3,7 @@ using API.Common;
 using API.Controllers.ProductsControllers.HouseholdProductsController.Dtos;
 using DatabaseBroker.Repositories.Products.HouseHoldProductsRepository;
 using DatabaseBroker.Repositories.Tags.HouseHoldProductTagsRepository;
+using DatabaseBroker.Repositories.WarehouseDatesRepositories;
 using Entity.Models.Product.Products;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +15,13 @@ public class HouseholdProductsController : ControllerBase
 {
     private IHouseHoldProductsRepository HoldProductsRepository { get; set; }
     private IHouseHoldProductTagsRepository HouseholdProductTagsRepository { get; set; }
-    public HouseholdProductsController(IHouseHoldProductsRepository ourTeamRepository, IHouseHoldProductTagsRepository houseHoldProductTags, IHouseHoldProductTagsRepository householdProductTagsRepository)
+    private IWarehouseDatesRepository WarehouseDatesRepository { get; set; }
+
+    public HouseholdProductsController(IHouseHoldProductsRepository ourTeamRepository, IHouseHoldProductTagsRepository houseHoldProductTags, IHouseHoldProductTagsRepository householdProductTagsRepository, IWarehouseDatesRepository warehouseDatesRepository)
     {
         this.HoldProductsRepository = ourTeamRepository;
         HouseholdProductTagsRepository = householdProductTagsRepository;
+        WarehouseDatesRepository = warehouseDatesRepository;
     }
 
     [HttpPost]
@@ -37,7 +41,8 @@ public class HouseholdProductsController : ControllerBase
             
         };
         var resEntity=await HoldProductsRepository.AddAsync(entity);
-        
+        var warehouseDates=await WarehouseDatesRepository.GetByIdAsync(resEntity.WarehouseDatesId);
+
         var resDto = new HouseholdGetDto
         {
             Id = resEntity.Id,
@@ -51,7 +56,11 @@ public class HouseholdProductsController : ControllerBase
             HouseholdProductCategoryId = resEntity.HouseholdCategoryId,
             TagId = resEntity.TagId,
             Tag = resEntity.Tag,
-            WarehouseDatesId = resEntity.WarehouseDatesId
+            WarehouseDatesId = resEntity.WarehouseDatesId,
+            QuantityBoxes = warehouseDates.QuantityBoxes,
+            QuantityPieces = warehouseDates.QuantityPieces,
+            QuantityInOneBox = warehouseDates.QuantityInOneBox,
+            
         };
         return new ResponseModelBase(resDto);
     }
@@ -115,6 +124,8 @@ public class HouseholdProductsController : ControllerBase
         List<HouseholdGetDto> dtos = new List<HouseholdGetDto>();
         foreach (HouseholdProducts resEntity in res)
         {
+            var warehouseDates=await WarehouseDatesRepository.GetByIdAsync(resEntity.WarehouseDatesId);
+
             dtos.Add(new HouseholdGetDto
             {
                 Id = resEntity.Id,
@@ -128,7 +139,10 @@ public class HouseholdProductsController : ControllerBase
                 HouseholdProductCategoryId = resEntity.HouseholdCategoryId,
                 TagId = resEntity.TagId,
                 Tag = resEntity.Tag,
-                WarehouseDatesId = resEntity.WarehouseDatesId
+                WarehouseDatesId = resEntity.WarehouseDatesId,
+                QuantityBoxes = warehouseDates.QuantityBoxes,
+                QuantityPieces = warehouseDates.QuantityPieces,
+                QuantityInOneBox = warehouseDates.QuantityInOneBox,
             });
         }
         
@@ -147,6 +161,8 @@ public class HouseholdProductsController : ControllerBase
         List<HouseholdGetDto> dtos = new List<HouseholdGetDto>();
         foreach (HouseholdProducts resEntity in res)
         {
+            var warehouseDates=await WarehouseDatesRepository.GetByIdAsync(resEntity.WarehouseDatesId);
+
             dtos.Add(new HouseholdGetDto
             {
                 Id = resEntity.Id,
@@ -160,7 +176,10 @@ public class HouseholdProductsController : ControllerBase
                 HouseholdProductCategoryId = resEntity.HouseholdCategoryId,
                 TagId = resEntity.TagId,
                 Tag = resEntity.Tag,
-                WarehouseDatesId = resEntity.WarehouseDatesId
+                WarehouseDatesId = resEntity.WarehouseDatesId,
+                QuantityBoxes = warehouseDates.QuantityBoxes,
+                QuantityPieces = warehouseDates.QuantityPieces,
+                QuantityInOneBox = warehouseDates.QuantityInOneBox,
             });
         }
         
@@ -176,6 +195,8 @@ public class HouseholdProductsController : ControllerBase
         List<HouseholdProductCategoryGetDto> dtos = new List<HouseholdProductCategoryGetDto>();
         foreach (HouseholdProducts res in resList)
         {
+            var warehouseDates=await WarehouseDatesRepository.GetByIdAsync(res.WarehouseDatesId);
+
             dtos.Add(new HouseholdProductCategoryGetDto
             {
                 Id = res.Id,
@@ -186,7 +207,10 @@ public class HouseholdProductsController : ControllerBase
                 MainCategoryId = res.MainCategoryId,
                 HouseholdProductCategoryId = res.HouseholdCategoryId,
                 TagId = res.TagId,
-                WarehouseDatesId = res.WarehouseDatesId
+                WarehouseDatesId = res.WarehouseDatesId,
+                QuantityBoxes = warehouseDates.QuantityBoxes,
+                QuantityPieces = warehouseDates.QuantityPieces,
+                QuantityInOneBox = warehouseDates.QuantityInOneBox,
             });
         }
         
