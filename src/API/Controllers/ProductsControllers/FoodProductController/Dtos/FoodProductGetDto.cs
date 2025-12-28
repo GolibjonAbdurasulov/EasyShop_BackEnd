@@ -20,5 +20,8 @@ public class FoodProductGetDto
     public FoodProductCategory? FoodProductCategory { get; set; }
     public long TagId { get; set; }
     public FoodProductTags? Tag { get; set; }
+    public int QuantityBoxes { get; set; }
+    public int QuantityPieces { get; set; }
+    public int QuantityInOneBox { get; set; }
     
 }

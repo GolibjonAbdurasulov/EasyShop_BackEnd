@@ -303,6 +303,10 @@ namespace DatabaseBroker.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("tag_id");
 
+                    b.Property<long>("WarehouseDatesId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("warehouse_dates_id");
+
                     b.HasKey("Id");
 
                     b.HasIndex("FoodCategoryId");
@@ -312,6 +316,8 @@ namespace DatabaseBroker.Migrations
                     b.HasIndex("ProductImageId");
 
                     b.HasIndex("TagId");
+
+                    b.HasIndex("WarehouseDatesId");
 
                     b.ToTable("food_products");
                 });
@@ -353,6 +359,10 @@ namespace DatabaseBroker.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("tag_id");
 
+                    b.Property<long>("WarehouseDatesId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("warehouse_dates_id");
+
                     b.HasKey("Id");
 
                     b.HasIndex("HouseholdCategoryId");
@@ -362,6 +372,8 @@ namespace DatabaseBroker.Migrations
                     b.HasIndex("ProductImageId");
 
                     b.HasIndex("TagId");
+
+                    b.HasIndex("WarehouseDatesId");
 
                     b.ToTable("household_products");
                 });
@@ -399,6 +411,10 @@ namespace DatabaseBroker.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("tag_id");
 
+                    b.Property<long>("WarehouseDatesId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("warehouse_dates_id");
+
                     b.HasKey("Id");
 
                     b.HasIndex("MainCategoryId");
@@ -406,6 +422,8 @@ namespace DatabaseBroker.Migrations
                     b.HasIndex("ProductImageId");
 
                     b.HasIndex("TagId");
+
+                    b.HasIndex("WarehouseDatesId");
 
                     b.ToTable("oil_products");
                 });
@@ -443,6 +461,10 @@ namespace DatabaseBroker.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("tag_id");
 
+                    b.Property<long>("WarehouseDatesId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("warehouse_dates_id");
+
                     b.HasKey("Id");
 
                     b.HasIndex("MainCategoryId");
@@ -450,6 +472,8 @@ namespace DatabaseBroker.Migrations
                     b.HasIndex("ProductImageId");
 
                     b.HasIndex("TagId");
+
+                    b.HasIndex("WarehouseDatesId");
 
                     b.ToTable("water_and_drinks");
                 });
@@ -462,6 +486,10 @@ namespace DatabaseBroker.Migrations
                         .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("CategoryId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("category_id");
 
                     b.Property<MultiLanguageField>("TagName")
                         .HasColumnType("jsonb")
@@ -480,6 +508,10 @@ namespace DatabaseBroker.Migrations
                         .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("CategoryId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("category_id");
 
                     b.Property<MultiLanguageField>("TagName")
                         .HasColumnType("jsonb")
@@ -524,6 +556,32 @@ namespace DatabaseBroker.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("water_and_drinks_tags");
+                });
+
+            modelBuilder.Entity("Entity.Models.Product.WarehouseDates", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<int>("QuantityBoxes")
+                        .HasColumnType("integer")
+                        .HasColumnName("quantity_boxes");
+
+                    b.Property<int>("QuantityInOneBox")
+                        .HasColumnType("integer")
+                        .HasColumnName("quantity_ine_one_box");
+
+                    b.Property<int>("QuantityPieces")
+                        .HasColumnType("integer")
+                        .HasColumnName("quantity_pieces");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WarehouseDates");
                 });
 
             modelBuilder.Entity("Entity.Models.Translation.Translation", b =>
@@ -693,6 +751,12 @@ namespace DatabaseBroker.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Entity.Models.Product.WarehouseDates", "WarehouseDates")
+                        .WithMany()
+                        .HasForeignKey("WarehouseDatesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("FoodProductCategory");
 
                     b.Navigation("Image");
@@ -700,6 +764,8 @@ namespace DatabaseBroker.Migrations
                     b.Navigation("MainCategory");
 
                     b.Navigation("Tag");
+
+                    b.Navigation("WarehouseDates");
                 });
 
             modelBuilder.Entity("Entity.Models.Product.Products.HouseholdProducts", b =>
@@ -728,6 +794,12 @@ namespace DatabaseBroker.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Entity.Models.Product.WarehouseDates", "WarehouseDates")
+                        .WithMany()
+                        .HasForeignKey("WarehouseDatesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("HouseholdProductCategory");
 
                     b.Navigation("Image");
@@ -735,6 +807,8 @@ namespace DatabaseBroker.Migrations
                     b.Navigation("MainCategory");
 
                     b.Navigation("Tag");
+
+                    b.Navigation("WarehouseDates");
                 });
 
             modelBuilder.Entity("Entity.Models.Product.Products.OilProducts", b =>
@@ -757,11 +831,19 @@ namespace DatabaseBroker.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Entity.Models.Product.WarehouseDates", "WarehouseDates")
+                        .WithMany()
+                        .HasForeignKey("WarehouseDatesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Image");
 
                     b.Navigation("MainCategory");
 
                     b.Navigation("Tag");
+
+                    b.Navigation("WarehouseDates");
                 });
 
             modelBuilder.Entity("Entity.Models.Product.Products.WaterAndDrinks", b =>
@@ -784,11 +866,19 @@ namespace DatabaseBroker.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Entity.Models.Product.WarehouseDates", "WarehouseDates")
+                        .WithMany()
+                        .HasForeignKey("WarehouseDatesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Image");
 
                     b.Navigation("MainCategory");
 
                     b.Navigation("Tag");
+
+                    b.Navigation("WarehouseDates");
                 });
 #pragma warning restore 612, 618
         }

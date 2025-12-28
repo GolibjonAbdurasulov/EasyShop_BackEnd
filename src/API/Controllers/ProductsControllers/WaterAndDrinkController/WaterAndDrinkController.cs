@@ -3,6 +3,7 @@ using API.Common;
 using API.Controllers.ProductsControllers.WaterAndDrinkController.Dtos;
 using DatabaseBroker.Repositories.Products.WaterAndDrinksRepository;
 using DatabaseBroker.Repositories.Tags.WaterAndDrinkTagsRepository;
+using Entity.Models.Product;
 using Entity.Models.Product.Products;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,6 +33,12 @@ public class WaterAndDrinkController : ControllerBase
             ProductImageId = dto.ImageId,
             MainCategoryId = dto.MainCategoryId,
             TagId = dto.TagId,
+            WarehouseDates = new WarehouseDates
+            {
+                QuantityBoxes = dto.QuantityBoxes,
+                QuantityPieces = dto.QuantityPieces,
+                QuantityInOneBox = dto.QuantityInOneBox,
+            }
         };
         var resEntity=await WaterAndDrinksRepository.AddAsync(entity);
         
@@ -45,7 +52,10 @@ public class WaterAndDrinkController : ControllerBase
             MainCategoryId = resEntity.MainCategoryId,
             MainCategory = resEntity.MainCategory,
             TagId = resEntity.TagId,
-            Tag = resEntity.Tag
+            Tag = resEntity.Tag,
+            QuantityBoxes = resEntity.WarehouseDates.QuantityBoxes,
+            QuantityPieces = resEntity.WarehouseDates.QuantityPieces,
+            QuantityInOneBox = resEntity.WarehouseDates.QuantityInOneBox
         };
         return new ResponseModelBase(resDto);
     }
@@ -63,6 +73,9 @@ public class WaterAndDrinkController : ControllerBase
         res.ProductImageId = dto.ImageId;
         res.MainCategoryId = dto.MainCategoryId;
         res.TagId = dto.TagId;
+        res.WarehouseDates.QuantityBoxes = dto.QuantityBoxes;
+        res.WarehouseDates.QuantityPieces = dto.QuantityPieces;
+        res.WarehouseDates.QuantityInOneBox = dto.QuantityInOneBox;
         
         await WaterAndDrinksRepository.UpdateAsync(res);
         return new ResponseModelBase(dto);
@@ -93,7 +106,10 @@ public class WaterAndDrinkController : ControllerBase
             MainCategoryId = resEntity.MainCategoryId,
             MainCategory = resEntity.MainCategory,
             TagId = resEntity.TagId,
-            Tag = resEntity.Tag
+            Tag = resEntity.Tag,
+            QuantityBoxes = resEntity.WarehouseDates.QuantityBoxes,
+            QuantityPieces = resEntity.WarehouseDates.QuantityPieces,
+            QuantityInOneBox = resEntity.WarehouseDates.QuantityInOneBox
         };
         return new ResponseModelBase(dto);
     }
@@ -114,7 +130,10 @@ public class WaterAndDrinkController : ControllerBase
                 ImageId = model.ProductImageId,
                 MainCategory = model.MainCategory,
                 TagId = model.TagId,
-                Tag = model.Tag
+                Tag = model.Tag,
+                QuantityBoxes = model.WarehouseDates.QuantityBoxes,
+                QuantityPieces = model.WarehouseDates.QuantityPieces,
+                QuantityInOneBox = model.WarehouseDates.QuantityInOneBox
             });
         }
         
@@ -139,7 +158,11 @@ public class WaterAndDrinkController : ControllerBase
                 ImageId = model.ProductImageId,
                 MainCategory = model.MainCategory,
                 TagId = model.TagId,
-                Tag = model.Tag
+                Tag = model.Tag,
+                QuantityBoxes = model.WarehouseDates.QuantityBoxes,
+                QuantityPieces = model.WarehouseDates.QuantityPieces,
+                QuantityInOneBox = model.WarehouseDates.QuantityInOneBox
+                
             });
         }
         
@@ -155,10 +178,7 @@ public class WaterAndDrinkController : ControllerBase
         var res = WaterAndDrinksRepository
             .GetAllAsQueryable()
             .Where(p =>
-                p.Name.uz.ToLower().Contains(query.ToLower()) ||
-                p.Name.ru.ToLower().Contains(query.ToLower()) ||
-                p.Name.kr.ToLower().Contains(query.ToLower())
-            )
+                p.Name.uz.ToLower().Contains(query.ToLower()))
             .ToList();
 
         var dtos = res.Select(model => new WaterAndDrinkProductGetDto
@@ -171,7 +191,10 @@ public class WaterAndDrinkController : ControllerBase
             MainCategoryId = model.MainCategoryId,
             MainCategory = model.MainCategory,
             TagId = model.TagId,
-            Tag = model.Tag
+            Tag = model.Tag,
+            QuantityBoxes = model.WarehouseDates.QuantityBoxes,
+            QuantityPieces = model.WarehouseDates.QuantityPieces,
+            QuantityInOneBox = model.WarehouseDates.QuantityInOneBox
         }).ToList();
 
         if (dtos.Count==0) 

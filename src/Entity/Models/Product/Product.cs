@@ -17,7 +17,13 @@ public class Product : ModelBase<long>
     [Column("main_category_id"),ForeignKey(nameof(MainCategory))]public long MainCategoryId { get; set; }
     public virtual MainProductCategories MainCategory { get; set; }
 
+    [Column("warehouse_dates_id")]public long WarehouseDatesId { get; set; }
+    [Column("warehouse_dates")]public virtual WarehouseDates WarehouseDates { get; set; }
+
     [NotMapped]
-    public int Quantity { get; set; }
+    public int QuantityBox { get; set; }
+    [NotMapped]
+    public int QuantityPiece { get; set; }
+
     
 }

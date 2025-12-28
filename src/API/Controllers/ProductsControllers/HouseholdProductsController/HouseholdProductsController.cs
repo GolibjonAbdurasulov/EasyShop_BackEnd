@@ -3,6 +3,7 @@ using API.Common;
 using API.Controllers.ProductsControllers.HouseholdProductsController.Dtos;
 using DatabaseBroker.Repositories.Products.HouseHoldProductsRepository;
 using DatabaseBroker.Repositories.Tags.HouseHoldProductTagsRepository;
+using Entity.Models.Product;
 using Entity.Models.Product.Products;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,7 +33,13 @@ public class HouseholdProductsController : ControllerBase
             ProductImageId = dto.ImageId,
             MainCategoryId = dto.MainCategoryId,
             HouseholdCategoryId = dto.HouseholdCategoryId,
-            TagId = dto.TagId
+            TagId = dto.TagId,
+            WarehouseDates = new WarehouseDates
+            {
+                QuantityBoxes = dto.QuantityBoxes,
+                QuantityPieces = dto.QuantityPieces,
+                QuantityInOneBox = dto.QuantityInOneBox,
+            }
         };
         var resEntity=await HoldProductsRepository.AddAsync(entity);
         
@@ -48,7 +55,10 @@ public class HouseholdProductsController : ControllerBase
             HouseholdProductCategory = resEntity.HouseholdProductCategory,
             HouseholdProductCategoryId = resEntity.HouseholdCategoryId,
             TagId = resEntity.TagId,
-            Tag = resEntity.Tag
+            Tag = resEntity.Tag,
+            QuantityBoxes = resEntity.WarehouseDates.QuantityBoxes,
+            QuantityPieces = resEntity.WarehouseDates.QuantityPieces,
+            QuantityInOneBox = resEntity.WarehouseDates.QuantityInOneBox
         };
         return new ResponseModelBase(resDto);
     }
@@ -67,7 +77,9 @@ public class HouseholdProductsController : ControllerBase
         res.MainCategoryId = dto.MainCategoryId;
         res.HouseholdCategoryId = dto.HouseholdProductCategoryId;
         res.TagId = dto.TagId;
-        
+        res.WarehouseDates.QuantityBoxes = dto.QuantityBoxes;
+        res.WarehouseDates.QuantityPieces = dto.QuantityPieces;
+        res.WarehouseDates.QuantityInOneBox = dto.QuantityInOneBox;
         await HoldProductsRepository.UpdateAsync(res);
         return new ResponseModelBase(dto);
     }
@@ -99,7 +111,10 @@ public class HouseholdProductsController : ControllerBase
             HouseholdProductCategory = resEntity.HouseholdProductCategory,
             HouseholdProductCategoryId = resEntity.HouseholdCategoryId,
             TagId = resEntity.TagId,
-            Tag = resEntity.Tag
+            Tag = resEntity.Tag,
+            QuantityBoxes = resEntity.WarehouseDates.QuantityBoxes,
+            QuantityPieces = resEntity.WarehouseDates.QuantityPieces,
+            QuantityInOneBox = resEntity.WarehouseDates.QuantityInOneBox
         };
         return new ResponseModelBase(dto);
     }
@@ -123,7 +138,10 @@ public class HouseholdProductsController : ControllerBase
                 HouseholdProductCategory = resEntity.HouseholdProductCategory,
                 HouseholdProductCategoryId = resEntity.HouseholdCategoryId,
                 TagId = resEntity.TagId,
-                Tag = resEntity.Tag
+                Tag = resEntity.Tag,
+                QuantityBoxes = resEntity.WarehouseDates.QuantityBoxes,
+                QuantityPieces = resEntity.WarehouseDates.QuantityPieces,
+                QuantityInOneBox = resEntity.WarehouseDates.QuantityInOneBox
             });
         }
         
@@ -133,9 +151,12 @@ public class HouseholdProductsController : ControllerBase
     
     
     [HttpGet]
-    public async Task<ResponseModelBase> GetAllByTagsAsync(long tagId)
+    public async Task<ResponseModelBase> GetAllByTagsAsync(long tagId,long categoryId)
     {
-        var res =   HoldProductsRepository.GetAllAsQueryable().Where(item=>item.TagId==tagId).ToList();
+        var res =   HoldProductsRepository.GetAllAsQueryable().Where(item
+            =>item.TagId==tagId && 
+              item.HouseholdCategoryId==categoryId).ToList();
+        
         List<HouseholdGetDto> dtos = new List<HouseholdGetDto>();
         foreach (HouseholdProducts resEntity in res)
         {
@@ -151,7 +172,10 @@ public class HouseholdProductsController : ControllerBase
                 HouseholdProductCategory = resEntity.HouseholdProductCategory,
                 HouseholdProductCategoryId = resEntity.HouseholdCategoryId,
                 TagId = resEntity.TagId,
-                Tag = resEntity.Tag
+                Tag = resEntity.Tag,
+                QuantityBoxes = resEntity.WarehouseDates.QuantityBoxes,
+                QuantityPieces = resEntity.WarehouseDates.QuantityPieces,
+                QuantityInOneBox = resEntity.WarehouseDates.QuantityInOneBox
             });
         }
         
@@ -177,6 +201,9 @@ public class HouseholdProductsController : ControllerBase
                 MainCategoryId = res.MainCategoryId,
                 HouseholdProductCategoryId = res.HouseholdCategoryId,
                 TagId = res.TagId,
+                QuantityBoxes = res.WarehouseDates.QuantityBoxes,
+                QuantityPieces = res.WarehouseDates.QuantityPieces,
+                QuantityInOneBox = res.WarehouseDates.QuantityInOneBox
             });
         }
         
@@ -194,9 +221,7 @@ public class HouseholdProductsController : ControllerBase
         var res = HoldProductsRepository
             .GetAllAsQueryable()
             .Where(p =>
-                p.Name.uz.ToLower().Contains(query.ToLower()) ||
-                p.Name.ru.ToLower().Contains(query.ToLower()) ||
-                p.Name.kr.ToLower().Contains(query.ToLower())
+                p.Name.uz.ToLower().Contains(query.ToLower())
             )
             .ToList();
 
@@ -210,7 +235,10 @@ public class HouseholdProductsController : ControllerBase
             MainCategoryId = model.MainCategoryId,
             MainCategory = model.MainCategory,
             TagId = model.TagId,
-            Tag = model.Tag
+            Tag = model.Tag,
+            QuantityBoxes = model.WarehouseDates.QuantityBoxes,
+            QuantityPieces = model.WarehouseDates.QuantityPieces,
+            QuantityInOneBox = model.WarehouseDates.QuantityInOneBox
         }).ToList();
 
         if (dtos.Count==0) 

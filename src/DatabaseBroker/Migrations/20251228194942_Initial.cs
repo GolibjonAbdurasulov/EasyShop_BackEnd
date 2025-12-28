@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Entity.Models.Common;
+using Entity.Models.Order;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -14,6 +15,24 @@ namespace DatabaseBroker.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "clients",
+                columns: table => new
+                {
+                    id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    client_full_name = table.Column<string>(type: "text", nullable: true),
+                    company_name = table.Column<string>(type: "text", nullable: true),
+                    inn = table.Column<string>(type: "text", nullable: true),
+                    phone_number = table.Column<string>(type: "text", nullable: true),
+                    password = table.Column<string>(type: "text", nullable: true),
+                    IsSigned = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_clients", x => x.id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "file_model",
                 columns: table => new
@@ -34,7 +53,8 @@ namespace DatabaseBroker.Migrations
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    tag_name = table.Column<MultiLanguageField>(type: "jsonb", nullable: true)
+                    tag_name = table.Column<MultiLanguageField>(type: "jsonb", nullable: true),
+                    category_id = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -47,7 +67,8 @@ namespace DatabaseBroker.Migrations
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    tag_name = table.Column<MultiLanguageField>(type: "jsonb", nullable: true)
+                    tag_name = table.Column<MultiLanguageField>(type: "jsonb", nullable: true),
+                    category_id = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -102,6 +123,21 @@ namespace DatabaseBroker.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "WarehouseDates",
+                columns: table => new
+                {
+                    id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    quantity_boxes = table.Column<int>(type: "integer", nullable: false),
+                    quantity_pieces = table.Column<int>(type: "integer", nullable: false),
+                    quantity_ine_one_box = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WarehouseDates", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "water_and_drinks_tags",
                 columns: table => new
                 {
@@ -112,6 +148,54 @@ namespace DatabaseBroker.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_water_and_drinks_tags", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "addresses",
+                columns: table => new
+                {
+                    id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    full_address = table.Column<string>(type: "text", nullable: true),
+                    latitude = table.Column<double>(type: "double precision", nullable: true),
+                    longitude = table.Column<double>(type: "double precision", nullable: true),
+                    city = table.Column<string>(type: "text", nullable: true),
+                    region = table.Column<string>(type: "text", nullable: true),
+                    postal_code = table.Column<string>(type: "text", nullable: true),
+                    client_id = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_addresses", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_addresses_clients_client_id",
+                        column: x => x.client_id,
+                        principalTable: "clients",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "orders",
+                columns: table => new
+                {
+                    id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    products_id = table.Column<List<ProductItem>>(type: "jsonb", nullable: true),
+                    total_price = table.Column<decimal>(type: "numeric", nullable: false),
+                    order_status = table.Column<int>(type: "integer", nullable: false),
+                    delivery_date = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    customer_id = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_orders", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_orders_clients_customer_id",
+                        column: x => x.customer_id,
+                        principalTable: "clients",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -180,7 +264,7 @@ namespace DatabaseBroker.Migrations
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    products_id = table.Column<List<long>>(type: "bigint[]", nullable: true),
+                    products_id = table.Column<List<ProductItem>>(type: "jsonb", nullable: true),
                     customer_id = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
@@ -188,30 +272,6 @@ namespace DatabaseBroker.Migrations
                     table.PrimaryKey("PK_cart", x => x.id);
                     table.ForeignKey(
                         name: "FK_cart_users_customer_id",
-                        column: x => x.customer_id,
-                        principalTable: "users",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "orders",
-                columns: table => new
-                {
-                    id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    products_id = table.Column<List<long>>(type: "bigint[]", nullable: true),
-                    quantity = table.Column<int>(type: "integer", nullable: false),
-                    total_price = table.Column<decimal>(type: "numeric", nullable: false),
-                    order_status = table.Column<int>(type: "integer", nullable: false),
-                    delivery_date = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    customer_id = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_orders", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_orders_users_customer_id",
                         column: x => x.customer_id,
                         principalTable: "users",
                         principalColumn: "id",
@@ -230,11 +290,18 @@ namespace DatabaseBroker.Migrations
                     about = table.Column<MultiLanguageField>(type: "jsonb", nullable: true),
                     price = table.Column<decimal>(type: "numeric", nullable: false),
                     product_image_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    main_category_id = table.Column<long>(type: "bigint", nullable: false)
+                    main_category_id = table.Column<long>(type: "bigint", nullable: false),
+                    warehouse_dates_id = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_food_products", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_food_products_WarehouseDates_warehouse_dates_id",
+                        column: x => x.warehouse_dates_id,
+                        principalTable: "WarehouseDates",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_food_products_file_model_product_image_id",
                         column: x => x.product_image_id,
@@ -273,11 +340,18 @@ namespace DatabaseBroker.Migrations
                     about = table.Column<MultiLanguageField>(type: "jsonb", nullable: true),
                     price = table.Column<decimal>(type: "numeric", nullable: false),
                     product_image_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    main_category_id = table.Column<long>(type: "bigint", nullable: false)
+                    main_category_id = table.Column<long>(type: "bigint", nullable: false),
+                    warehouse_dates_id = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_household_products", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_household_products_WarehouseDates_warehouse_dates_id",
+                        column: x => x.warehouse_dates_id,
+                        principalTable: "WarehouseDates",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_household_products_file_model_product_image_id",
                         column: x => x.product_image_id,
@@ -315,11 +389,18 @@ namespace DatabaseBroker.Migrations
                     about = table.Column<MultiLanguageField>(type: "jsonb", nullable: true),
                     price = table.Column<decimal>(type: "numeric", nullable: false),
                     product_image_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    main_category_id = table.Column<long>(type: "bigint", nullable: false)
+                    main_category_id = table.Column<long>(type: "bigint", nullable: false),
+                    warehouse_dates_id = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_oil_products", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_oil_products_WarehouseDates_warehouse_dates_id",
+                        column: x => x.warehouse_dates_id,
+                        principalTable: "WarehouseDates",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_oil_products_file_model_product_image_id",
                         column: x => x.product_image_id,
@@ -351,11 +432,18 @@ namespace DatabaseBroker.Migrations
                     about = table.Column<MultiLanguageField>(type: "jsonb", nullable: true),
                     price = table.Column<decimal>(type: "numeric", nullable: false),
                     product_image_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    main_category_id = table.Column<long>(type: "bigint", nullable: false)
+                    main_category_id = table.Column<long>(type: "bigint", nullable: false),
+                    warehouse_dates_id = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_water_and_drinks", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_water_and_drinks_WarehouseDates_warehouse_dates_id",
+                        column: x => x.warehouse_dates_id,
+                        principalTable: "WarehouseDates",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_water_and_drinks_file_model_product_image_id",
                         column: x => x.product_image_id,
@@ -375,6 +463,11 @@ namespace DatabaseBroker.Migrations
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_addresses_client_id",
+                table: "addresses",
+                column: "client_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_cart_customer_id",
@@ -407,6 +500,11 @@ namespace DatabaseBroker.Migrations
                 column: "tag_id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_food_products_warehouse_dates_id",
+                table: "food_products",
+                column: "warehouse_dates_id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_household_product_categories_house_hold_category_image_id",
                 table: "household_product_categories",
                 column: "house_hold_category_image_id");
@@ -432,6 +530,11 @@ namespace DatabaseBroker.Migrations
                 column: "tag_id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_household_products_warehouse_dates_id",
+                table: "household_products",
+                column: "warehouse_dates_id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_main_product_categories_main_category_image_id",
                 table: "main_product_categories",
                 column: "main_category_image_id");
@@ -450,6 +553,11 @@ namespace DatabaseBroker.Migrations
                 name: "IX_oil_products_tag_id",
                 table: "oil_products",
                 column: "tag_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_oil_products_warehouse_dates_id",
+                table: "oil_products",
+                column: "warehouse_dates_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_orders_customer_id",
@@ -476,11 +584,19 @@ namespace DatabaseBroker.Migrations
                 name: "IX_water_and_drinks_tag_id",
                 table: "water_and_drinks",
                 column: "tag_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_water_and_drinks_warehouse_dates_id",
+                table: "water_and_drinks",
+                column: "warehouse_dates_id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "addresses");
+
             migrationBuilder.DropTable(
                 name: "cart");
 
@@ -503,6 +619,9 @@ namespace DatabaseBroker.Migrations
                 name: "water_and_drinks");
 
             migrationBuilder.DropTable(
+                name: "users");
+
+            migrationBuilder.DropTable(
                 name: "food_product_categories");
 
             migrationBuilder.DropTable(
@@ -518,7 +637,10 @@ namespace DatabaseBroker.Migrations
                 name: "oil_product_tags");
 
             migrationBuilder.DropTable(
-                name: "users");
+                name: "clients");
+
+            migrationBuilder.DropTable(
+                name: "WarehouseDates");
 
             migrationBuilder.DropTable(
                 name: "main_product_categories");

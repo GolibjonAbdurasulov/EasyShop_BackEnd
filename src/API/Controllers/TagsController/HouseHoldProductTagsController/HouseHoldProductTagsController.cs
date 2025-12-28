@@ -24,6 +24,7 @@ public class HouseHoldProductTagsController : ControllerBase
         var entity = new HouseholdProductTags
         {
             TagName = dto.TagName,
+            CategoryId = dto.CategoryId,
         };
         var resEntity=await HouseHoldProductTagsRepository.AddAsync(entity);
         
@@ -31,6 +32,7 @@ public class HouseHoldProductTagsController : ControllerBase
         {
             Id = resEntity.Id,
             TagName = resEntity.TagName,
+            CategoryId = resEntity.CategoryId
         };
         return new ResponseModelBase(resDto);
     }
@@ -43,7 +45,7 @@ public class HouseHoldProductTagsController : ControllerBase
     {
         var res =  await HouseHoldProductTagsRepository.GetByIdAsync(dto.Id);
         res.TagName = dto.TagName;
-        
+        res.CategoryId = dto.CategoryId;
         await HouseHoldProductTagsRepository.UpdateAsync(res);
         return new ResponseModelBase(dto);
     }
@@ -66,6 +68,7 @@ public class HouseHoldProductTagsController : ControllerBase
         {
             Id = resEntity.Id,
             TagName = resEntity.TagName,
+            CategoryId = resEntity.CategoryId
         };
         return new ResponseModelBase(dto);
     }
@@ -81,6 +84,7 @@ public class HouseHoldProductTagsController : ControllerBase
             {
                 Id = model.Id,
                 TagName = model.TagName,
+                CategoryId = model.CategoryId
             });
         }
         

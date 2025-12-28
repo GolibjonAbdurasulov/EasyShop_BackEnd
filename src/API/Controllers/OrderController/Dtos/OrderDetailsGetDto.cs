@@ -19,5 +19,6 @@ public class OrderDetailsProducts
     public long ProductId { get; set; }
     public string ProductName { get; set; }
     public decimal Price { get; set; }
-    public int Count { get; set; }
+    public int CountBox { get; set; }
+    public int CountPiece { get; set; }
 }

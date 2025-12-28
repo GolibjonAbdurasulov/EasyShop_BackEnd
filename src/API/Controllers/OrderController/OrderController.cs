@@ -404,7 +404,8 @@ public class OrderController : ControllerBase
                 ProductId = item.ProductId,
                 ProductName = product.Name.uz,
                 Price = product.Price,
-                Count = item.Quantity
+                CountBox = item.QuantityBox,
+                CountPiece = item.QuantityPiece,
             });
             product = null;
         }

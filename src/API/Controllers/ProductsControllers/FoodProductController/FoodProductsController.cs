@@ -3,6 +3,7 @@ using API.Common;
 using API.Controllers.ProductsControllers.FoodProductController.Dtos;
 using DatabaseBroker.Repositories.Products.FoodProductRepository;
 using DatabaseBroker.Repositories.Tags.FoodProductTagsRepository;
+using Entity.Models.Product;
 using Entity.Models.Product.Products;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -33,7 +34,13 @@ public class FoodProductsController : ControllerBase
             ProductImageId = dto.ImageId,
             MainCategoryId = dto.MainCategoryId,
             FoodCategoryId = dto.FoodProductCategoryId,
-            TagId = dto.TagId
+            TagId = dto.TagId,
+            WarehouseDates = new WarehouseDates
+            {
+                QuantityBoxes = dto.QuantityBoxes,
+                QuantityPieces = dto.QuantityPieces,
+                QuantityInOneBox = dto.QuantityInOneBox,
+            }
         };
         var resEntity=await FoodProductRepository.AddAsync(entity);
         
@@ -48,7 +55,10 @@ public class FoodProductsController : ControllerBase
             FoodProductCategoryId = resEntity.FoodCategoryId,
             FoodProductCategory = resEntity.FoodProductCategory,
             TagId = resEntity.TagId,
-            Tag = resEntity.Tag
+            Tag = resEntity.Tag,
+            QuantityBoxes = resEntity.WarehouseDates.QuantityBoxes,
+            QuantityPieces = resEntity.WarehouseDates.QuantityPieces,
+            QuantityInOneBox = resEntity.WarehouseDates.QuantityInOneBox
         };
         return new ResponseModelBase(resDto);
     }
@@ -67,6 +77,9 @@ public class FoodProductsController : ControllerBase
         res.MainCategoryId = dto.MainCategoryId;
         res.FoodCategoryId = dto.FoodProductCategoryId;
         res.TagId = dto.TagId;
+        res.WarehouseDates.QuantityBoxes = dto.QuantityBoxes;
+        res.WarehouseDates.QuantityPieces = dto.QuantityPieces;
+        res.WarehouseDates.QuantityInOneBox = dto.QuantityInOneBox;
         
         await FoodProductRepository.UpdateAsync(res);
         return new ResponseModelBase(dto);
@@ -99,7 +112,10 @@ public class FoodProductsController : ControllerBase
             FoodProductCategoryId = res.FoodCategoryId,
             FoodProductCategory = res.FoodProductCategory,
             TagId = res.TagId,
-            Tag = res.Tag
+            Tag = res.Tag,
+            QuantityBoxes = res.WarehouseDates.QuantityBoxes,
+            QuantityPieces = res.WarehouseDates.QuantityPieces,
+            QuantityInOneBox = res.WarehouseDates.QuantityInOneBox
         };
         return new ResponseModelBase(dto);
     }
@@ -123,7 +139,10 @@ public class FoodProductsController : ControllerBase
                 FoodProductCategoryId = res.FoodCategoryId,
                 FoodProductCategory = res.FoodProductCategory,
                 TagId = res.TagId,
-                Tag = res.Tag
+                Tag = res.Tag,
+                QuantityBoxes = res.WarehouseDates.QuantityBoxes,
+                QuantityPieces = res.WarehouseDates.QuantityPieces,
+                QuantityInOneBox = res.WarehouseDates.QuantityInOneBox
             });
         }
         
@@ -133,9 +152,9 @@ public class FoodProductsController : ControllerBase
     
     
     [HttpGet]
-    public async Task<ResponseModelBase> GetAllByTagsAsync(long tagId)
+    public async Task<ResponseModelBase> GetAllByTagsAsync(long tagId,long categoryId)
     {
-        var resList =   FoodProductRepository.GetAllAsQueryable().Where(item=>item.TagId==tagId).ToList();
+        var resList =   FoodProductRepository.GetAllAsQueryable().Where(item=>item.TagId==tagId&&categoryId==item.FoodCategoryId).ToList();
         List<FoodProductGetDto> dtos = new List<FoodProductGetDto>();
         foreach (FoodProducts res in resList)
         {
@@ -151,7 +170,10 @@ public class FoodProductsController : ControllerBase
                 FoodProductCategoryId = res.FoodCategoryId,
                 FoodProductCategory = res.FoodProductCategory,
                 TagId = res.TagId,
-                Tag = res.Tag
+                Tag = res.Tag,
+                QuantityBoxes = res.WarehouseDates.QuantityBoxes,
+                QuantityPieces = res.WarehouseDates.QuantityPieces,
+                QuantityInOneBox = res.WarehouseDates.QuantityInOneBox
             });
         }
         
@@ -178,6 +200,9 @@ public class FoodProductsController : ControllerBase
                 MainCategoryId = res.MainCategoryId,
                 FoodProductCategoryId = res.FoodCategoryId,
                 TagId = res.TagId,
+                QuantityBoxes = res.WarehouseDates.QuantityBoxes,
+                QuantityPieces = res.WarehouseDates.QuantityPieces,
+                QuantityInOneBox = res.WarehouseDates.QuantityInOneBox
             });
         }
         
@@ -194,9 +219,7 @@ public class FoodProductsController : ControllerBase
         var res = FoodProductRepository
             .GetAllAsQueryable()
             .Where(p =>
-                p.Name.uz.ToLower().Contains(query.ToLower()) ||
-                p.Name.ru.ToLower().Contains(query.ToLower()) ||
-                p.Name.kr.ToLower().Contains(query.ToLower())
+                p.Name.uz.ToLower().Contains(query.ToLower())
             )
             .ToList();
 
@@ -210,7 +233,10 @@ public class FoodProductsController : ControllerBase
             MainCategoryId = model.MainCategoryId,
             MainCategory = model.MainCategory,
             TagId = model.TagId,
-            Tag = model.Tag
+            Tag = model.Tag,
+            QuantityBoxes = model.WarehouseDates.QuantityBoxes,
+            QuantityPieces = model.WarehouseDates.QuantityPieces,
+            QuantityInOneBox = model.WarehouseDates.QuantityInOneBox
         }).ToList();
 
         if (dtos.Count==0) 

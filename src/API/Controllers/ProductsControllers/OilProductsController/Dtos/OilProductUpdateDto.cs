@@ -11,4 +11,7 @@ public class OilProductUpdateDto
     public Guid ImageId { get; set; }
     public long MainCategoryId { get; set; }
     public long TagId { get; set; }
+    public int QuantityBoxes { get; set; }
+    public int QuantityPieces { get; set; }
+    public int QuantityInOneBox { get; set; }
 }

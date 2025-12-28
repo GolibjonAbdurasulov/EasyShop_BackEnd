@@ -23,6 +23,7 @@ public class FoodProductTagsController : ControllerBase
         var entity = new FoodProductTags
         {
             TagName = dto.TagName,
+            CategoryId = dto.CategoryId,
         };
         var resEntity=await FoodProductTagsRepository.AddAsync(entity);
         
@@ -30,6 +31,7 @@ public class FoodProductTagsController : ControllerBase
         {
             Id = resEntity.Id,
             TagName = resEntity.TagName,
+            CategoryId = resEntity.CategoryId
         };
         return new ResponseModelBase(resDto);
     }
@@ -42,6 +44,7 @@ public class FoodProductTagsController : ControllerBase
     {
         var res =  await FoodProductTagsRepository.GetByIdAsync(dto.Id);
         res.TagName = dto.TagName;
+        res.CategoryId = dto.CategoryId;
         
         await FoodProductTagsRepository.UpdateAsync(res);
         return new ResponseModelBase(dto);
@@ -65,6 +68,7 @@ public class FoodProductTagsController : ControllerBase
         {
             Id = resEntity.Id,
             TagName = resEntity.TagName,
+            CategoryId = resEntity.CategoryId
         };
         return new ResponseModelBase(dto);
     }
@@ -80,6 +84,7 @@ public class FoodProductTagsController : ControllerBase
             {
                 Id = model.Id,
                 TagName = model.TagName,
+                CategoryId = model.CategoryId
             });
         }
         

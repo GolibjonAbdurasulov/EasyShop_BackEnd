@@ -283,7 +283,7 @@ public async Task<Stream> GetProductCheck(long orderId)
         {
             productsWithData.Add((
                 productData.Name?.uz ?? "Noma'lum",
-                item.Quantity,
+                item.QuantityBox,
                 productData.Price
             ));
         }

@@ -11,5 +11,7 @@ public class HouseholdCreationDto
     public long MainCategoryId { get; set; }
     public long HouseholdCategoryId { get; set; }
     public long TagId { get; set; }
-
+    public int QuantityBoxes { get; set; }
+    public int QuantityPieces { get; set; }
+    public int QuantityInOneBox { get; set; }
 }

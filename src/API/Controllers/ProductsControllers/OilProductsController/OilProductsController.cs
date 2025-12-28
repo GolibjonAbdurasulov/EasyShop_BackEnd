@@ -3,6 +3,7 @@ using API.Common;
 using API.Controllers.ProductsControllers.OilProductsController.Dtos;
 using DatabaseBroker.Repositories.Products.OilProductsRepository;
 using DatabaseBroker.Repositories.Tags.OilProductTagsRepository;
+using Entity.Models.Product;
 using Entity.Models.Product.Products;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -33,6 +34,12 @@ public class OilProductsController : ControllerBase
             ProductImageId = dto.ImageId,
             MainCategoryId = dto.MainCategoryId,
             TagId = dto.TagId,
+            WarehouseDates = new WarehouseDates
+            {
+                QuantityBoxes = dto.QuantityBoxes,
+                QuantityPieces = dto.QuantityPieces,
+                QuantityInOneBox = dto.QuantityInOneBox,
+            }
         };
         var resEntity=await HoldProductsRepository.AddAsync(entity);
         
@@ -46,7 +53,10 @@ public class OilProductsController : ControllerBase
             MainCategoryId = resEntity.MainCategoryId,
             MainCategory = resEntity.MainCategory,
             TagId = resEntity.TagId,
-            Tag = resEntity.Tag
+            Tag = resEntity.Tag,
+            QuantityBoxes = resEntity.WarehouseDates.QuantityBoxes,
+            QuantityPieces = resEntity.WarehouseDates.QuantityPieces,
+            QuantityInOneBox = resEntity.WarehouseDates.QuantityInOneBox
         };
         return new ResponseModelBase(resDto);
     }
@@ -64,6 +74,9 @@ public class OilProductsController : ControllerBase
         res.ProductImageId = dto.ImageId;
         res.MainCategoryId = dto.MainCategoryId;
         res.TagId = dto.TagId;
+        res.WarehouseDates.QuantityBoxes = dto.QuantityBoxes;
+        res.WarehouseDates.QuantityPieces = dto.QuantityPieces;
+        res.WarehouseDates.QuantityInOneBox = dto.QuantityInOneBox;
         
         await HoldProductsRepository.UpdateAsync(res);
         return new ResponseModelBase(dto);
@@ -94,7 +107,10 @@ public class OilProductsController : ControllerBase
             MainCategoryId = resEntity.MainCategoryId,
             MainCategory = resEntity.MainCategory,
             TagId = resEntity.TagId,
-            Tag = resEntity.Tag
+            Tag = resEntity.Tag,
+            QuantityBoxes = resEntity.WarehouseDates.QuantityBoxes,
+            QuantityPieces = resEntity.WarehouseDates.QuantityPieces,
+            QuantityInOneBox = resEntity.WarehouseDates.QuantityInOneBox
         };
         return new ResponseModelBase(dto);
     }
@@ -116,7 +132,10 @@ public class OilProductsController : ControllerBase
                 MainCategoryId = model.MainCategoryId,
                 MainCategory = model.MainCategory,
                 TagId = model.TagId,
-                Tag = model.Tag
+                Tag = model.Tag,
+                QuantityBoxes = model.WarehouseDates.QuantityBoxes,
+                QuantityPieces = model.WarehouseDates.QuantityPieces,
+                QuantityInOneBox = model.WarehouseDates.QuantityInOneBox
             });
         }
         
@@ -139,7 +158,10 @@ public class OilProductsController : ControllerBase
                 ImageId = model.ProductImageId,
                 MainCategory = model.MainCategory,
                 TagId = model.TagId,
-                Tag = model.Tag
+                Tag = model.Tag,
+                QuantityBoxes = model.WarehouseDates.QuantityBoxes,
+                QuantityPieces = model.WarehouseDates.QuantityPieces,
+                QuantityInOneBox = model.WarehouseDates.QuantityInOneBox
             });
         }
         
@@ -155,10 +177,7 @@ public class OilProductsController : ControllerBase
         var res = HoldProductsRepository
             .GetAllAsQueryable()
             .Where(p =>
-                p.Name.uz.ToLower().Contains(query.ToLower()) ||
-                p.Name.ru.ToLower().Contains(query.ToLower()) ||
-                p.Name.kr.ToLower().Contains(query.ToLower())
-            )
+                p.Name.uz.ToLower().Contains(query.ToLower()))
             .ToList();
 
         var dtos = res.Select(model => new OilProductGetDto
@@ -171,7 +190,10 @@ public class OilProductsController : ControllerBase
             MainCategoryId = model.MainCategoryId,
             MainCategory = model.MainCategory,
             TagId = model.TagId,
-            Tag = model.Tag
+            Tag = model.Tag,
+            QuantityBoxes = model.WarehouseDates.QuantityBoxes,
+            QuantityInOneBox = model.WarehouseDates.QuantityInOneBox,
+            QuantityPieces = model.WarehouseDates.QuantityPieces
         }).ToList();
 
         if (dtos.Count==0) 

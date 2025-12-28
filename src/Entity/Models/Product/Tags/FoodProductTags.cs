@@ -6,4 +6,5 @@ namespace Entity.Models.Product.Tags;
 public class FoodProductTags : ModelBase<long>
 {
     [Column("tag_name",TypeName = "jsonb")]public MultiLanguageField TagName { get; set; }
+    [Column("category_id")]public long CategoryId { get; set; }
 }
