@@ -3,7 +3,6 @@ using API.Common;
 using API.Controllers.ProductsControllers.HouseholdProductsController.Dtos;
 using DatabaseBroker.Repositories.Products.HouseHoldProductsRepository;
 using DatabaseBroker.Repositories.Tags.HouseHoldProductTagsRepository;
-using Entity.Models.Product;
 using Entity.Models.Product.Products;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,12 +33,8 @@ public class HouseholdProductsController : ControllerBase
             MainCategoryId = dto.MainCategoryId,
             HouseholdCategoryId = dto.HouseholdCategoryId,
             TagId = dto.TagId,
-            WarehouseDates = new WarehouseDates
-            {
-                QuantityBoxes = dto.QuantityBoxes,
-                QuantityPieces = dto.QuantityPieces,
-                QuantityInOneBox = dto.QuantityInOneBox,
-            }
+            WarehouseDatesId = dto.WarehouseDatesId,
+            
         };
         var resEntity=await HoldProductsRepository.AddAsync(entity);
         
@@ -56,9 +51,7 @@ public class HouseholdProductsController : ControllerBase
             HouseholdProductCategoryId = resEntity.HouseholdCategoryId,
             TagId = resEntity.TagId,
             Tag = resEntity.Tag,
-            QuantityBoxes = resEntity.WarehouseDates.QuantityBoxes,
-            QuantityPieces = resEntity.WarehouseDates.QuantityPieces,
-            QuantityInOneBox = resEntity.WarehouseDates.QuantityInOneBox
+            WarehouseDatesId = resEntity.WarehouseDatesId
         };
         return new ResponseModelBase(resDto);
     }
@@ -77,9 +70,7 @@ public class HouseholdProductsController : ControllerBase
         res.MainCategoryId = dto.MainCategoryId;
         res.HouseholdCategoryId = dto.HouseholdProductCategoryId;
         res.TagId = dto.TagId;
-        res.WarehouseDates.QuantityBoxes = dto.QuantityBoxes;
-        res.WarehouseDates.QuantityPieces = dto.QuantityPieces;
-        res.WarehouseDates.QuantityInOneBox = dto.QuantityInOneBox;
+        res.WarehouseDates.Id = dto.WarehouseDatesId;
         await HoldProductsRepository.UpdateAsync(res);
         return new ResponseModelBase(dto);
     }
@@ -112,9 +103,7 @@ public class HouseholdProductsController : ControllerBase
             HouseholdProductCategoryId = resEntity.HouseholdCategoryId,
             TagId = resEntity.TagId,
             Tag = resEntity.Tag,
-            QuantityBoxes = resEntity.WarehouseDates.QuantityBoxes,
-            QuantityPieces = resEntity.WarehouseDates.QuantityPieces,
-            QuantityInOneBox = resEntity.WarehouseDates.QuantityInOneBox
+            WarehouseDatesId = resEntity.WarehouseDatesId
         };
         return new ResponseModelBase(dto);
     }
@@ -139,9 +128,7 @@ public class HouseholdProductsController : ControllerBase
                 HouseholdProductCategoryId = resEntity.HouseholdCategoryId,
                 TagId = resEntity.TagId,
                 Tag = resEntity.Tag,
-                QuantityBoxes = resEntity.WarehouseDates.QuantityBoxes,
-                QuantityPieces = resEntity.WarehouseDates.QuantityPieces,
-                QuantityInOneBox = resEntity.WarehouseDates.QuantityInOneBox
+                WarehouseDatesId = resEntity.WarehouseDatesId
             });
         }
         
@@ -173,9 +160,7 @@ public class HouseholdProductsController : ControllerBase
                 HouseholdProductCategoryId = resEntity.HouseholdCategoryId,
                 TagId = resEntity.TagId,
                 Tag = resEntity.Tag,
-                QuantityBoxes = resEntity.WarehouseDates.QuantityBoxes,
-                QuantityPieces = resEntity.WarehouseDates.QuantityPieces,
-                QuantityInOneBox = resEntity.WarehouseDates.QuantityInOneBox
+                WarehouseDatesId = resEntity.WarehouseDatesId
             });
         }
         
@@ -201,9 +186,7 @@ public class HouseholdProductsController : ControllerBase
                 MainCategoryId = res.MainCategoryId,
                 HouseholdProductCategoryId = res.HouseholdCategoryId,
                 TagId = res.TagId,
-                QuantityBoxes = res.WarehouseDates.QuantityBoxes,
-                QuantityPieces = res.WarehouseDates.QuantityPieces,
-                QuantityInOneBox = res.WarehouseDates.QuantityInOneBox
+                WarehouseDatesId = res.WarehouseDatesId
             });
         }
         
@@ -236,9 +219,7 @@ public class HouseholdProductsController : ControllerBase
             MainCategory = model.MainCategory,
             TagId = model.TagId,
             Tag = model.Tag,
-            QuantityBoxes = model.WarehouseDates.QuantityBoxes,
-            QuantityPieces = model.WarehouseDates.QuantityPieces,
-            QuantityInOneBox = model.WarehouseDates.QuantityInOneBox
+            WarehouseDatesId = model.WarehouseDatesId
         }).ToList();
 
         if (dtos.Count==0) 

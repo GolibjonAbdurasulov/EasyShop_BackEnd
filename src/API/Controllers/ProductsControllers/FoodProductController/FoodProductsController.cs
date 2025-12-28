@@ -3,6 +3,7 @@ using API.Common;
 using API.Controllers.ProductsControllers.FoodProductController.Dtos;
 using DatabaseBroker.Repositories.Products.FoodProductRepository;
 using DatabaseBroker.Repositories.Tags.FoodProductTagsRepository;
+using DatabaseBroker.Repositories.WarehouseDatesRepositories;
 using Entity.Models.Product;
 using Entity.Models.Product.Products;
 using Microsoft.AspNetCore.Authorization;
@@ -15,17 +16,27 @@ public class FoodProductsController : ControllerBase
 {
     private IFoodProductTagsRepository FoodProductTagsRepository { get; set; }
     private IFoodProductRepository FoodProductRepository { get; set; }
+    private IWarehouseDatesRepository WarehouseDatesRepository { get; set; }
 
-    public FoodProductsController(IFoodProductRepository ourTeamRepository, IFoodProductTagsRepository foodProductTagsRepository)
+    public FoodProductsController(IFoodProductRepository ourTeamRepository, IFoodProductTagsRepository foodProductTagsRepository, IWarehouseDatesRepository warehouseDatesRepository)
     {
         this.FoodProductRepository = ourTeamRepository;
         FoodProductTagsRepository = foodProductTagsRepository;
+        this.WarehouseDatesRepository = warehouseDatesRepository;
     }
 
     [HttpPost]
     [Authorize]
     public async Task<ResponseModelBase> CreateAsync( FoodProductCreationDto dto)
     {
+
+        var warehouse = await WarehouseDatesRepository.AddAsync(new WarehouseDates
+        {
+            QuantityBoxes = 0,
+            QuantityPieces = 0,
+            QuantityInOneBox = 0
+        });
+        
         var entity = new FoodProducts
         {
             Name = dto.Name,
@@ -34,14 +45,10 @@ public class FoodProductsController : ControllerBase
             ProductImageId = dto.ImageId,
             MainCategoryId = dto.MainCategoryId,
             FoodCategoryId = dto.FoodProductCategoryId,
+            WarehouseDatesId = warehouse.Id,
             TagId = dto.TagId,
-            WarehouseDates = new WarehouseDates
-            {
-                QuantityBoxes = dto.QuantityBoxes,
-                QuantityPieces = dto.QuantityPieces,
-                QuantityInOneBox = dto.QuantityInOneBox,
-            }
         };
+        
         var resEntity=await FoodProductRepository.AddAsync(entity);
         
         var resDto = new FoodProductGetDto
@@ -54,11 +61,9 @@ public class FoodProductsController : ControllerBase
             MainCategoryId = resEntity.MainCategoryId,
             FoodProductCategoryId = resEntity.FoodCategoryId,
             FoodProductCategory = resEntity.FoodProductCategory,
+            WarehouseDatesId = resEntity.WarehouseDatesId,
             TagId = resEntity.TagId,
             Tag = resEntity.Tag,
-            QuantityBoxes = resEntity.WarehouseDates.QuantityBoxes,
-            QuantityPieces = resEntity.WarehouseDates.QuantityPieces,
-            QuantityInOneBox = resEntity.WarehouseDates.QuantityInOneBox
         };
         return new ResponseModelBase(resDto);
     }
@@ -77,9 +82,7 @@ public class FoodProductsController : ControllerBase
         res.MainCategoryId = dto.MainCategoryId;
         res.FoodCategoryId = dto.FoodProductCategoryId;
         res.TagId = dto.TagId;
-        res.WarehouseDates.QuantityBoxes = dto.QuantityBoxes;
-        res.WarehouseDates.QuantityPieces = dto.QuantityPieces;
-        res.WarehouseDates.QuantityInOneBox = dto.QuantityInOneBox;
+        res.WarehouseDatesId = dto.WarehouseDatesId;
         
         await FoodProductRepository.UpdateAsync(res);
         return new ResponseModelBase(dto);
@@ -113,9 +116,7 @@ public class FoodProductsController : ControllerBase
             FoodProductCategory = res.FoodProductCategory,
             TagId = res.TagId,
             Tag = res.Tag,
-            QuantityBoxes = res.WarehouseDates.QuantityBoxes,
-            QuantityPieces = res.WarehouseDates.QuantityPieces,
-            QuantityInOneBox = res.WarehouseDates.QuantityInOneBox
+            WarehouseDatesId = res.WarehouseDatesId
         };
         return new ResponseModelBase(dto);
     }
@@ -140,9 +141,7 @@ public class FoodProductsController : ControllerBase
                 FoodProductCategory = res.FoodProductCategory,
                 TagId = res.TagId,
                 Tag = res.Tag,
-                QuantityBoxes = res.WarehouseDates.QuantityBoxes,
-                QuantityPieces = res.WarehouseDates.QuantityPieces,
-                QuantityInOneBox = res.WarehouseDates.QuantityInOneBox
+                WarehouseDatesId = res.WarehouseDatesId
             });
         }
         
@@ -171,9 +170,8 @@ public class FoodProductsController : ControllerBase
                 FoodProductCategory = res.FoodProductCategory,
                 TagId = res.TagId,
                 Tag = res.Tag,
-                QuantityBoxes = res.WarehouseDates.QuantityBoxes,
-                QuantityPieces = res.WarehouseDates.QuantityPieces,
-                QuantityInOneBox = res.WarehouseDates.QuantityInOneBox
+                WarehouseDatesId = res.WarehouseDatesId
+                
             });
         }
         
@@ -200,9 +198,7 @@ public class FoodProductsController : ControllerBase
                 MainCategoryId = res.MainCategoryId,
                 FoodProductCategoryId = res.FoodCategoryId,
                 TagId = res.TagId,
-                QuantityBoxes = res.WarehouseDates.QuantityBoxes,
-                QuantityPieces = res.WarehouseDates.QuantityPieces,
-                QuantityInOneBox = res.WarehouseDates.QuantityInOneBox
+                WarehouseDatesId = res.WarehouseDatesId
             });
         }
         
@@ -234,9 +230,7 @@ public class FoodProductsController : ControllerBase
             MainCategory = model.MainCategory,
             TagId = model.TagId,
             Tag = model.Tag,
-            QuantityBoxes = model.WarehouseDates.QuantityBoxes,
-            QuantityPieces = model.WarehouseDates.QuantityPieces,
-            QuantityInOneBox = model.WarehouseDates.QuantityInOneBox
+            WarehouseDatesId = model.WarehouseDatesId,
         }).ToList();
 
         if (dtos.Count==0) 

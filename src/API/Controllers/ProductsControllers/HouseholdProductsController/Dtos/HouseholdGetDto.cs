@@ -17,9 +17,8 @@ public class HouseholdGetDto
     public MainProductCategories? MainCategory { get; set; }
     public long HouseholdProductCategoryId { get; set; }
     public HouseholdProductCategory? HouseholdProductCategory { get; set; }
+    public long WarehouseDatesId { get; set; }  
+
     public long TagId { get; set; }
     public HouseholdProductTags? Tag { get; set; }
-    public int QuantityBoxes { get; set; }
-    public int QuantityPieces { get; set; }
-    public int QuantityInOneBox { get; set; }
 }

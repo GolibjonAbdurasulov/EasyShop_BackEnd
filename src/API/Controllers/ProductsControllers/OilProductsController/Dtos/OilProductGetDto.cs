@@ -17,7 +17,5 @@ public class OilProductGetDto
     public MainProductCategories MainCategory { get; set; }
     public long TagId { get; set; }
     public OilProductTags Tag { get; set; }
-    public int QuantityBoxes { get; set; }
-    public int QuantityPieces { get; set; }
-    public int QuantityInOneBox { get; set; }
+    public long WarehouseDatesId { get; set; }  
 }

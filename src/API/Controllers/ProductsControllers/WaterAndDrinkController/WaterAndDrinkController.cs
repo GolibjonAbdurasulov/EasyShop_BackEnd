@@ -33,12 +33,7 @@ public class WaterAndDrinkController : ControllerBase
             ProductImageId = dto.ImageId,
             MainCategoryId = dto.MainCategoryId,
             TagId = dto.TagId,
-            WarehouseDates = new WarehouseDates
-            {
-                QuantityBoxes = dto.QuantityBoxes,
-                QuantityPieces = dto.QuantityPieces,
-                QuantityInOneBox = dto.QuantityInOneBox,
-            }
+            WarehouseDatesId = dto.WarehouseDatesId
         };
         var resEntity=await WaterAndDrinksRepository.AddAsync(entity);
         
@@ -53,9 +48,7 @@ public class WaterAndDrinkController : ControllerBase
             MainCategory = resEntity.MainCategory,
             TagId = resEntity.TagId,
             Tag = resEntity.Tag,
-            QuantityBoxes = resEntity.WarehouseDates.QuantityBoxes,
-            QuantityPieces = resEntity.WarehouseDates.QuantityPieces,
-            QuantityInOneBox = resEntity.WarehouseDates.QuantityInOneBox
+            WarehouseDatesId = resEntity.WarehouseDatesId
         };
         return new ResponseModelBase(resDto);
     }
@@ -73,9 +66,7 @@ public class WaterAndDrinkController : ControllerBase
         res.ProductImageId = dto.ImageId;
         res.MainCategoryId = dto.MainCategoryId;
         res.TagId = dto.TagId;
-        res.WarehouseDates.QuantityBoxes = dto.QuantityBoxes;
-        res.WarehouseDates.QuantityPieces = dto.QuantityPieces;
-        res.WarehouseDates.QuantityInOneBox = dto.QuantityInOneBox;
+        res.WarehouseDatesId = dto.WarehouseDatesId;
         
         await WaterAndDrinksRepository.UpdateAsync(res);
         return new ResponseModelBase(dto);
@@ -107,9 +98,7 @@ public class WaterAndDrinkController : ControllerBase
             MainCategory = resEntity.MainCategory,
             TagId = resEntity.TagId,
             Tag = resEntity.Tag,
-            QuantityBoxes = resEntity.WarehouseDates.QuantityBoxes,
-            QuantityPieces = resEntity.WarehouseDates.QuantityPieces,
-            QuantityInOneBox = resEntity.WarehouseDates.QuantityInOneBox
+            WarehouseDatesId = resEntity.WarehouseDatesId
         };
         return new ResponseModelBase(dto);
     }
@@ -131,9 +120,7 @@ public class WaterAndDrinkController : ControllerBase
                 MainCategory = model.MainCategory,
                 TagId = model.TagId,
                 Tag = model.Tag,
-                QuantityBoxes = model.WarehouseDates.QuantityBoxes,
-                QuantityPieces = model.WarehouseDates.QuantityPieces,
-                QuantityInOneBox = model.WarehouseDates.QuantityInOneBox
+                WarehouseDatesId = model.WarehouseDatesId
             });
         }
         
@@ -159,9 +146,7 @@ public class WaterAndDrinkController : ControllerBase
                 MainCategory = model.MainCategory,
                 TagId = model.TagId,
                 Tag = model.Tag,
-                QuantityBoxes = model.WarehouseDates.QuantityBoxes,
-                QuantityPieces = model.WarehouseDates.QuantityPieces,
-                QuantityInOneBox = model.WarehouseDates.QuantityInOneBox
+                WarehouseDatesId = model.WarehouseDatesId
                 
             });
         }
@@ -192,9 +177,7 @@ public class WaterAndDrinkController : ControllerBase
             MainCategory = model.MainCategory,
             TagId = model.TagId,
             Tag = model.Tag,
-            QuantityBoxes = model.WarehouseDates.QuantityBoxes,
-            QuantityPieces = model.WarehouseDates.QuantityPieces,
-            QuantityInOneBox = model.WarehouseDates.QuantityInOneBox
+            WarehouseDatesId = model.WarehouseDatesId
         }).ToList();
 
         if (dtos.Count==0) 

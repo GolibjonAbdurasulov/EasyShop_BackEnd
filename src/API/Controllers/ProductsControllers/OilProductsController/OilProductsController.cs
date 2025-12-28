@@ -34,12 +34,7 @@ public class OilProductsController : ControllerBase
             ProductImageId = dto.ImageId,
             MainCategoryId = dto.MainCategoryId,
             TagId = dto.TagId,
-            WarehouseDates = new WarehouseDates
-            {
-                QuantityBoxes = dto.QuantityBoxes,
-                QuantityPieces = dto.QuantityPieces,
-                QuantityInOneBox = dto.QuantityInOneBox,
-            }
+            WarehouseDatesId = dto.WarehouseDatesId
         };
         var resEntity=await HoldProductsRepository.AddAsync(entity);
         
@@ -54,9 +49,7 @@ public class OilProductsController : ControllerBase
             MainCategory = resEntity.MainCategory,
             TagId = resEntity.TagId,
             Tag = resEntity.Tag,
-            QuantityBoxes = resEntity.WarehouseDates.QuantityBoxes,
-            QuantityPieces = resEntity.WarehouseDates.QuantityPieces,
-            QuantityInOneBox = resEntity.WarehouseDates.QuantityInOneBox
+            WarehouseDatesId = resEntity.WarehouseDatesId
         };
         return new ResponseModelBase(resDto);
     }
@@ -74,9 +67,7 @@ public class OilProductsController : ControllerBase
         res.ProductImageId = dto.ImageId;
         res.MainCategoryId = dto.MainCategoryId;
         res.TagId = dto.TagId;
-        res.WarehouseDates.QuantityBoxes = dto.QuantityBoxes;
-        res.WarehouseDates.QuantityPieces = dto.QuantityPieces;
-        res.WarehouseDates.QuantityInOneBox = dto.QuantityInOneBox;
+        res.WarehouseDatesId = dto.WarehouseDatesId;
         
         await HoldProductsRepository.UpdateAsync(res);
         return new ResponseModelBase(dto);
@@ -108,9 +99,7 @@ public class OilProductsController : ControllerBase
             MainCategory = resEntity.MainCategory,
             TagId = resEntity.TagId,
             Tag = resEntity.Tag,
-            QuantityBoxes = resEntity.WarehouseDates.QuantityBoxes,
-            QuantityPieces = resEntity.WarehouseDates.QuantityPieces,
-            QuantityInOneBox = resEntity.WarehouseDates.QuantityInOneBox
+            WarehouseDatesId = resEntity.WarehouseDatesId
         };
         return new ResponseModelBase(dto);
     }
@@ -133,9 +122,7 @@ public class OilProductsController : ControllerBase
                 MainCategory = model.MainCategory,
                 TagId = model.TagId,
                 Tag = model.Tag,
-                QuantityBoxes = model.WarehouseDates.QuantityBoxes,
-                QuantityPieces = model.WarehouseDates.QuantityPieces,
-                QuantityInOneBox = model.WarehouseDates.QuantityInOneBox
+                WarehouseDatesId = model.WarehouseDatesId
             });
         }
         
@@ -159,9 +146,7 @@ public class OilProductsController : ControllerBase
                 MainCategory = model.MainCategory,
                 TagId = model.TagId,
                 Tag = model.Tag,
-                QuantityBoxes = model.WarehouseDates.QuantityBoxes,
-                QuantityPieces = model.WarehouseDates.QuantityPieces,
-                QuantityInOneBox = model.WarehouseDates.QuantityInOneBox
+                WarehouseDatesId = model.WarehouseDatesId
             });
         }
         
@@ -191,9 +176,7 @@ public class OilProductsController : ControllerBase
             MainCategory = model.MainCategory,
             TagId = model.TagId,
             Tag = model.Tag,
-            QuantityBoxes = model.WarehouseDates.QuantityBoxes,
-            QuantityInOneBox = model.WarehouseDates.QuantityInOneBox,
-            QuantityPieces = model.WarehouseDates.QuantityPieces
+            WarehouseDatesId = model.WarehouseDatesId
         }).ToList();
 
         if (dtos.Count==0) 
