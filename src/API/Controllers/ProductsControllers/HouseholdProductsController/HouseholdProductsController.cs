@@ -4,6 +4,7 @@ using API.Controllers.ProductsControllers.HouseholdProductsController.Dtos;
 using DatabaseBroker.Repositories.Products.HouseHoldProductsRepository;
 using DatabaseBroker.Repositories.Tags.HouseHoldProductTagsRepository;
 using DatabaseBroker.Repositories.WarehouseDatesRepositories;
+using Entity.Models.Product;
 using Entity.Models.Product.Products;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +29,14 @@ public class HouseholdProductsController : ControllerBase
     [Authorize]
     public async Task<ResponseModelBase> CreateAsync( HouseholdCreationDto dto)
     {
+        
+        var warehouse = await WarehouseDatesRepository.AddAsync(new WarehouseDates
+        {
+            QuantityBoxes = 0,
+            QuantityPieces = 0,
+            QuantityInOneBox = 0
+        });
+        
         var entity = new HouseholdProducts
         {
             Name = dto.Name,
@@ -37,7 +46,7 @@ public class HouseholdProductsController : ControllerBase
             MainCategoryId = dto.MainCategoryId,
             HouseholdCategoryId = dto.HouseholdCategoryId,
             TagId = dto.TagId,
-            WarehouseDatesId = dto.WarehouseDatesId,
+            WarehouseDatesId = warehouse.Id,
             
         };
         var resEntity=await HoldProductsRepository.AddAsync(entity);
@@ -56,10 +65,6 @@ public class HouseholdProductsController : ControllerBase
             HouseholdProductCategoryId = resEntity.HouseholdCategoryId,
             TagId = resEntity.TagId,
             Tag = resEntity.Tag,
-            WarehouseDatesId = resEntity.WarehouseDatesId,
-            QuantityBoxes = warehouseDates.QuantityBoxes,
-            QuantityPieces = warehouseDates.QuantityPieces,
-            QuantityInOneBox = warehouseDates.QuantityInOneBox,
             
         };
         return new ResponseModelBase(resDto);
