@@ -152,11 +152,10 @@ public class HouseholdProductsController : ControllerBase
     
     
     [HttpGet]
-    public async Task<ResponseModelBase> GetAllByTagsAsync(long tagId,long categoryId)
+    public async Task<ResponseModelBase> GetAllByTagsAsync(long tagId)
     {
         var res =   HoldProductsRepository.GetAllAsQueryable().Where(item
-            =>item.TagId==tagId && 
-              item.HouseholdCategoryId==categoryId).ToList();
+            =>item.TagId==tagId).ToList();
         
         List<HouseholdGetDto> dtos = new List<HouseholdGetDto>();
         foreach (HouseholdProducts resEntity in res)

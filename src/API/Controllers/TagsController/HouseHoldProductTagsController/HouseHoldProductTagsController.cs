@@ -72,7 +72,25 @@ public class HouseHoldProductTagsController : ControllerBase
         };
         return new ResponseModelBase(dto);
     }
-    
+    [HttpGet]
+    public async Task<ResponseModelBase> GetTagsByCategoryIdAsync(long categoryId)
+    {
+        var resEntity =   HouseHoldProductTagsRepository.GetAllAsQueryable().
+            Where(x => x.CategoryId==categoryId).ToList();
+        
+        
+        List<HouseHoldProductTagsDto> dtos = new List<HouseHoldProductTagsDto>();
+        foreach (HouseholdProductTags model in resEntity)
+        {
+            dtos.Add(new HouseHoldProductTagsDto()
+            {
+                Id = model.Id,
+                TagName = model.TagName,
+                CategoryId = model.CategoryId
+            });
+        }
+        return new ResponseModelBase(dtos);
+    }
     [HttpGet]
     public async Task<ResponseModelBase> GetAllAsync()
     {
