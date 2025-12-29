@@ -74,6 +74,26 @@ public class FoodProductTagsController : ControllerBase
     }
     
     [HttpGet]
+    public async Task<ResponseModelBase> GetTagsByCategoryIdAsync(long categoryId)
+    {
+        var resEntity =   FoodProductTagsRepository.GetAllAsQueryable().
+            Where(x => x.CategoryId==categoryId).ToList();
+        
+        
+        List<FoodProductTagsDto> dtos = new List<FoodProductTagsDto>();
+        foreach (FoodProductTags model in resEntity)
+        {
+            dtos.Add(new FoodProductTagsDto
+            {
+                Id = model.Id,
+                TagName = model.TagName,
+                CategoryId = model.CategoryId
+            });
+        }
+        return new ResponseModelBase(dtos);
+    }
+    
+    [HttpGet]
     public async Task<ResponseModelBase> GetAllAsync()
     {
         var res =   FoodProductTagsRepository.GetAllAsQueryable().ToList();
