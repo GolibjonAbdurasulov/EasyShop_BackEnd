@@ -159,9 +159,9 @@ public class FoodProductsController : ControllerBase
     
     
     [HttpGet]
-    public async Task<ResponseModelBase> GetAllByTagsAsync(long tagId,long categoryId)
+    public async Task<ResponseModelBase> GetAllByTagsAsync(long tagId)
     {
-        var resList =   FoodProductRepository.GetAllAsQueryable().Where(item=>item.TagId==tagId&&categoryId==item.FoodCategoryId).ToList();
+        var resList =   FoodProductRepository.GetAllAsQueryable().Where(item=>item.TagId==tagId).ToList();
         List<FoodProductGetDto> dtos = new List<FoodProductGetDto>();
         foreach (FoodProducts res in resList)
         {
