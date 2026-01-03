@@ -60,12 +60,8 @@ public class HouseholdProductsController : ControllerBase
             Price = resEntity.Price,
             ImageId = resEntity.ProductImageId,
             MainCategoryId = resEntity.MainCategoryId,
-            MainCategory = resEntity.MainCategory,
-            HouseholdProductCategory = resEntity.HouseholdProductCategory,
             HouseholdProductCategoryId = resEntity.HouseholdCategoryId,
-            TagId = resEntity.TagId,
-            Tag = resEntity.Tag,
-            
+            TagId = resEntity.TagId
         };
         return new ResponseModelBase(resDto);
     }
@@ -112,11 +108,8 @@ public class HouseholdProductsController : ControllerBase
             Price = resEntity.Price,
             ImageId = resEntity.ProductImageId,
             MainCategoryId = resEntity.MainCategoryId,
-            MainCategory = resEntity.MainCategory,
-            HouseholdProductCategory = resEntity.HouseholdProductCategory,
             HouseholdProductCategoryId = resEntity.HouseholdCategoryId,
             TagId = resEntity.TagId,
-            Tag = resEntity.Tag,
             WarehouseDatesId = resEntity.WarehouseDatesId
         };
         return new ResponseModelBase(dto);
@@ -139,11 +132,8 @@ public class HouseholdProductsController : ControllerBase
                 Price = resEntity.Price,
                 ImageId = resEntity.ProductImageId,
                 MainCategoryId = resEntity.MainCategoryId,
-                MainCategory = resEntity.MainCategory,
-                HouseholdProductCategory = resEntity.HouseholdProductCategory,
                 HouseholdProductCategoryId = resEntity.HouseholdCategoryId,
                 TagId = resEntity.TagId,
-                Tag = resEntity.Tag,
                 WarehouseDatesId = resEntity.WarehouseDatesId,
                 QuantityBoxes = warehouseDates.QuantityBoxes,
                 QuantityPieces = warehouseDates.QuantityPieces,
@@ -175,11 +165,8 @@ public class HouseholdProductsController : ControllerBase
                 Price = resEntity.Price,
                 ImageId = resEntity.ProductImageId,
                 MainCategoryId = resEntity.MainCategoryId,
-                MainCategory = resEntity.MainCategory,
-                HouseholdProductCategory = resEntity.HouseholdProductCategory,
                 HouseholdProductCategoryId = resEntity.HouseholdCategoryId,
                 TagId = resEntity.TagId,
-                Tag = resEntity.Tag,
                 WarehouseDatesId = resEntity.WarehouseDatesId,
                 QuantityBoxes = warehouseDates.QuantityBoxes,
                 QuantityPieces = warehouseDates.QuantityPieces,
@@ -244,9 +231,7 @@ public class HouseholdProductsController : ControllerBase
             Price = model.Price,
             ImageId = model.ProductImageId,
             MainCategoryId = model.MainCategoryId,
-            MainCategory = model.MainCategory,
             TagId = model.TagId,
-            Tag = model.Tag,
             WarehouseDatesId = model.WarehouseDatesId
         }).ToList();
 

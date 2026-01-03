@@ -46,9 +46,7 @@ public class OilProductsController : ControllerBase
             Price = resEntity.Price,
             ImageId = resEntity.ProductImageId,
             MainCategoryId = resEntity.MainCategoryId,
-            MainCategory = resEntity.MainCategory,
             TagId = resEntity.TagId,
-            Tag = resEntity.Tag,
             WarehouseDatesId = resEntity.WarehouseDatesId
         };
         return new ResponseModelBase(resDto);
@@ -96,9 +94,7 @@ public class OilProductsController : ControllerBase
             Price = resEntity.Price,
             ImageId = resEntity.ProductImageId,
             MainCategoryId = resEntity.MainCategoryId,
-            MainCategory = resEntity.MainCategory,
             TagId = resEntity.TagId,
-            Tag = resEntity.Tag,
             WarehouseDatesId = resEntity.WarehouseDatesId
         };
         return new ResponseModelBase(dto);
@@ -119,9 +115,7 @@ public class OilProductsController : ControllerBase
                 Price = model.Price,
                 ImageId = model.ProductImageId,
                 MainCategoryId = model.MainCategoryId,
-                MainCategory = model.MainCategory,
                 TagId = model.TagId,
-                Tag = model.Tag,
                 WarehouseDatesId = model.WarehouseDatesId
             });
         }
@@ -143,9 +137,7 @@ public class OilProductsController : ControllerBase
                 About = model.About,
                 Price = model.Price,
                 ImageId = model.ProductImageId,
-                MainCategory = model.MainCategory,
                 TagId = model.TagId,
-                Tag = model.Tag,
                 WarehouseDatesId = model.WarehouseDatesId
             });
         }
@@ -173,9 +165,7 @@ public class OilProductsController : ControllerBase
             Price = model.Price,
             ImageId = model.ProductImageId,
             MainCategoryId = model.MainCategoryId,
-            MainCategory = model.MainCategory,
             TagId = model.TagId,
-            Tag = model.Tag,
             WarehouseDatesId = model.WarehouseDatesId
         }).ToList();
 

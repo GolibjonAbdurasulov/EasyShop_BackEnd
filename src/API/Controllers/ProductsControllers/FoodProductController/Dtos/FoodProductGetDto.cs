@@ -15,7 +15,6 @@ public class FoodProductGetDto
     public string ImageUrl => $"https://back.easyshop.uz/File/DownloadFile/download/{ImageId}";
 
     public long MainCategoryId { get; set; }
-    public MainProductCategories? MainCategory { get; set; }
     public long FoodProductCategoryId { get; set; }    
     public long WarehouseDatesId { get; set; }  
     public long TagId { get; set; }

@@ -14,8 +14,6 @@ public class OilProductGetDto
     public Guid ImageId { get; set; }
     public string ImageUrl => $"https://back.easyshop.uz/File/DownloadFile/download/{ImageId}";
     public long MainCategoryId { get; set; }
-    public MainProductCategories MainCategory { get; set; }
     public long TagId { get; set; }
-    public OilProductTags Tag { get; set; }
     public long WarehouseDatesId { get; set; }  
 }
