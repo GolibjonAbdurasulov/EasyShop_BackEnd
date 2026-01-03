@@ -16,11 +16,9 @@ public class FoodProductGetDto
 
     public long MainCategoryId { get; set; }
     public MainProductCategories? MainCategory { get; set; }
-    public long FoodProductCategoryId { get; set; }
-    public FoodProductCategory? FoodProductCategory { get; set; }    
+    public long FoodProductCategoryId { get; set; }    
     public long WarehouseDatesId { get; set; }  
     public long TagId { get; set; }
-    public FoodProductTags? Tag { get; set; }
     public int QuantityBoxes { get; set; }
     public int QuantityPieces { get; set; }
     public int QuantityInOneBox { get; set; }
