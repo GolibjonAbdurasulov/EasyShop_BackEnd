@@ -65,8 +65,6 @@ public class HouseholdProductsController : ControllerBase
         };
         return new ResponseModelBase(resDto);
     }
-
-
   
     [HttpPut]
     [Authorize]
@@ -143,8 +141,6 @@ public class HouseholdProductsController : ControllerBase
         
         return new ResponseModelBase(dtos);
     }   
-    
-    
     
     [HttpGet]
     public async Task<ResponseModelBase> GetAllByTagsAsync(long tagId)

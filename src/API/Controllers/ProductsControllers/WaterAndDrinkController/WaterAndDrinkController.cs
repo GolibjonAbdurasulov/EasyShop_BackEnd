@@ -3,6 +3,7 @@ using API.Common;
 using API.Controllers.ProductsControllers.WaterAndDrinkController.Dtos;
 using DatabaseBroker.Repositories.Products.WaterAndDrinksRepository;
 using DatabaseBroker.Repositories.Tags.WaterAndDrinkTagsRepository;
+using DatabaseBroker.Repositories.WarehouseDatesRepositories;
 using Entity.Models.Product;
 using Entity.Models.Product.Products;
 using Microsoft.AspNetCore.Authorization;
@@ -15,16 +16,25 @@ public class WaterAndDrinkController : ControllerBase
 {
      private IWaterAndDrinksRepository WaterAndDrinksRepository { get; set; }
     private IWaterAndDrinkTagsRepository WaterAndDrinkTagsRepository { get; set; }
-    public WaterAndDrinkController(IWaterAndDrinksRepository ourTeamRepository, IWaterAndDrinkTagsRepository houseHoldProductTags)
+    private IWarehouseDatesRepository WarehouseDatesRepository { get; set; }
+
+    public WaterAndDrinkController(IWaterAndDrinksRepository ourTeamRepository, IWaterAndDrinkTagsRepository houseHoldProductTags, IWarehouseDatesRepository warehouseDatesRepository)
     {
         this.WaterAndDrinksRepository = ourTeamRepository;
         WaterAndDrinkTagsRepository = houseHoldProductTags;
+        WarehouseDatesRepository = warehouseDatesRepository;
     }
 
     [HttpPost]
     [Authorize]
     public async Task<ResponseModelBase> CreateAsync( WaterAndDrinkProductCreationDto dto)
     {
+        var warehouse = await WarehouseDatesRepository.AddAsync(new WarehouseDates
+        {
+            QuantityBoxes = 0,
+            QuantityPieces = 0,
+            QuantityInOneBox = 0
+        });
         var entity = new WaterAndDrinks()
         {
             Name = dto.Name,
@@ -33,7 +43,7 @@ public class WaterAndDrinkController : ControllerBase
             ProductImageId = dto.ImageId,
             MainCategoryId = dto.MainCategoryId,
             TagId = dto.TagId,
-            WarehouseDatesId = dto.WarehouseDatesId
+            WarehouseDatesId = warehouse.Id,
         };
         var resEntity=await WaterAndDrinksRepository.AddAsync(entity);
         

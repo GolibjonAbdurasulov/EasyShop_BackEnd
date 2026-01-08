@@ -65,9 +65,7 @@ public class FoodProductsController : ControllerBase
         };
         return new ResponseModelBase(resDto);
     }
-
-
-  
+    
     [HttpPut]
     [Authorize]
     public async Task<ResponseModelBase> UpdateAsync( FoodProductUpdateDto dto)
@@ -85,7 +83,6 @@ public class FoodProductsController : ControllerBase
         await FoodProductRepository.UpdateAsync(res);
         return new ResponseModelBase(dto);
     }
-    
     
     [HttpDelete]
     [Authorize]
@@ -147,8 +144,6 @@ public class FoodProductsController : ControllerBase
         
         return new ResponseModelBase(dtos);
     }   
-    
-    
     
     [HttpGet]
     public async Task<ResponseModelBase> GetAllByTagsAsync(long tagId)

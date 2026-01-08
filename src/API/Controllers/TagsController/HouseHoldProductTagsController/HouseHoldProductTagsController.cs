@@ -72,6 +72,7 @@ public class HouseHoldProductTagsController : ControllerBase
         };
         return new ResponseModelBase(dto);
     }
+    
     [HttpGet]
     public async Task<ResponseModelBase> GetTagsByCategoryIdAsync(long categoryId)
     {

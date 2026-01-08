@@ -3,6 +3,7 @@ using API.Common;
 using API.Controllers.ProductsControllers.OilProductsController.Dtos;
 using DatabaseBroker.Repositories.Products.OilProductsRepository;
 using DatabaseBroker.Repositories.Tags.OilProductTagsRepository;
+using DatabaseBroker.Repositories.WarehouseDatesRepositories;
 using Entity.Models.Product;
 using Entity.Models.Product.Products;
 using Microsoft.AspNetCore.Authorization;
@@ -16,16 +17,25 @@ public class OilProductsController : ControllerBase
 {
     private IOilProductsRepository HoldProductsRepository { get; set; }
     private IOilProductTagsRepository OilProduct { get; set; }
-    public OilProductsController(IOilProductsRepository ourTeamRepository, IOilProductTagsRepository houseHoldProductTags)
+    private IWarehouseDatesRepository WarehouseDatesRepository { get; set; }
+
+    public OilProductsController(IOilProductsRepository ourTeamRepository, IOilProductTagsRepository houseHoldProductTags, IWarehouseDatesRepository warehouseDatesRepository)
     {
         this.HoldProductsRepository = ourTeamRepository;
         OilProduct = houseHoldProductTags;
+        WarehouseDatesRepository = warehouseDatesRepository;
     }
 
     [HttpPost]
     [Authorize]
     public async Task<ResponseModelBase> CreateAsync( OilProductCreationDto dto)
     {
+        var warehouse = await WarehouseDatesRepository.AddAsync(new WarehouseDates
+        {
+            QuantityBoxes = 0,
+            QuantityPieces = 0,
+            QuantityInOneBox = 0
+        });
         var entity = new OilProducts
         {
             Name = dto.Name,
@@ -34,7 +44,7 @@ public class OilProductsController : ControllerBase
             ProductImageId = dto.ImageId,
             MainCategoryId = dto.MainCategoryId,
             TagId = dto.TagId,
-            WarehouseDatesId = dto.WarehouseDatesId
+            WarehouseDatesId = warehouse.Id
         };
         var resEntity=await HoldProductsRepository.AddAsync(entity);
         
