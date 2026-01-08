@@ -9,6 +9,5 @@ public class WaterAndDrinkProductCreationDto
     public decimal Price { get; set; }
     public Guid ImageId { get; set; }
     public long MainCategoryId { get; set; }
-    public long TagId { get; set; }
-    public long WarehouseDatesId { get; set; }  
+    public long TagId { get; set; } 
 }

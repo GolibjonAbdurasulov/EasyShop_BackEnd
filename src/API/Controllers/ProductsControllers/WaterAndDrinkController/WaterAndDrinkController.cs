@@ -56,7 +56,10 @@ public class WaterAndDrinkController : ControllerBase
             ImageId = resEntity.ProductImageId,
             MainCategoryId = resEntity.MainCategoryId,
             TagId = resEntity.TagId,
-            WarehouseDatesId = resEntity.WarehouseDatesId
+            WarehouseDatesId = resEntity.WarehouseDatesId,
+            QuantityBoxes = warehouse.QuantityBoxes,
+            QuantityPieces = warehouse.QuantityPieces, 
+            QuantityInOneBox = warehouse.QuantityInOneBox
         };
         return new ResponseModelBase(resDto);
     }
@@ -104,7 +107,10 @@ public class WaterAndDrinkController : ControllerBase
             ImageId = resEntity.ProductImageId,
             MainCategoryId = resEntity.MainCategoryId,
             TagId = resEntity.TagId,
-            WarehouseDatesId = resEntity.WarehouseDatesId
+            WarehouseDatesId = resEntity.WarehouseDatesId,
+            QuantityBoxes = resEntity.WarehouseDates.QuantityBoxes,
+            QuantityPieces = resEntity.WarehouseDates.QuantityPieces, 
+            QuantityInOneBox = resEntity.WarehouseDates.QuantityInOneBox
         };
         return new ResponseModelBase(dto);
     }
@@ -124,7 +130,11 @@ public class WaterAndDrinkController : ControllerBase
                 Price = model.Price,
                 ImageId = model.ProductImageId,
                 TagId = model.TagId,
-                WarehouseDatesId = model.WarehouseDatesId
+                WarehouseDatesId = model.WarehouseDatesId,
+                QuantityBoxes = model.WarehouseDates.QuantityBoxes,
+                QuantityPieces = model.WarehouseDates.QuantityPieces, 
+                QuantityInOneBox = model.WarehouseDates.QuantityInOneBox
+
             });
         }
         
@@ -148,8 +158,10 @@ public class WaterAndDrinkController : ControllerBase
                 Price = model.Price,
                 ImageId = model.ProductImageId,
                 TagId = model.TagId,
-                WarehouseDatesId = model.WarehouseDatesId
-                
+                WarehouseDatesId = model.WarehouseDatesId,
+                QuantityBoxes = model.WarehouseDates.QuantityBoxes,
+                QuantityPieces = model.WarehouseDates.QuantityPieces, 
+                QuantityInOneBox = model.WarehouseDates.QuantityInOneBox
             });
         }
         
@@ -177,7 +189,11 @@ public class WaterAndDrinkController : ControllerBase
             ImageId = model.ProductImageId,
             MainCategoryId = model.MainCategoryId,
             TagId = model.TagId,
-            WarehouseDatesId = model.WarehouseDatesId
+            WarehouseDatesId = model.WarehouseDatesId,
+            QuantityBoxes = model.WarehouseDates.QuantityBoxes,
+            QuantityPieces = model.WarehouseDates.QuantityPieces, 
+            QuantityInOneBox = model.WarehouseDates.QuantityInOneBox
+
         }).ToList();
 
         if (dtos.Count==0) 
