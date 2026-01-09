@@ -468,19 +468,19 @@ public class OrderController : ControllerBase
             throw new NullReferenceException("Order not found OrderController");
         switch (status)
         {
-            case 1:
+            case 0:
                 order.OrderStatus = OrderStatus.Paid;
                 break;
-            case 2:
+            case 1:
                 order.OrderStatus = OrderStatus.Unpaid;
                 break;
-            case 3:
+            case 2:
                 order.OrderStatus = OrderStatus.Shipped;
                 break;
-            case 4:
+            case 3:
                 order.OrderStatus = OrderStatus.Delivered;
                 break;
-            case 5:
+            case 4:
                 order.OrderStatus = OrderStatus.Accepted;
                 break;
         }
