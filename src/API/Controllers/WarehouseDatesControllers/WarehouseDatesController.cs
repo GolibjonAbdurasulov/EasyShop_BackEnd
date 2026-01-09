@@ -58,6 +58,19 @@ public class WarehouseDatesController(IWarehouseDatesRepository warehouseDatates
         var res =await _warehouseDatatesRepository.GetByIdAsync(id);
         return new ResponseModelBase(res);
     }
+
+    [HttpGet]
+    public async Task<ResponseModelBase> CheckStockAsync(long id)
+    {
+        var res = _warehouseDatatesRepository.GetAllAsQueryable().FirstOrDefault(item=>item.Id==id);
+        if (res.QuantityBoxes >= 1)
+        {
+            return new ResponseModelBase(content:res.QuantityBoxes);
+        }
+        return new ResponseModelBase(content:0);
+    }
+    
+    
     
     
     [HttpGet]
