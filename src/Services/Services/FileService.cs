@@ -14,6 +14,9 @@ using Services.Interfaces;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
+using QuestPDF.Infrastructure;
 
 
 namespace Services.Services;
@@ -265,31 +268,29 @@ public class FileService : IFileService
 //     return stream;
 // }
 
+
 public async Task<Stream> GetProductCheck(long orderId)
 {
-    // Litsenziya sozlash
     QuestPDF.Settings.License = LicenseType.Community;
 
     var order = await _orderRepository.GetByIdAsync(orderId);
     if (order == null)
         throw new Exception("Buyurtma topilmadi");
 
-    // Mahsulotlar ro'yxatini tayyorlash
-    var productsWithData = new List<(string Name, int Quantity, decimal Price)>();
+    var products = new List<(string Name, int Qty, decimal Price)>();
+
     foreach (var item in order.ProductsIds)
     {
-        var productData = await GetProductsDates(item.ProductType, item.ProductId);
-        if (productData != null)
+        var product = await GetProductsDates(item.ProductType, item.ProductId);
+        if (product != null)
         {
-            productsWithData.Add((
-                productData.Name?.uz ?? "Noma'lum",
+            products.Add((
+                product.Name?.uz ?? "Noma'lum",
                 item.QuantityBox,
-                productData.Price
+                product.Price
             ));
         }
     }
-
-    var clientName = order.Client?.ClientFullName ?? "Mijoz";
 
     var stream = new MemoryStream();
 
@@ -297,45 +298,90 @@ public async Task<Stream> GetProductCheck(long orderId)
     {
         container.Page(page =>
         {
-            page.Margin(15);
-            page.Size(PageSizes.A6); 
-            page.PageColor(Colors.White);
-            page.DefaultTextStyle(x => x.FontSize(10));
+            page.Size(PageSizes.A4);
+            page.Margin(25);
+            page.DefaultTextStyle(x => x.FontSize(11));
 
-            // Header
-            page.Header().Text($"Buyurtma ID: {order.Id} - {clientName}")
-                .FontSize(12).Bold();
+            // ===== HEADER =====
+            page.Header().Column(col =>
+            {
+                col.Item().AlignRight()
+                    .Text($"Sana: {DateTime.Now:dd.MM.yyyy}");
 
-            page.Content().PaddingVertical(10).Table(table =>
+                col.Item()
+                    .Padding(10)         
+                    .AlignCenter()
+                    .Text("Xarid cheki")
+                    .FontSize(16)
+                    .Bold();
+
+
+
+
+                col.Item().Text($"Kimga: {order.Client?.ClientFullName ?? "Mijoz"}");
+                col.Item().Text("Kimdan: ____________________________");
+            });
+
+            // ===== TABLE =====
+            page.Content().PaddingTop(15).Table(table =>
             {
                 table.ColumnsDefinition(columns =>
                 {
-                    columns.RelativeColumn(4); // Mahsulot nomi uzunroq bo‘lsin
-                    columns.RelativeColumn(1); // Soni
-                    columns.RelativeColumn(2); // Narxi
+                    columns.ConstantColumn(30);  // №
+                    columns.RelativeColumn(5);   // Nomi
+                    columns.RelativeColumn(2);   // Miqdori
+                    columns.RelativeColumn(2);   // Narxi
+                    columns.RelativeColumn(2);   // Summa
                 });
 
-                // Jadval header
+                // Header
                 table.Header(header =>
                 {
-                    header.Cell().Text("Mahsulot nomi").Bold();
-                    header.Cell().Text("Soni").Bold();
-                    header.Cell().Text("Narxi").Bold();
+                    header.Cell().Border(1).Padding(5).AlignCenter().Text("№").Bold();
+                    header.Cell().Border(1).Padding(5).Text("Mahsulot nomi").Bold();
+                    header.Cell().Border(1).Padding(5).AlignCenter().Text("Miqdori").Bold();
+                    header.Cell().Border(1).Padding(5).AlignRight().Text("Narxi").Bold();
+                    header.Cell().Border(1).Padding(5).AlignRight().Text("Summa").Bold();
                 });
 
-                // Jadval satrlari
-                foreach (var p in productsWithData)
+                decimal total = 0;
+                int index = 1;
+
+                foreach (var p in products)
                 {
-                    table.Cell().Text(p.Name);
-                    table.Cell().AlignCenter().Text(p.Quantity.ToString());
-                    table.Cell().AlignRight().Text(p.Price.ToString("N0") + " so‘m");
+                    var sum = p.Qty * p.Price;
+                    total += sum;
+
+                    table.Cell().Border(1).Padding(5).AlignCenter().Text(index++.ToString());
+                    table.Cell().Border(1).Padding(5).Text(p.Name);
+                    table.Cell().Border(1).Padding(5).AlignCenter().Text(p.Qty.ToString());
+                    table.Cell().Border(1).Padding(5).AlignRight().Text($"{p.Price:N0}");
+                    table.Cell().Border(1).Padding(5).AlignRight().Text($"{sum:N0}");
                 }
+
+                // TOTAL
+                table.Cell().ColumnSpan(4).Border(1).Padding(5)
+                    .AlignRight().Text("Jami:").Bold();
+
+                table.Cell().Border(1).Padding(5)
+                    .AlignRight().Text($"{total:N0} so'm").Bold();
             });
 
-            // Footer
-            page.Footer().AlignCenter()
-                .Text($"Umumiy summa: {order.TotalPrice:N0} so‘m")
-                .FontSize(12).SemiBold();
+            // ===== FOOTER =====
+            page.Footer().PaddingTop(30).Row(row =>
+            {
+                row.RelativeItem().Column(col =>
+                {
+                    col.Item().Text("Topshirdi: _______________________");
+                    col.Item().Text("Imzo: _____________");
+                });
+
+                row.RelativeItem().Column(col =>
+                {
+                    col.Item().Text("Qabul qildi: ______________________");
+                    col.Item().Text("Imzo: _____________");
+                });
+            });
         });
     });
 
@@ -344,10 +390,88 @@ public async Task<Stream> GetProductCheck(long orderId)
     return stream;
 }
 
+// public async Task<Stream> GetProductCheck(long orderId)
+// {
+//     // Litsenziya sozlash
+//     QuestPDF.Settings.License = LicenseType.Community;
+//
+//     var order = await _orderRepository.GetByIdAsync(orderId);
+//     if (order == null)
+//         throw new Exception("Buyurtma topilmadi");
+//
+//     // Mahsulotlar ro'yxatini tayyorlash
+//     var productsWithData = new List<(string Name, int Quantity, decimal Price)>();
+//     foreach (var item in order.ProductsIds)
+//     {
+//         var productData = await GetProductsDates(item.ProductType, item.ProductId);
+//         if (productData != null)
+//         {
+//             productsWithData.Add((
+//                 productData.Name?.uz ?? "Noma'lum",
+//                 item.QuantityBox,
+//                 productData.Price
+//             ));
+//         }
+//     }
+//
+//     var clientName = order.Client?.ClientFullName ?? "Mijoz";
+//
+//     var stream = new MemoryStream();
+//
+//     var document = Document.Create(container =>
+//     {
+//         container.Page(page =>
+//         {
+//             page.Margin(15);
+//             page.Size(PageSizes.A6); 
+//             page.PageColor(Colors.White);
+//             page.DefaultTextStyle(x => x.FontSize(10));
+//
+//             // Header
+//             page.Header().Text($"Buyurtma ID: {order.Id} - {clientName}")
+//                 .FontSize(12).Bold();
+//
+//             page.Content().PaddingVertical(10).Table(table =>
+//             {
+//                 table.ColumnsDefinition(columns =>
+//                 {
+//                     columns.RelativeColumn(4); // Mahsulot nomi uzunroq bo‘lsin
+//                     columns.RelativeColumn(1); // Soni
+//                     columns.RelativeColumn(2); // Narxi
+//                 });
+//
+//                 // Jadval header
+//                 table.Header(header =>
+//                 {
+//                     header.Cell().Text("Mahsulot nomi").Bold();
+//                     header.Cell().Text("Soni").Bold();
+//                     header.Cell().Text("Narxi").Bold();
+//                 });
+//
+//                 // Jadval satrlari
+//                 foreach (var p in productsWithData)
+//                 {
+//                     table.Cell().Text(p.Name);
+//                     table.Cell().AlignCenter().Text(p.Quantity.ToString());
+//                     table.Cell().AlignRight().Text(p.Price.ToString("N0") + " so‘m");
+//                 }
+//             });
+//
+//             // Footer
+//             page.Footer().AlignCenter()
+//                 .Text($"Umumiy summa: {order.TotalPrice:N0} so‘m")
+//                 .FontSize(12).SemiBold();
+//         });
+//     });
+//
+//     document.GeneratePdf(stream);
+//     stream.Position = 0;
+//     return stream;
+// }
 
 
 
-    public async Task<Product> GetProductsDates(string productType,long productId)
+public async Task<Product> GetProductsDates(string productType,long productId)
     {
         Product product = new Product();
 
