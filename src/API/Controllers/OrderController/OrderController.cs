@@ -6,6 +6,7 @@ using DatabaseBroker.Repositories.Products.FoodProductRepository;
 using DatabaseBroker.Repositories.Products.HouseHoldProductsRepository;
 using DatabaseBroker.Repositories.Products.OilProductsRepository;
 using DatabaseBroker.Repositories.Products.WaterAndDrinksRepository;
+using DatabaseBroker.Repositories.WarehouseDatesRepositories;
 using Entity.Enums;
 using Entity.Models.Order;
 using Entity.Models.Product;
@@ -23,9 +24,10 @@ public class OrderController : ControllerBase
     private IHouseHoldProductsRepository HouseholdProducts { get; set; }
     private IWaterAndDrinksRepository WaterAndDrinks { get; set; }
     private IClientRepository ClientRepository { get; set; }
+    private IWarehouseDatesRepository WarehouseDatesRepository { get; set; }
     public OrderController(IOrderRepository orderRepository, IOilProductsRepository oilProductsRepository, 
         IFoodProductRepository foodProducts, IHouseHoldProductsRepository householdProducts, 
-        IWaterAndDrinksRepository waterAndDrinks, IClientRepository clientRepository)
+        IWaterAndDrinksRepository waterAndDrinks, IClientRepository clientRepository, IWarehouseDatesRepository warehouseDatesRepository)
     {
         OrderRepository = orderRepository;
         OilProductsRepository = oilProductsRepository;
@@ -33,6 +35,7 @@ public class OrderController : ControllerBase
         HouseholdProducts = householdProducts;
         WaterAndDrinks = waterAndDrinks;
         ClientRepository = clientRepository;
+        WarehouseDatesRepository = warehouseDatesRepository;
     }
 
     [HttpPost]
@@ -48,8 +51,10 @@ public class OrderController : ControllerBase
             CustomerId = dto.CustomerId,
             Client = null
         };
+
         var resEntity=await OrderRepository.AddAsync(entity);
-        
+        await this.ChangeWarehouseDates(entity.ProductsIds);
+
         var resDto = new OrderGetDto
         {
             Id = resEntity.Id,
@@ -514,7 +519,43 @@ public class OrderController : ControllerBase
                 return null;
         }
     }
-    
 
+
+    private async Task<bool> RemoveProductFromWarehouse(long warehouseId, int count)
+    {
+       var warehouse=await WarehouseDatesRepository.GetByIdAsync(warehouseId);
+       if (warehouse.QuantityBoxes>count)
+       {
+           warehouse.QuantityBoxes -= count;
+           await WarehouseDatesRepository.UpdateAsync(warehouse);
+           return true;
+       }
+       return false;
+    }
+    
+    private async Task ChangeWarehouseDates(List<ProductItem> products)
+    {
+        
+        foreach (var product in products)
+        {
+            switch (product.ProductType)
+            {
+                case "FoodProduct":
+                    await RemoveProductFromWarehouse(product.ProductId, product.QuantityBox);
+                    break;
+                case "HouseHoldProduct":
+                    await RemoveProductFromWarehouse(product.ProductId, product.QuantityBox);
+                    break;
+                case "WaterAndDrinksProduct":
+                    await RemoveProductFromWarehouse(product.ProductId, product.QuantityBox);
+                    break;
+                case "OilProduct":
+                    await RemoveProductFromWarehouse(product.ProductId, product.QuantityBox);
+                    break;
+            }  
+        }
+        
+
+    }
 
 }
