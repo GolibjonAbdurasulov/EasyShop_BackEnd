@@ -541,16 +541,20 @@ public class OrderController : ControllerBase
             switch (product.ProductType)
             {
                 case "FoodProduct":
-                    await RemoveProductFromWarehouse(product.ProductId, product.QuantityBox);
+                    var f=await FoodProducts.GetByIdAsync(product.ProductId);
+                    await RemoveProductFromWarehouse(f.WarehouseDatesId, product.QuantityBox);
                     break;
                 case "HouseHoldProduct":
-                    await RemoveProductFromWarehouse(product.ProductId, product.QuantityBox);
+                    var h=await HouseholdProducts.GetByIdAsync(product.ProductId);
+                    await RemoveProductFromWarehouse(h.WarehouseDatesId, product.QuantityBox);
                     break;
                 case "WaterAndDrinksProduct":
-                    await RemoveProductFromWarehouse(product.ProductId, product.QuantityBox);
+                    var w=await WaterAndDrinks.GetByIdAsync(product.ProductId);
+                    await RemoveProductFromWarehouse(w.WarehouseDatesId, product.QuantityBox);
                     break;
                 case "OilProduct":
-                    await RemoveProductFromWarehouse(product.ProductId, product.QuantityBox);
+                    var o=await OilProductsRepository.GetByIdAsync(product.ProductId);
+                    await RemoveProductFromWarehouse(o.WarehouseDatesId, product.QuantityBox);
                     break;
             }  
         }
