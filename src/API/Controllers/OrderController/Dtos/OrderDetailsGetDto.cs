@@ -12,6 +12,10 @@ public class OrderDetailsGetDto
     public List<OrderDetailsProducts> OrderDetailsProducts { get; set; }
     public string CustomerName { get; set; }
     public string CustomerPhoneNumber { get; set; }
+    public double CustomerLat { get; set; }
+    public double CustomerLng { get; set; }
+    public string CustomerAddress { get; set; }
+    
 }
 
 public class OrderDetailsProducts
@@ -20,5 +24,4 @@ public class OrderDetailsProducts
     public string ProductName { get; set; }
     public decimal Price { get; set; }
     public int CountBox { get; set; }
-    public int CountPiece { get; set; }
 }

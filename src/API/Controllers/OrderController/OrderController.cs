@@ -1,5 +1,6 @@
 using API.Common;
 using API.Controllers.OrderController.Dtos;
+using DatabaseBroker.Repositories.AddressRepositories;
 using DatabaseBroker.Repositories.ClientRepository;
 using DatabaseBroker.Repositories.OrderRepositories;
 using DatabaseBroker.Repositories.Products.FoodProductRepository;
@@ -25,9 +26,10 @@ public class OrderController : ControllerBase
     private IWaterAndDrinksRepository WaterAndDrinks { get; set; }
     private IClientRepository ClientRepository { get; set; }
     private IWarehouseDatesRepository WarehouseDatesRepository { get; set; }
+    private IAddressRepository AddressRepository { get; set; }
     public OrderController(IOrderRepository orderRepository, IOilProductsRepository oilProductsRepository, 
         IFoodProductRepository foodProducts, IHouseHoldProductsRepository householdProducts, 
-        IWaterAndDrinksRepository waterAndDrinks, IClientRepository clientRepository, IWarehouseDatesRepository warehouseDatesRepository)
+        IWaterAndDrinksRepository waterAndDrinks, IClientRepository clientRepository, IWarehouseDatesRepository warehouseDatesRepository, IAddressRepository addressRepository)
     {
         OrderRepository = orderRepository;
         OilProductsRepository = oilProductsRepository;
@@ -36,6 +38,7 @@ public class OrderController : ControllerBase
         WaterAndDrinks = waterAndDrinks;
         ClientRepository = clientRepository;
         WarehouseDatesRepository = warehouseDatesRepository;
+        AddressRepository = addressRepository;
     }
 
     [HttpPost]
@@ -379,6 +382,7 @@ public class OrderController : ControllerBase
             throw new NullReferenceException("Order not found OrderController");
         var client = await ClientRepository.GetByIdAsync(model.CustomerId);
 
+        var address= AddressRepository.GetAllAsQueryable().FirstOrDefault(n=>n.ClientId==model.CustomerId);
         
         List<OrderDetailsProducts> products = new List<OrderDetailsProducts>();
         foreach (ProductItem item in model.ProductsIds)
@@ -410,7 +414,6 @@ public class OrderController : ControllerBase
                 ProductName = product.Name.uz,
                 Price = product.Price,
                 CountBox = item.QuantityBox,
-                CountPiece = item.QuantityPiece,
             });
             product = null;
         }
@@ -423,7 +426,10 @@ public class OrderController : ControllerBase
             OrderedDate = model.DeliveryDate,
             OrderDetailsProducts = products,
             CustomerName = client.ClientFullName,
-            CustomerPhoneNumber = client.PhoneNumber
+            CustomerPhoneNumber = client.PhoneNumber,
+            CustomerLat = address.Latitude??0,
+            CustomerLng = address.Longitude??0,
+            CustomerAddress = address.FullAddress,
         };
 
 

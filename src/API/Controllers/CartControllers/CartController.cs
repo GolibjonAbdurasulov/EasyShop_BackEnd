@@ -165,7 +165,6 @@ public class CartController : ControllerBase
             return new ResponseModelBase("Product not found in cart", HttpStatusCode.NotFound);
 
         item.QuantityBox = dto.QuantityBox;
-        item.QuantityPiece = dto.QuantityPiece;
 
         await CartRepository.UpdateAsync(cart);
         return new ResponseModelBase(cart, HttpStatusCode.OK);
@@ -274,7 +273,6 @@ public class CartController : ControllerBase
                         Name = item.Name.uz,
                         Price = item.Price,
                         QuantityBox = product.QuantityBox,
-                        QuantityPiece = product.QuantityPiece,
                         ProductType=product.ProductType,
                         ImageId = item.ProductImageId
                     });
@@ -287,7 +285,6 @@ public class CartController : ControllerBase
                         Name = item2.Name.uz,
                         Price = item2.Price,
                         QuantityBox = product.QuantityBox,
-                        QuantityPiece = product.QuantityPiece,
                         ProductType=product.ProductType,
                         ImageId = item2.ProductImageId
                     });                    break;
@@ -299,7 +296,6 @@ public class CartController : ControllerBase
                         Name = item3.Name.uz,
                         Price = item3.Price,
                         QuantityBox = product.QuantityBox,
-                        QuantityPiece = product.QuantityPiece,
                         ProductType=product.ProductType,
                         ImageId = item3.ProductImageId
                     });                    break;
@@ -311,7 +307,6 @@ public class CartController : ControllerBase
                         Name = item4.Name.uz,
                         Price = item4.Price,
                         QuantityBox = product.QuantityBox,
-                        QuantityPiece = product.QuantityPiece,
                         ProductType=product.ProductType,
                         ImageId = item4.ProductImageId
                     });                    break;
