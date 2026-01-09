@@ -411,7 +411,7 @@ public class OrderController : ControllerBase
             products.Add(new OrderDetailsProducts
             {
                 ProductId = item.ProductId,
-                ProductName = product.Name.uz+" "+product.About,
+                ProductName = product.Name.uz+" "+product.About.uz,
                 Price = product.Price,
                 CountBox = item.QuantityBox,
             });
