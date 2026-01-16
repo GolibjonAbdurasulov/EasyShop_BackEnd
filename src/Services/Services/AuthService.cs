@@ -47,7 +47,7 @@ public class AuthService : IAuthService
             UserName = user.FullName,
             PhoneNumber = user.PhoneNumber,
             Password = user.Password,
-            Role = user.Role.ToString(),
+            Role = user.Role,
             IsSigned = true,
             Token = token
         };
@@ -112,7 +112,7 @@ public class AuthService : IAuthService
             ,
             PhoneNumber = user.PhoneNumber,
             Password = user.Password,
-            Role = user.Role.ToString()
+            Role = user.Role
         };
     }
 
