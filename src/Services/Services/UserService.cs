@@ -31,7 +31,7 @@ public class UserService : IUserService
             UserName=oldUser.FullName,
             PhoneNumber = oldUser.PhoneNumber,
             Password = oldUser.Password,
-            Role = oldUser.Role.ToString(),
+            Role = oldUser.Role,
             IsSigned = oldUser.IsSigned
             
             
@@ -49,16 +49,12 @@ public class UserService : IUserService
     public async Task<UserDto> UpdateAsync(UserDto dto)
     {
         var oldUser = await _userRepository.GetByIdAsync(dto.Id);
-        if (dto.PhoneNumber is not null&&dto.PhoneNumber!="string")
-            oldUser.PhoneNumber = dto.PhoneNumber;
-        
-        if (dto.Password is not null&&dto.Password!="string")
-            oldUser.Password = dto.Password; 
-        
-        if (dto.UserName is not null&&dto.UserName!="string")
-            oldUser.FullName = dto.UserName; 
+        oldUser.PhoneNumber = dto.PhoneNumber;
+        oldUser.Password = dto.Password; 
+        oldUser.FullName = dto.UserName; 
+        oldUser.Role = dto.Role; 
      
-        //oldUser.UpdatedAt=DateTime.Now;
+
         await _userRepository.UpdateAsync(oldUser);
         return dto;
     }
@@ -80,7 +76,7 @@ public class UserService : IUserService
             UserName = user.FullName,
             PhoneNumber = user.PhoneNumber,
             Password = user.Password,
-            Role = user.Role.ToString(),
+            Role = user.Role,
             IsSigned = user.IsSigned
         };
         await _userRepository.AddAsync(user);
@@ -99,7 +95,7 @@ public class UserService : IUserService
                 UserName = user.FullName,
                 PhoneNumber = user.PhoneNumber,
                 Password = user.Password,
-                Role = user.Role.ToString(),
+                Role = user.Role,
                 IsSigned = user.IsSigned,
                 Token = "null"
             });

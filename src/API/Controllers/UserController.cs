@@ -31,7 +31,7 @@ public class UserController : ControllerBase
     public async Task<ResponseModelBase> UpdateAsync( UserDto dto)
     {
         var user =await UserService.UpdateAsync(dto);
-        return new ResponseModelBase(dto);
+        return new ResponseModelBase(user);
     }
     
     
