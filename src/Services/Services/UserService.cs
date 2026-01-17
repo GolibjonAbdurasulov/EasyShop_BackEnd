@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DatabaseBroker.Repositories.ClientRepository;
 using DatabaseBroker.Repositories.UserRepository;
 using Entity.Attributes;
 using Entity.Enums;
@@ -48,15 +49,31 @@ public class UserService : IUserService
 
     public async Task<UserDto> UpdateAsync(UserDto dto)
     {
-        var oldUser = await _userRepository.GetByIdAsync(dto.Id);
-        oldUser.PhoneNumber = dto.PhoneNumber;
-        oldUser.Password = dto.Password; 
-        oldUser.FullName = dto.UserName; 
-        oldUser.Role = dto.Role; 
-     
+        var userFromDb = await _userRepository.GetByIdAsync(dto.Id);
+        if (userFromDb == null)
+            throw new Exception("Client not found");
+        userFromDb.FullName = dto.UserName;
+        userFromDb.PhoneNumber = dto.PhoneNumber;
+        userFromDb.IsSigned = dto.IsSigned;
+        userFromDb.Role = dto.Role;
 
-        await _userRepository.UpdateAsync(oldUser);
-        return dto;
+
+        if (!string.IsNullOrWhiteSpace(dto.Password))
+        {
+            userFromDb.Password = dto.Password; 
+        }
+
+
+        var updatedClient = await _userRepository.UpdateAsync(userFromDb);
+
+        return new UserDto()
+        {
+            UserName = updatedClient.FullName,
+            PhoneNumber = updatedClient.PhoneNumber,
+            Role = updatedClient.Role,
+            IsSigned = updatedClient.IsSigned,
+            Password = updatedClient.Password,
+        };
     }
     
     

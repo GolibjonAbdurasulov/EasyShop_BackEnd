@@ -41,21 +41,30 @@ public class ClientController : ControllerBase
     
     [HttpPut]
     [Authorize]
-    public async Task<ResponseModelBase> UpdateAsync( ClientDto dto)
+    public async Task<ResponseModelBase> UpdateAsync(ClientDto dto)
     {
-        var client =await ClientRepository.UpdateAsync(new Client
+        var clientFromDb = await ClientRepository.GetByIdAsync(dto.Id);
+        if (clientFromDb == null)
+            return new ResponseModelBase(new Exception("Client not found"));
+
+        clientFromDb.ClientFullName = dto.ClientFullName;
+        clientFromDb.CompanyName = dto.CompanyName;
+        clientFromDb.INN = dto.INN;
+        clientFromDb.PhoneNumber = dto.PhoneNumber;
+        clientFromDb.IsSigned = dto.IsSigned;
+
+
+        if (!string.IsNullOrWhiteSpace(dto.Password))
         {
-            Id = dto.Id,
-            ClientFullName = dto.ClientFullName,
-            CompanyName = dto.CompanyName,
-            INN = dto.INN,
-            PhoneNumber = dto.PhoneNumber,
-            Password = dto.Password,
-            IsSigned = dto.IsSigned
-        });
-        
-        return new ResponseModelBase(client);
+            clientFromDb.Password = dto.Password; 
+        }
+
+
+        var updatedClient = await ClientRepository.UpdateAsync(clientFromDb);
+
+        return new ResponseModelBase(updatedClient);
     }
+
     
     
     [HttpDelete]
