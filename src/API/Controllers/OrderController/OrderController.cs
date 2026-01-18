@@ -530,7 +530,7 @@ public class OrderController : ControllerBase
     private async Task<bool> RemoveProductFromWarehouse(long warehouseId, int count)
     {
        var warehouse=await WarehouseDatesRepository.GetByIdAsync(warehouseId);
-       if (warehouse.QuantityBoxes>count)
+       if (warehouse.QuantityBoxes>=count)
        {
            warehouse.QuantityBoxes -= count;
            await WarehouseDatesRepository.UpdateAsync(warehouse);
