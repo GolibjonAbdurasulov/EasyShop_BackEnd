@@ -1,4 +1,5 @@
 using API.Common;
+using API.Controllers.AddressControllers.Dtos;
 using API.Controllers.OrderController.Dtos;
 using DatabaseBroker.Repositories.AddressRepositories;
 using DatabaseBroker.Repositories.ClientRepository;
@@ -250,6 +251,43 @@ public class OrderController : ControllerBase
         return new ResponseModelBase(dtos);
     }
 
+
+    [HttpGet]
+    public async Task<ResponseModelBase> GetAllShippedOrdersToDelivery()
+    {
+        var orders= OrderRepository.GetAllAsQueryable().
+            Where(order=>order.OrderStatus==OrderStatus.Shipped).ToList();
+        if (orders == null)
+            throw new NullReferenceException("Order not found OrderController");
+        List<ShippedOrdersDtoToDelivery> resDtos=new List<ShippedOrdersDtoToDelivery>();
+        foreach (Order order in orders)
+        {
+            var address=AddressRepository.GetAllAsQueryable().
+                FirstOrDefault(address => address.ClientId == order.CustomerId);
+            if (address != null)
+            {
+                AddressDtoToDelivery addressDto=new AddressDtoToDelivery
+                {
+                    Id = address.Id,
+                    FullAddress = address.FullAddress,
+                    Latitude = address.Latitude,
+                    Longitude = address.Longitude
+                };
+                resDtos.Add(new ShippedOrdersDtoToDelivery
+                {
+                    Id = order.Id,
+                    CustomerId = order.CustomerId,
+                    TotalPrice = order.TotalPrice,
+                    OrderStatus = order.OrderStatus,
+                    DeliveryDate = order.DeliveryDate,
+                    OrderAddress = addressDto
+                }); 
+            }
+            
+        }
+        
+        return new ResponseModelBase(resDtos);
+    }
     
     [HttpGet]
     public async Task<ResponseModelBase> GetAllDeliveredOrders(

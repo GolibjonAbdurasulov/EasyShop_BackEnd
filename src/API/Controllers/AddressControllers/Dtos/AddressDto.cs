@@ -5,14 +5,12 @@ public class AddressDto
     public long  Id { get; set; }
     public string FullAddress { get; set; }
 
-    // 🌍 Geolokatsiya koordinatalari
 
-    public double? Latitude { get; set; }   // kenglik (masalan: 41.2995)
+    public double? Latitude { get; set; }  
 
 
-    public double? Longitude { get; set; }  // uzunlik (masalan: 69.2401)
+    public double? Longitude { get; set; }  
 
-    // 🏙 Shahar va mintaqa ma’lumotlari
 
     public string? City { get; set; }
 
