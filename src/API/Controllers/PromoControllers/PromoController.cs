@@ -6,7 +6,7 @@ using Services.Interfaces;
 
 namespace API.Controllers.PromoControllers;
 [ApiController]
-[Route("{controller}/[action]")]
+[Route("[controller]/[action]")]
 public class PromoController : ControllerBase
 {
     private IPromoService _promoService;
