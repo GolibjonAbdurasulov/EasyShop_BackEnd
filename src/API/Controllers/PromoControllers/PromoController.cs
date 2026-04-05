@@ -21,25 +21,28 @@ public class PromoController : ControllerBase
         var res=await _promoService.CreatePromoAsync(dto);
         return new ResponseModelBase(res,HttpStatusCode.OK);
     }
-
+    [HttpPut]
     public async Task<ResponseModelBase> UpdatePromo(PromoUpdateDto dto)
     {
         var res = await _promoService.UpdatePromoAsync(dto);
         return new ResponseModelBase(res,HttpStatusCode.OK);
     }
 
+    [HttpDelete]
     public async Task<ResponseModelBase> DeletePromo(long id)
     {
         var res =await _promoService.DeletePromoAsync(id);
         return new ResponseModelBase(res,HttpStatusCode.OK);
     }
-
+    
+    [HttpGet]
     public async Task<ResponseModelBase> GetPromo(long id)
     {
         var res = await _promoService.GetPromoByIdAsync(id);
         return new ResponseModelBase(res,HttpStatusCode.OK);
     }
-
+    
+    [HttpGet]
     public async Task<ResponseModelBase> GetAllPromos()
     {
         var res = await _promoService.GetAllPromoAsync();
