@@ -115,7 +115,7 @@ public class PromoService : IPromoService
         };
         switch (mainCategory.MainCategoryName.uz)
         {
-            case "FoodProduct":
+            case "Oziq-ovqat mahsulotlar":
                 var foodProduct = await _foodProductRepository.GetByIdAsync(promo.ProductId);
                 resDto.OldPrice = foodProduct.Price;
                 resDto.ProductName = foodProduct.Name.uz;
@@ -128,7 +128,7 @@ public class PromoService : IPromoService
                 resDto.QuantityInOneBox = foodProduct.WarehouseDates.QuantityInOneBox;
                 resDto.QuantityPieces = foodProduct.WarehouseDates.QuantityPieces;
                 break;
-            case "HouseHoldProduct":
+            case "Ho'jalik mollari":
                 var houseHoldProduct = await _houseHoldProductsRepository.GetByIdAsync(promo.ProductId);
                 resDto.OldPrice = houseHoldProduct.Price;
                 resDto.ProductName = houseHoldProduct.Name.uz;
@@ -141,7 +141,7 @@ public class PromoService : IPromoService
                 resDto.QuantityInOneBox = houseHoldProduct.WarehouseDates.QuantityInOneBox;
                 resDto.QuantityPieces = houseHoldProduct.WarehouseDates.QuantityPieces;
                 break;
-            case "OilProduct":
+            case "Yog' mahsulotlari":
                 var oilProduct = await _oilProductsRepository.GetByIdAsync(promo.ProductId);
                 resDto.OldPrice = oilProduct.Price;
                 resDto.ProductName = oilProduct.Name.uz;
@@ -154,7 +154,7 @@ public class PromoService : IPromoService
                 resDto.QuantityInOneBox = oilProduct.WarehouseDates.QuantityInOneBox;
                 resDto.QuantityPieces = oilProduct.WarehouseDates.QuantityPieces;
                 break;
-            case "WaterAndDrinksProduct":
+            case "Suv va gazli ichimliklar":
                 var waterProduct = await _waterAndDrinksRepository.GetByIdAsync(promo.ProductId);
                 resDto.OldPrice = waterProduct.Price;
                 resDto.ProductName = waterProduct.Name.uz;
