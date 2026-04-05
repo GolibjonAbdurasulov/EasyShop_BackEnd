@@ -131,6 +131,7 @@ builder.Services.AddScoped<SmtpClient>(sp =>
 builder.Services.ConfigureServicesFromTypeAssembly<OtpService>();
 builder.Services.ConfigureServicesFromTypeAssembly<UserService>();
 builder.Services.ConfigureServicesFromTypeAssembly<AuthService>();
+builder.Services.ConfigureServicesFromTypeAssembly<PromoService>();
 builder.Services.ConfigureServicesFromTypeAssembly<FileService>();
 builder.Services.ConfigureServicesFromTypeAssembly<TranslationService>();
 builder.Services.ConfigureServicesFromTypeAssembly<TokenService>();

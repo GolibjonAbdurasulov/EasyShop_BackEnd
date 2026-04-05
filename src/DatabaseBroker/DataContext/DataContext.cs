@@ -5,6 +5,7 @@ using Entity.Models.Order;
 using Entity.Models.Product.Categories;
 using Entity.Models.Product.Products;
 using Entity.Models.Product.Tags;
+using Entity.Models.Promo;
 using Entity.Models.Translation;
 using Microsoft.EntityFrameworkCore;
 using User = Entity.Models.Users.User;
@@ -36,7 +37,7 @@ public class DataContext : DbContext
     public  DbSet<MainProductCategories> MainProductCategories { get; set; }
     public  DbSet<Address> Addresses { get; set; }
     public  DbSet<Client> Clients { get; set; }
-
+    public DbSet<Promo> Promos { get; set; }
 
     // private void TrackActionsAt()
     // {
