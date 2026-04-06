@@ -58,8 +58,8 @@ public class PromoService : IPromoService
         promo.NewPrice=promoDto.NewPrice;
         promo.StartDate=promoDto.StartDate;
         promo.EndDate=promoDto.EndDate;
-        
-        var resDto= await this.GeneratePromoGetDto(promo);
+        var updatedPromo=await _promoRepository.UpdateAsync(promo);
+        var resDto= await this.GeneratePromoGetDto(updatedPromo);
         return resDto;
     }
 
