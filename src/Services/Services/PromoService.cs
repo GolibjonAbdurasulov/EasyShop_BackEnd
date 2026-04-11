@@ -41,6 +41,10 @@ public class PromoService : IPromoService
             StartDate = promoDto.StartDate,
             EndDate = promoDto.EndDate,
         };
+        var res=await IsExist(promo.MainCategoryId,promo.ProductId);
+        if (!res)
+         throw new NotFoundException("Product not found on PromoService");
+        
         var resPromo=await _promoRepository.AddAsync(promo);
         var resDto= await this.GeneratePromoGetDto(resPromo);
 
@@ -126,7 +130,7 @@ public class PromoService : IPromoService
                 resDto.ProductImageId = foodProduct.ProductImageId;
                 resDto.QuantityBoxes = foodProduct.WarehouseDates.QuantityBoxes;
                 resDto.QuantityInOneBox = foodProduct.WarehouseDates.QuantityInOneBox;
-                resDto.QuantityPieces = foodProduct.WarehouseDates.QuantityPieces;
+                //resDto.QuantityPieces = foodProduct.WarehouseDates.QuantityPieces;
                 break;
             case "Ho'jalik mollari":
                 var houseHoldProduct = await _houseHoldProductsRepository.GetByIdAsync(promo.ProductId);
@@ -171,5 +175,40 @@ public class PromoService : IPromoService
                 throw new NotFoundException("Invalid product type on PromoService");
         }
         return resDto;
+    }
+    
+    private async Task<bool> IsExist(long categoryId,long  productId)
+    {
+       var categoryName=await _mainProductCategoryRepository.GetByIdAsync(categoryId);
+       
+      switch (categoryName.MainCategoryName.uz)
+        {
+            case "Oziq-ovqat mahsulotlar":
+                var foodProduct = await _foodProductRepository.GetByIdAsync(productId);
+                if (foodProduct is  null)
+                 throw new NotFoundException("Product not found on PromoService");
+                    
+                return true;
+            case "Ho'jalik mollari":
+                var houseHoldProduct = await _houseHoldProductsRepository.GetByIdAsync(productId);
+                if (houseHoldProduct is  null)
+                    throw new NotFoundException("Product not found on PromoService");
+                    
+                return true;
+            case "Yog' mahsulotlari":
+                var oilProduct = await _oilProductsRepository.GetByIdAsync(productId);
+                if (oilProduct is  null)
+                    throw new NotFoundException("Product not found on PromoService");
+                    
+                return true;
+            case "Suv va gazli ichimliklar":
+                var waterProduct = await _waterAndDrinksRepository.GetByIdAsync(productId);
+                if (waterProduct is  null)
+                    throw new NotFoundException("Product not found on PromoService");
+                    
+                return true;
+            default:
+                throw new NotFoundException("Invalid product type on PromoService");
+        }   
     }
 }
