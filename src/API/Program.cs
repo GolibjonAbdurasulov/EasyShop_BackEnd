@@ -136,6 +136,7 @@ builder.Services.ConfigureServicesFromTypeAssembly<FileService>();
 builder.Services.ConfigureServicesFromTypeAssembly<TranslationService>();
 builder.Services.ConfigureServicesFromTypeAssembly<TokenService>();
 builder.Services.ConfigureServicesFromTypeAssembly<EmailNotificationService>();
+builder.Services.ConfigureServicesFromTypeAssembly<SearchService>();
 
 // Global xato boshqaruv middleware ni qo'shish
 builder.Services.AddTransient<GlobalExceptionHandlerMiddleware>();
