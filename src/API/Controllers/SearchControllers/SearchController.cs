@@ -7,8 +7,6 @@ namespace API.Controllers.SearchControllers;
 [Route("[controller]/[action]")]
 public class SearchController : ControllerBase
 {
-
-    
     private readonly ISearchService _searchService;
 
     public SearchController(ISearchService searchService)

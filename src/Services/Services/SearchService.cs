@@ -57,7 +57,8 @@ public class SearchService : ISearchService
                 Price = f.Price,
                 ProductImageId = f.ProductImageId,
                 QuantityBoxes = f.WarehouseDates.QuantityBoxes,
-                QuantityInOneBox = f.WarehouseDates.QuantityInOneBox
+                QuantityInOneBox = f.WarehouseDates.QuantityInOneBox,
+                WarehouseId = f.WarehouseDatesId
             });
         
         var houseHolsProducts = _holdProductsRepository.GetAllAsQueryable()
@@ -74,7 +75,8 @@ public class SearchService : ISearchService
                 Price = f.Price,
                 ProductImageId = f.ProductImageId,
                 QuantityBoxes = f.WarehouseDates.QuantityBoxes,
-                QuantityInOneBox = f.WarehouseDates.QuantityInOneBox
+                QuantityInOneBox = f.WarehouseDates.QuantityInOneBox,
+                WarehouseId = f.WarehouseDatesId
             });
         
          var oilProducts = _oilProductsRepository.GetAllAsQueryable()
@@ -90,7 +92,8 @@ public class SearchService : ISearchService
                  Price = f.Price,
                  ProductImageId = f.ProductImageId,
                  QuantityBoxes = f.WarehouseDates.QuantityBoxes,
-                 QuantityInOneBox = f.WarehouseDates.QuantityInOneBox
+                 QuantityInOneBox = f.WarehouseDates.QuantityInOneBox,
+                 WarehouseId = f.WarehouseDatesId
              });
         
          var waterProducts = _waterAndDrinksRepository.GetAllAsQueryable()
@@ -106,7 +109,8 @@ public class SearchService : ISearchService
                  Price = f.Price,
                  ProductImageId = f.ProductImageId,
                  QuantityBoxes = f.WarehouseDates.QuantityBoxes,
-                 QuantityInOneBox = f.WarehouseDates.QuantityInOneBox
+                 QuantityInOneBox = f.WarehouseDates.QuantityInOneBox,
+                 WarehouseId = f.WarehouseDatesId
              });
         
         List<SearchResponse> res = new List<SearchResponse>();
@@ -129,20 +133,15 @@ public class SearchService : ISearchService
             case "Oziq-ovqat mahsulotlar":
                 var foodProduct = await  _foodProductRepository.GetByIdAsync(productId);
                 return foodProduct;
-                //resDto.QuantityPieces = foodProduct.WarehouseDates.QuantityPieces;
-                break;
             case "Ho'jalik mollari":
                 var houseHoldProduct = await _holdProductsRepository.GetByIdAsync(productId);
                 return houseHoldProduct;
-                break;
             case "Yog' mahsulotlari":
                 var oilProduct = await _oilProductsRepository.GetByIdAsync(productId);
                 return oilProduct;
-                break;
             case "Suv va gazli ichimliklar":
                 var waterProduct = await _waterAndDrinksRepository.GetByIdAsync(productId);
                 return waterProduct;
-                break;
             default:
                 throw new NotFoundException("Invalid product type on PromoService");
         }

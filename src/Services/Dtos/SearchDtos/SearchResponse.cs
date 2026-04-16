@@ -8,6 +8,7 @@ public class SearchResponse
     public long MainCategoryId { get; set; } 
     public long? ProductCategoryId { get; set; } = -1;
     public long TagId { get; set; } = -1;
+    public long WarehouseId { get; set; } = -1;
     public decimal Price { get; set; } = 0;
     public Guid ProductImageId { get; set; }
     public string ImageLink { get => $"https://back.easyshop.uz/File/DownloadFile/download/{ProductImageId}"; }
