@@ -43,7 +43,7 @@ public class FoodProductsController : ControllerBase
             About = dto.About,
             Price = dto.Price,
             ProductImageId = dto.ImageId,
-            MainCategoryId = 2,
+            MainCategoryId = dto.MainCategoryId,
             FoodCategoryId = dto.FoodProductCategoryId,
             WarehouseDatesId = warehouse.Id,
             TagId = dto.TagId,
