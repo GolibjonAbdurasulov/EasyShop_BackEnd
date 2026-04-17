@@ -40,7 +40,7 @@ public class SearchService : ISearchService
     }
 
 
-    public async Task<List<SearchResponse>> Search(string q, int page = 1, int pageSize = 20)
+    public async Task<List<SearchResponse>> Search(string q, int page , int pageSize )
     {
         string query = q.ToLower();
         var foodProducts = _foodProductRepository.GetAllAsQueryable()
