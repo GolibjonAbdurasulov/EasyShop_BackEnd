@@ -98,7 +98,7 @@ public class PromoService : IPromoService
         foreach (var promoModel in promosModels)
         {
             var temp=await GeneratePromoGetDto(promoModel);
-            if(temp.EndDate.Date<DateTime.Now.Date)
+            if(temp.EndDate<DateTime.Now)
                 continue;
             
             resPromos.Add(temp);
