@@ -38,8 +38,8 @@ public class PromoService : IPromoService
             ProductId = promoDto.ProductId,
             MainCategoryId = promoDto.MainCategoryId,
             NewPrice = promoDto.NewPrice,
-            StartDate = promoDto.StartDate,
-            EndDate = promoDto.EndDate,
+            StartDate = DateTime.Today,
+            EndDate = DateTime.Today,
         };
         var res=await IsExist(promo.MainCategoryId,promo.ProductId);
         if (!res)
@@ -89,20 +89,21 @@ public class PromoService : IPromoService
 
     public async Task<List<PromoGetDto>> GetAllPromoAsync()
     { 
-        List<PromoGetDto> resPromos=  new List<PromoGetDto>();
+        var now = DateTime.UtcNow;
 
-        var promosModels =_promoRepository.GetAllAsQueryable().ToList();
-        if (promosModels==null)
-            throw new NotFoundException("Promos is null");
+        var promoModels = _promoRepository.GetAllAsQueryable()
+            .ToList();
 
-        foreach (var promoModel in promosModels)
+        if (!promoModels.Any())
+            throw new NotFoundException("Promos not found");
+
+        var resPromos = new List<PromoGetDto>();
+        foreach (var promoModel in promoModels)
         {
-            var temp=await GeneratePromoGetDto(promoModel);
-            if(temp.EndDate<DateTime.Now)
-                continue;
-            
+            var temp = await GeneratePromoGetDto(promoModel);
             resPromos.Add(temp);
         }
+
         return resPromos;
     }
 
